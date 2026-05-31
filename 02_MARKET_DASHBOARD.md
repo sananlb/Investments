@@ -290,47 +290,71 @@ sector_score = сумма(metric_coefficient x metric_weight)
 
 На графике рисуется только `sector_score`, но в данных должны оставаться все компоненты. Это важно, чтобы потом понимать, почему сектор получился дорогим или дешевым.
 
-### Пилотные данные: Banks, Semiconductors, Mining, Energy, Utilities и Consumer Discretionary
+### Пилотные данные: chart-ready sectors
 
 Обновлено: 2026-05-31.
 
-Сделана первая тестовая серия из последних 10 якорных точек: 2026-02-28, 2026-03-10, 2026-03-20, 2026-03-30, 2026-04-10, 2026-04-20, 2026-04-30, 2026-05-10, 2026-05-20, 2026-05-30.
+Сделана тестовая серия из последних 10 якорных точек: 2026-02-28, 2026-03-10, 2026-03-20, 2026-03-30, 2026-04-10, 2026-04-20, 2026-04-30, 2026-05-10, 2026-05-20, 2026-05-30.
 
 Методика пилота:
 
 - текущие мультипликаторы и годовые значения FY2021-FY2025 взяты из StockAnalysis по выбранным ключевым компаниям;
 - `five_year_average` считается как среднее FY2021-FY2025;
 - `metric_coefficient = current metric / five_year_average`;
-- для якорных дат до последней даты коэффициенты масштабируются по закрытию ETF-прокси на последний торговый день до якорной даты, потому что фундаментальные мультипликаторы внутри коротких промежутков почти не меняются;
-- для Banks ETF-proxy - `KBE`;
-- для Semiconductors ETF-proxy - `SOXX`;
-- для Mining ETF-proxy - `PICK`;
-- для Energy ETF-proxy - `XLE`.
-- для Utilities ETF-proxy - `XLU`.
-- для Consumer Discretionary ETF-proxy - `XLY`.
+- для yield-метрик используется обратная формула `5Y average yield / current yield`, чтобы выше `1.0` всегда означало дороже;
+- для якорных дат до последней даты коэффициенты масштабируются по закрытию ETF-прокси на последний торговый день до якорной даты;
+- если метрика недоступна, отрицательная или экономически бессмысленная для конкретной компании, она исключается из средней по этой метрике;
+- если вся метрика недоступна для сектора, она исключается, а веса нормализуются по оставшимся метрикам.
 
-Важно: это первая рабочая версия графика, а не окончательная институциональная модель. Она нужна, чтобы проверить формат данных, механику одной точки в день и визуальную полезность графика.
+ETF-proxy по новым секторам:
 
-Ключевые итоговые значения на якорную дату 2026-05-30, где фактическое торговое закрытие - 2026-05-29:
+- для Agriculture & Chemicals ETF-proxy - `XLB`.
+- для AI Infrastructure ETF-proxy - `AIQ`.
+- для China ETF-proxy - `MCHI`.
+- для Commodities ETF-proxy - `PICK`.
+- для Delivery & Logistics ETF-proxy - `IYT`.
+- для Drugs ETF-proxy - `XLV`.
+- для Food & Staples ETF-proxy - `XLP`.
+- для Insurance ETF-proxy - `KIE`.
+- для Medical Services ETF-proxy - `IHI`.
+- для REIT ETF-proxy - `VNQ`.
+- для Solar ETF-proxy - `TAN`.
+- для Technology ETF-proxy - `XLK`.
+- для Telecom & Streaming ETF-proxy - `XLC`.
+
+Важно: это рабочая valuation-only версия графика, а не окончательная институциональная модель. Она нужна, чтобы проверить формат данных, механику одной точки на сектор и визуальную полезность графика.
+
+Ключевые итоговые значения на якорную дату 2026-05-30, где фактическое торговое закрытие обычно 2026-05-29:
 
 | Сектор | Компоненты | Итоговый `sector_score` | Интерпретация |
 |---|---|---:|---|
-| Banks | P/B 35%, P/TBV 25%, P/E 20%, Forward P/E 20% | `1.43` | выбранная банковская корзина торгуется примерно на 43% выше своей 5-летней нормы по этим мультипликаторам |
-| Semiconductors | Forward P/E 30%, P/S 25%, P/B 20%, EV/EBITDA 25% | `1.82` | выбранная semiconductor-корзина торгуется примерно на 82% выше своей 5-летней нормы по этим мультипликаторам |
-| Mining | EV/EBITDA 35%, P/FCF 25%, P/B 20%, P/E 20% | `1.54` | выбранная mining-корзина торгуется примерно на 54% выше своей 5-летней нормы по этим мультипликаторам |
-| Energy | EV/EBITDA 35%, P/FCF 30%, P/E 20%, P/B 15% | `1.50` | выбранная energy-корзина торгуется примерно на 50% выше своей 5-летней нормы по этим мультипликаторам |
-| Utilities | P/E 25%, Forward P/E 25%, EV/EBITDA 20%, Dividend Yield 20%, P/B 10% | `0.98` | выбранная regulated utilities-корзина около своей 5-летней нормы; trailing P/E и EV/EBITDA дешевле нормы, но dividend yield и forward P/E не дают явного дисконта |
-| Consumer Discretionary | P/E 25%, Forward P/E 25%, EV/EBITDA 20%, P/S 15%, P/FCF 15% | `0.81` | выбранная consumer discretionary-корзина без `TSLA` торгуется примерно на 19% ниже своей 5-летней нормы по этим мультипликаторам |
+| Medical Services | Forward P/E 0.65 x 30%<br>P/E 0.68 x 25%<br>EV/EBITDA 0.67 x 20%<br>P/S 0.68 x 15%<br>P/FCF 0.61 x 10% | `0.66` | дешевле своей 5-летней нормы |
+| Telecom & Streaming | EV/EBITDA 0.75 x 30%<br>Forward P/E 0.73 x 25%<br>P/E 0.63 x 20%<br>P/S 0.91 x 15%<br>P/FCF 0.65 x 10% | `0.73` | дешевле своей 5-летней нормы |
+| China | Forward P/E 0.79 x 30%<br>P/E 0.72 x 25%<br>P/S 0.79 x 20%<br>P/B 0.75 x 15%<br>EV/EBITDA 0.73 x 10% | `0.76` | дешевле своей 5-летней нормы |
+| Consumer Discretionary | P/E 0.78 x 25%<br>Forward P/E 0.77 x 25%<br>EV/EBITDA 0.79 x 20%<br>P/S 0.76 x 15%<br>P/FCF 0.99 x 15% | `0.81` | дешевле своей 5-летней нормы |
+| Technology | Forward P/E 0.80 x 30%<br>P/E 0.69 x 20%<br>EV/EBITDA 0.85 x 20%<br>P/S 0.93 x 20%<br>P/FCF 1.01 x 10% | `0.84` | дешевле своей 5-летней нормы |
+| Insurance | P/B 0.89 x 35%<br>P/E 0.87 x 25%<br>Forward P/E 0.79 x 25%<br>P/S 0.93 x 15% | `0.87` | дешевле своей 5-летней нормы |
+| Drugs | Forward P/E 1.03 x 30%<br>P/E 0.80 x 25%<br>EV/EBITDA 0.71 x 20%<br>P/FCF 0.89 x 15%<br>P/S 0.91 x 10% | `0.88` | дешевле своей 5-летней нормы |
+| Agriculture & Chemicals | P/E 0.95 x 25%<br>Forward P/E 0.90 x 25%<br>EV/EBITDA 0.96 x 20%<br>P/S 0.95 x 15%<br>P/FCF 0.87 x 15% | `0.93` | около своей 5-летней нормы |
+| Delivery & Logistics | EV/EBITDA 0.95 x 30%<br>Forward P/E 0.95 x 25%<br>P/E 1.00 x 20%<br>P/S 1.25 x 15%<br>P/FCF 0.66 x 10% | `0.98` | около своей 5-летней нормы |
+| Utilities | P/E 0.87 x 25%<br>Forward P/E 1.03 x 25%<br>EV/EBITDA 0.92 x 20%<br>Dividend Yield 1.09 x 20%<br>P/B 1.02 x 10% | `0.98` | около своей 5-летней нормы |
+| REIT | Dividend Yield 1.08 x 36%<br>P/B 1.18 x 29%<br>EV/EBITDA 1.00 x 21%<br>P/S 1.00 x 14% | `1.08` | около своей 5-летней нормы |
+| Food & Staples | P/E 1.20 x 25%<br>Forward P/E 1.03 x 25%<br>EV/EBITDA 1.05 x 20%<br>Dividend Yield 1.13 x 15%<br>P/S 1.02 x 15% | `1.09` | около своей 5-летней нормы |
+| Solar | Forward P/E 1.24 x 30%<br>EV/EBITDA 0.92 x 25%<br>P/S 1.06 x 20%<br>P/FCF 1.25 x 15%<br>P/B 1.03 x 10% | `1.10` | дороже своей 5-летней нормы |
+| AI Infrastructure | Forward P/E 1.16 x 30%<br>P/S 1.53 x 25%<br>P/B 1.12 x 15%<br>EV/EBITDA 1.43 x 20%<br>P/FCF 1.40 x 10% | `1.32` | дороже своей 5-летней нормы |
+| Banks | P/B 1.64 x 35%<br>P/TBV 1.49 x 25%<br>P/E 1.26 x 20%<br>Forward P/E 1.16 x 20% | `1.43` | дороже своей 5-летней нормы |
+| Energy | EV/EBITDA 1.37 x 35%<br>P/FCF 1.79 x 30%<br>P/E 1.57 x 20%<br>P/B 1.10 x 15% | `1.50` | дороже своей 5-летней нормы |
+| Commodities | EV/EBITDA 1.58 x 35%<br>P/FCF 1.36 x 25%<br>P/B 1.34 x 20%<br>P/E 1.85 x 20% | `1.53` | дороже своей 5-летней нормы |
+| Mining | EV/EBITDA 1.59 x 35%<br>P/FCF 1.42 x 25%<br>P/B 1.59 x 20%<br>P/E 1.56 x 20% | `1.54` | дороже своей 5-летней нормы |
+| Semiconductors | Forward P/E 1.30 x 30%<br>P/S 2.16 x 25%<br>P/B 2.24 x 20%<br>EV/EBITDA 1.74 x 25% | `1.82` | дороже своей 5-летней нормы |
 
-Ограничение по Mining: в пилоте `P/B` используется как грубый proxy для `P/NAV`, потому что настоящий `P/NAV` требует моделей запасов, проектов и долгосрочной цены металлов. Для финальной версии mining лучше добавить `P/NAV`, cost curve и commodity price adjustment.
+Ограничения по готовности:
 
-Ограничение по Energy: в пилоте пока нет commodity price adjustment по нефти/газу и reserve life / production cost. Поэтому это valuation-only слой по выбранной корзине, а не полный through-cycle energy score.
+- `RUSSIA` не добавлен в этот график: для него нужна отдельная модель на базе MOEX/локальных мультипликаторов, ставок ЦБ РФ, валютного риска и ликвидности.
+- `JUNIOR` не добавлен как обычный сектор: junior miners требуют NAV/cash runway/dilution-risk модели, а не простого P/E/P/B.
+- `ETF`, `MY_PORTFOLIO`, `DECISIONS`, `ARCHIVE` и `COMPANIES` не являются секторными корзинами для этого графика.
 
-Ограничение по Utilities: в пилоте считаются только regulated electric utilities (`NEE`, `DUK`, `SO`, `AEP`, `D`) через `XLU`. Pipeline/gas infrastructure внутри папки нужно считать отдельно, потому что у midstream другая экономика: EV/EBITDA, FCF yield, leverage, contracted cash flows и commodity exposure.
-
-Ограничение по Consumer Discretionary: `TSLA` не включается в расчет, потому что в нашей библиотеке это AI / robotics / autonomous taxi thesis, а не consumer/autos thesis. В пилоте пока нет same-store sales, gross margin, inventory quality и EPS revisions, поэтому это valuation-only слой.
-
-Ряды уже добавлены в `sector_valuation_dashboard.html`.
+Ряды добавлены в `sector_valuation_dashboard.html`.
 
 ### Как учитывать прибыль
 

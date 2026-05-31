@@ -13,6 +13,22 @@
 - [OZON](OZON.md) - Ozon: e-commerce growth.
 - [TCSG](TCSG.md) - Т-Технологии: fintech/banking.
 
+## Данные для sector_score графика
+
+Обновлено: 2026-05-31.
+
+В текущую версию `sector_valuation_dashboard.html` сектор `RUSSIA` не добавлен. Причина: российский рынок нельзя корректно считать той же быстрой формулой, что и US/global sectors через StockAnalysis ratios и ETF-proxy.
+
+Для отдельной модели нужны:
+
+- локальные мультипликаторы по MOEX/эмитентам: `P/E`, `P/B`, `EV/EBITDA`, dividend yield;
+- ставка ЦБ РФ, OFZ yield curve и equity risk premium;
+- валютный риск и ликвидность;
+- санкционные/дивидендные ограничения;
+- отдельные веса по банкам, нефти/газу, металлам и локальному tech/e-commerce.
+
+Рабочее правило: не добавлять `RUSSIA` в общий sector_score, пока не собрана отдельная российская методика. В обзоре рынка ограничение записано в `02_MARKET_DASHBOARD.md`.
+
 ## Компании и инструменты
 
 - [GAZP](GAZP.md)
