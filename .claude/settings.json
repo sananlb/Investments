@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 scripts/*.py:*)",
+      "Bash(python3 scripts/*.py)",
+      "Bash(python3 -c:*)",
+      "Bash(python3 -m pip install:*)",
+      "Bash(python3 -m pip list)",
+      "Bash(ls:*)",
+      "Bash(cat data/*)",
+      "Bash(head:*)",
+      "Bash(wc:*)",
+      "Bash(git add:*)",
+      "Bash(git rm:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "WebFetch(domain:data.sec.gov)",
+      "WebFetch(domain:www.sec.gov)",
+      "WebFetch(domain:financialmodelingprep.com)",
+      "WebFetch(domain:site.financialmodelingprep.com)",
+      "WebFetch(domain:api.twelvedata.com)",
+      "WebFetch(domain:iss.moex.com)",
+      "WebFetch(domain:stockanalysis.com)",
+      "WebSearch"
+    ]
+  }
+}
