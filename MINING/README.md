@@ -149,7 +149,9 @@ Mining sector_score =
 | P/E | `1.564` |
 | Итоговый sector_score | `1.54` |
 
-Декадная динамика в `sector_valuation_dashboard.html` строится по последним 10 якорным датам: 10-е, 20-е, 30-е / конец месяца. Если якорная дата не торговая, используется закрытие последнего торгового дня до нее. Компоненты между полными фундаментальными обновлениями масштабируются по закрытию `PICK`, потому что за несколько торговых дней фундаментальные значения почти не меняются.
+Декадная динамика в `sector_valuation_dashboard.html` должна строиться по реальным valuation data на каждую якорную дату: 10-е, 20-е, 30-е / конец месяца. Если якорная дата не торговая, используется последний торговый день до нее. Исторические точки не должны рассчитываться простым масштабированием последнего `sector_score` по `PICK`; `PICK` используется как benchmark/source-check и вспомогательный ценовой ориентир.
+
+Текущие исторические строки в CSV dashboard, если они были получены через ETF close, считаются legacy/provisional и должны быть заменены скриптом на реальные valuation snapshots.
 
 Ограничение: это пилотная valuation-only модель. В mining `P/B` используется как грубый proxy для `P/NAV`, но настоящий `P/NAV` требует модели запасов, проектов, cost curve и долгосрочных цен меди/золота/железной руды. Следующий шаг - добавить commodity price adjustment и debt/jurisdiction adjustment.
 
@@ -166,13 +168,23 @@ Mining sector_score =
 | `NEM` ratios | [StockAnalysis: NEM financial ratios](https://stockanalysis.com/stocks/nem/financials/ratios/) |
 | `GOLD` ratios | [StockAnalysis: GOLD financial ratios](https://stockanalysis.com/stocks/gold/financials/ratios/) |
 
+Автоматизированный слой данных обновлен 2026-06-03:
+
+- котировки на якорные даты 10/20/30 для `BHP`, `RIO`, `VALE`, `FCX`, `SCCO`, `NEM`, `GOLD` сохранены в `data/market_quotes/anchor_quotes.csv`; фактический provider - Twelve Data fallback, потому что FMP для этой корзины вернул subscription errors;
+- point-in-time фундаментал SEC EDGAR сохранен в `data/market_quotes/fund_mining.csv` и `data/market_quotes/fund_mining.json`;
+- расчетный фундаментал покрывает 5/7 компаний: `FCX`, `GOLD`, `NEM`, `SCCO`, `VALE`;
+- `BHP` и `RIO` временно исключены из preview-расчета, потому что SEC-скрипт не смог собрать clean TTM net income window;
+- 5-летние company-level нормы `EV/EBITDA`, `P/FCF`, `P/B`, `P/E` сохранены в `data/market_quotes/sector_metric_baselines.csv` по StockAnalysis financial ratios;
+- для `VALE`, `NEM`, `GOLD` часть исторических строк `P/B`, `P/E` или `P/FCF` имеет меньше пяти положительных значений, поэтому baseline считается по доступным положительным значениям и это отдельно отмечено в комментариях CSV.
+- последняя автоматическая preview-точка на 2026-05-30: `sector_score = 1.22` при покрытии 5/7 компаний; старое ручное значение `1.54` выше считать legacy/prototype до полного покрытия `BHP` и `RIO` или подключения другого фундаментального источника.
+
 Как быстро обновлять:
 
 1. Открыть ratios-страницы корзины `BHP`, `RIO`, `VALE`, `FCX`, `SCCO`, `NEM`, `GOLD`.
 2. Взять текущие `EV/EBITDA`, `P/FCF`, `P/B`, `P/E`.
 3. Сравнить каждую метрику со средним FY2021-FY2025.
 4. Посчитать weighted score по весам выше.
-5. Для якорных дат масштабировать компоненты по закрытию `PICK` на последний торговый день до якоря.
+5. Для каждой якорной даты получить реальные valuation data на последний торговый день до якоря; `PICK` использовать только как benchmark/source-check и вспомогательный ценовой ориентир.
 6. При появлении надежного источника `P/NAV` заменить `P/B` на `P/NAV` или добавить `P/NAV` отдельным компонентом.
 
 ### Текущая картина: copper

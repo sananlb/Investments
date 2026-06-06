@@ -528,7 +528,7 @@ def write_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
         "comment",
     ]
     with path.open("w", encoding="utf-8", newline="") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer = csv.DictWriter(file, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

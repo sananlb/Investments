@@ -290,11 +290,126 @@ sector_score = сумма(metric_coefficient x metric_weight)
 
 На графике рисуется только `sector_score`, но в данных должны оставаться все компоненты. Это важно, чтобы потом понимать, почему сектор получился дорогим или дешевым.
 
+### Следующий шаг: автоматизация загрузки данных
+
+Чтобы не собирать точки вручную и не тратить токены на повторный поиск, нужна отдельная автоматическая загрузка.
+
+Рабочая схема:
+
+1. В конфиге хранить список секторов, тикеры корзины, метрики, веса, benchmark/ETF и ссылки на источники.
+2. Скрипт сам определяет якорные даты: 10-е, 20-е, 30-е / конец месяца; если дата не торговая, берет последний торговый день до нее.
+3. Для каждой компании и метрики скрипт скачивает реальное historical valuation data на эту дату или ближайший доступный valuation snapshot.
+4. Скрипт считает `metric_coefficient` против 5-летней нормы, затем `sector_score`.
+5. На выходе сохраняется CSV/JSON с полями `anchor_date`, `actual_trading_date`, `sector`, `metric`, `metric_coefficient`, `metric_weight`, `source`, `source_date`, `status`, `comment`.
+6. Если историческая valuation-метрика недоступна, строка получает статус `missing` или `provisional`. Нельзя заменять ее масштабированием последней оценки по ETF.
+
+Первый слой автоматизации по котировкам уже вынесен отдельно:
+
+- скрипт: `scripts/fetch_anchor_quotes.py`;
+- конфиг тикеров: `data/market_quotes/sector_quote_tickers.json`;
+- результат CSV: `data/market_quotes/anchor_quotes.csv`;
+- результат JSON: `data/market_quotes/anchor_quotes.json`;
+- провайдеры как в старом сайте учета инвестиций: Financial Modeling Prep для US/global тикеров и MOEX ISS для российских инструментов;
+- FMP key не хранится в текущем репозитории: скрипт сначала читает env vars, затем локально берет legacy key из старого проекта, если файл существует;
+- старые FMP `/api/v3` endpoints сейчас возвращают legacy error, поэтому скрипт использует новые FMP `/stable` endpoints;
+- строки со статусом `provider_error`, `missing` или `provisional` нельзя использовать как реальные котировки.
+
+Прогон от 2026-06-01 по 10 якорным датам дал `1390` строк: `400` успешных и `990` со статусом `provider_error`. Главная причина ошибок - текущая подписка FMP не дает доступ к части ETF, ADR, foreign listings и некоторым US tickers через API. Эти строки сохранены как диагностика, но не подменяются другими данными.
+
+Уточнение по FMP от 2026-06-01:
+
+- для одиночной исторической цены правильный endpoint - `stable/historical-price-eod/full`;
+- `batch-quote` и `batch-quote-short` дают текущие котировки, а не исторические закрытия 10/20/30;
+- для массовой исторической загрузки правильный endpoint - `stable/eod-bulk?date=YYYY-MM-DD`;
+- текущий ключ возвращает `HTTP 402: Restricted Endpoint` на `batch-quote`, `batch-quote-short` и `eod-bulk`;
+- текущий ключ также возвращает `HTTP 402` по части тикеров даже на одиночном `historical-price-eod/full`, хотя другие тикеры на том же endpoint работают. Значит проблема не в формате запроса и не в лимите количества запросов, а в покрытии/подписке ключа.
+- если покупать/обновлять FMP, для нашей задачи нужен план с `Global Coverage` и `Bulk and Batch Delivery`; по публичной странице FMP это соответствует уровню `Ultimate`.
+- ссылки для следующего запуска: historical EOD `https://site.financialmodelingprep.com/developer/docs/stable/historical-price-eod-full`, EOD bulk `https://site.financialmodelingprep.com/developer/docs/stable/eod-bulk`, batch quote `https://site.financialmodelingprep.com/developer/docs/stable/batch-quote`, pricing `https://intelligence.financialmodelingprep.com/pricing-plans?direct=true`.
+
+Бесплатные альтернативы для исторических закрытий:
+
+- MOEX ISS остается основным бесплатным источником для российских инструментов.
+- Twelve Data - лучший бесплатный fallback для US/global daily OHLCV: endpoint `time_series`, `interval=1day`, `start_date`, `end_date`; free plan дает `8` credits/minute и `800/day`, `time_series` стоит `1` credit per symbol. Скрипт уже подготовлен: если добавить `TWELVE_DATA_API_KEY` в `.env`, он будет пробовать Twelve Data после ошибки FMP и по умолчанию выдерживать паузу `8` секунд между такими запросами.
+- Alpha Vantage можно держать резервом: `TIME_SERIES_DAILY` дает daily OHLCV, но free limit всего `25` requests/day, а `outputsize=full` для 20+ лет требует premium.
+- Stooq теперь требует свой API key через captcha для CSV download, поэтому не подходит для полностью автоматической настройки без ручного шага.
+- Yahoo Finance chart API неофициальный и в тесте вернул `Too Many Requests`; как основа автоматизации не подходит.
+
+### Источники исторических фундаментальных данных
+
+Обновлено: 2026-06-01.
+
+Для полноценной секторной карты нужны не только цены. Минимальный набор данных:
+
+- historical close на anchor date;
+- последние доступные на anchor date квартальные/годовые отчеты: income statement, balance sheet, cash flow;
+- дата публикации/принятия отчета (`filingDate`, `acceptedDate`, `filedDate`), чтобы не использовать будущую информацию;
+- shares outstanding / diluted shares;
+- debt, cash, equity;
+- дивиденды и split/corporate actions;
+- желательно готовые historical ratios/key metrics, но их можно пересчитать самостоятельно.
+
+Рабочая формула: не искать готовый `historical P/E` как обязательный источник, а строить его самим:
+
+```text
+market_cap(anchor) = close(anchor) x shares_outstanding(anchor)
+enterprise_value(anchor) = market_cap + total_debt - cash
+P/E = market_cap / TTM net_income
+P/S = market_cap / TTM revenue
+P/B = market_cap / latest_common_equity
+EV/EBITDA = enterprise_value / TTM EBITDA
+FCF yield = TTM free_cash_flow / market_cap
+ROE = TTM net_income / average_or_latest_equity
+gross_margin = TTM gross_profit / TTM revenue
+```
+
+Обязательное point-in-time правило: для anchor date брать только отчеты, у которых `acceptedDate/filingDate <= anchor_date`. Если брать просто fiscal quarter без даты публикации, получится look-ahead bias.
+
+Оценка источников:
+
+| Источник | Что закрывает | Плюсы | Ограничения | Роль в проекте |
+|---|---|---|---|---|
+| SEC EDGAR Company Facts | US и SEC-reporting ADR: financial statements, XBRL facts, filing timeline | Бесплатно, официальный источник, есть ticker-CIK map, покрывает `AAPL`, `MS`, `HD`, `JPM`, `NVDA`, `AMD`, `TSM`, `ASML`, `BABA`, `NVO`, `SHEL` | Нужно нормализовать XBRL-теги, нет цен/EV готовыми, не все foreign/local listings | Главный бесплатный фундаментальный слой для US/ADR |
+| FMP текущий ключ | Statement data и enterprise values по части тикеров | Уже подключен, есть `acceptedDate`, statements и EV; по `AAPL/JPM/BABA` работает | Текущий ключ дает `HTTP 402` по части тикеров (`MS`, `HD`, `ASML`, `700.HK`) и по готовым `key-metrics/ratios` | Использовать там, где работает; остальное закрывать fallback |
+| SimFin | Statements, derived ratios, prices, common shares outstanding | Есть бесплатный аккаунт/API, rate limit free `2 requests/second`; есть `asreported` и point-in-time shares | Нужен ключ; покрытие и качество по нашим non-US/ETF нужно отдельно проверить | Хороший кандидат для бесплатного/дешевого фундаментального fallback |
+| Alpha Vantage | Income statement, balance sheet, cash flow, earnings | Бесплатный ключ, простые endpoints | `25 requests/day`; `TIME_SERIES_DAILY full` premium; не решает массовую загрузку | Только резерв/ручная проверка |
+| EODHD | Global EOD prices, fundamentals, ETF/funds/indices, historical market cap, macro/calendar | Глобальное покрытие, 70+ exchanges, fundamentals history; pricing выглядит дешевле FMP Ultimate | Платно для полной задачи; нужно проверить поля и качество на наших тикерах | Лучший кандидат на один практичный платный источник для global |
+| Nasdaq Data Link / Sharadar | US fundamentals/prices, point-in-time, survivorship-bias aware | Хороший quant-grade вариант для US | Premium, в основном US; глобальные сектора не закроет | Рассмотреть, если делаем серьезный US-only backtest |
+| Polygon/Massive | US prices, financials & ratios add-on | Удобно для US, есть financial statements/ratios | US-only; financials add-on, не закрывает глобальный список | Альтернатива для US, не главный global вариант |
+| Tiingo | Historical prices, fundamentals statements, daily metrics | Есть daily fundamentals/metrics по тикерам | Нужно проверить текущий доступ/цены/покрытие на нашем ключе | Кандидат на тест, но не первый выбор |
+| StockAnalysis/Finviz/ChartMill/WorldPERatio | Current/historical визуальные sector ratios | Удобны для сверки и sanity check | Не полноценная автоматизация по anchor dates | Контрольный слой, не primary data pipeline |
+
+Рекомендуемая архитектура:
+
+1. Цены: `MOEX ISS` для РФ, `Twelve Data` free fallback и `FMP` там, где текущий ключ работает.
+2. Фундаментал бесплатно: `SEC EDGAR Company Facts` для US/ADR; рассчитывать P/E, P/B, P/S, EV/EBITDA, FCF yield, ROE самостоятельно.
+3. Фундаментал платно/глобально: первым тестировать `EODHD Fundamentals`, потому что он закрывает global/fundamentals/ETF шире и дешевле, чем FMP Ultimate.
+4. FMP upgrade рассматривать только если хотим оставить FMP главным источником всего: prices bulk + global symbols + historical ratios/key metrics.
+5. Для estimates/revisions/guidance отдельный слой. Это обычно платные данные; на первом этапе не блокировать sector_score, а помечать такие метрики как `missing/provisional`, если нет надежного источника.
+
+Текущий статус автоматизации фундаментала: `scripts/fetch_anchor_fundamentals.py` уже создан. Он берет anchor dates, цены из `anchor_quotes`, фундаментал из SEC EDGAR, использует только отчеты с `filed <= anchor_date` и сохраняет сырые point-in-time метрики. Слой агрегации `scripts/build_sector_scores_preview.py` уже превращает сырые метрики компаний в `metric_coefficient` против 5-летней нормы и пишет итоговый `sector_score` по сектору. Реальные preview-точки на графике сейчас подставляются для `Banks`, `Semiconductors`, `Technology` и `Mining`; остальные сектора пока остаются legacy/prototype до сбора такого же raw/fundamental/baseline слоя.
+
+Обновление 2026-06-03 по `Mining`: котировки на 10 якорных дат покрыты 7/7 через Twelve Data fallback; SEC-фундаментал покрывает 5/7 (`FCX`, `GOLD`, `NEM`, `SCCO`, `VALE`), `BHP` и `RIO` пока исключены из preview из-за отсутствия clean TTM net income window. Последняя автоматическая preview-точка на 2026-05-30 равна `1.22`; старое ручное значение `1.54` ниже в таблице остается legacy/prototype и не должно смешиваться с новым автоматическим слоем.
+
+Ссылки на документацию источников:
+
+- SEC EDGAR APIs: `https://www.sec.gov/edgar/sec-api-documentation`
+- SEC ticker-CIK map: `https://www.sec.gov/files/company_tickers.json`
+- FMP stable docs: `https://site.financialmodelingprep.com/developer/docs/stable`
+- SimFin API docs: `https://simfin.readme.io/reference/getting-started-1`
+- SimFin rate limits: `https://simfin.readme.io/reference/rate-limits`
+- EODHD Fundamentals: `https://eodhd.com/financial-apis/stock-etfs-fundamental-data-feeds`
+- EODHD pricing: `https://eodhd.com/pricing`
+- Alpha Vantage fundamentals: `https://www.alphavantage.co/documentation/`
+- Twelve Data time series: `https://twelvedata.com/docs#time-series`
+- Polygon/Massive pricing: `https://massive.com/pricing`
+
 ### Пилотные данные: chart-ready sectors
 
 Обновлено: 2026-05-31.
 
 Сделана тестовая серия из последних 10 якорных точек: 2026-02-28, 2026-03-10, 2026-03-20, 2026-03-30, 2026-04-10, 2026-04-20, 2026-04-30, 2026-05-10, 2026-05-20, 2026-05-30.
+
+Важно: текущая CSV-история в `sector_valuation_dashboard.html` является прототипом и содержит legacy benchmark-check строки. Ее нельзя считать финальной историей sector_score, пока точки не будут заменены реальными historical valuation data на 10/20/30.
 
 Методика пилота:
 
@@ -302,7 +417,7 @@ sector_score = сумма(metric_coefficient x metric_weight)
 - `five_year_average` считается как среднее FY2021-FY2025;
 - `metric_coefficient = current metric / five_year_average`;
 - для yield-метрик используется обратная формула `5Y average yield / current yield`, чтобы выше `1.0` всегда означало дороже;
-- для якорных дат до последней даты коэффициенты масштабируются по закрытию ETF-прокси на последний торговый день до якорной даты;
+- каждая якорная дата 10/20/30 должна строиться по реальным valuation data на соответствующий торговый день, а не через масштабирование последней оценки по ETF-прокси;
 - если метрика недоступна, отрицательная или экономически бессмысленная для конкретной компании, она исключается из средней по этой метрике;
 - если вся метрика недоступна для сектора, она исключается, а веса нормализуются по оставшимся метрикам.
 
@@ -355,6 +470,66 @@ ETF-proxy по новым секторам:
 - `ETF`, `MY_PORTFOLIO`, `DECISIONS`, `ARCHIVE` и `COMPANIES` не являются секторными корзинами для этого графика.
 
 Ряды добавлены в `sector_valuation_dashboard.html`.
+
+### Аудит логики sector_score от 2026-06-01
+
+Статус: текущий график полезен как `v0 / valuation-only radar`, но исторические точки, которые были построены через legacy ETF benchmark-check, нужно заменить на реальные valuation data по датам 10/20/30. Главная задача следующего шага - автоматизировать сбор этих точек скриптами, чтобы график строился по фактическим данным без ручного поиска.
+
+#### Главные методологические выводы
+
+1. Базовая логика `current company multiple / FY2021-FY2025 average company multiple` остается основной. Это именно то, что нужно графику: насколько текущая оценка корзины выше или ниже своей 5-летней нормы.
+2. `Relative valuation vs S&P 500` можно добавить позже как дополнительный слой, но не как замену базовой 5-летней логике. Он нужен, если мы захотим понять, дорогой ли сектор не только относительно себя, но и относительно рынка.
+3. Исторические точки нельзя строить через движение ETF вместо реальных мультипликаторов. Для каждой даты 10/20/30 нужны фактические valuation data на этот день или последний торговый день до него. Если источник не хранит исторические мультипликаторы, точку нужно подтянуть другим источником или оставить как `missing/provisional`, а не подменять ее движением ETF.
+4. Общие корзины пока сохраняем. Цель графика - видеть общую картину, а не сразу дробить рынок на десятки узких подотраслей. Разделение нужно только там, где смешивание начинает явно искажать смысл.
+5. Исключение `TSLA` из Consumer Discretionary остается правильным рабочим решением пользователя. Tesla в этой библиотеке относится к AI / robotics / autonomous taxi thesis, а не к обычной consumer/autos оценке.
+6. Для ETF-proxy надо хранить два источника: официальный сайт эмитента ETF для проверки состава/назначения фонда и StockAnalysis ETF history только для цен закрытия.
+7. Нужна защита от выбросов: среднее по мультипликаторам может ломаться из-за разовых очень высоких/низких P/E, P/FCF или временно отрицательной прибыли. В следующей версии рассмотреть median или winsorized mean.
+8. Valuation-only score не должен означать "покупать". Его нужно читать вместе с `earnings_signal`, бизнес-циклом, ставками, commodity backdrop и трендом.
+
+#### Проверка ETF-proxy и корзин
+
+| Сектор | Статус корзины/proxy | Что уточнить |
+|---|---|---|
+| Banks | Корзина `JPM`, `BAC`, `C`, `GS`, `MS` логична как large-cap banks / capital markets basket. `KBE` как proxy шире и включает regional banks. | Проверить официальный состав `KBE`; решить, насколько нас устраивает этот proxy для large-bank корзины. Добавить ROE/ROTCE и credit quality как следующий слой. |
+| Semiconductors | `SOXX` подходит как официальный semiconductor proxy. Корзина в целом правильная. | Проверить официальный состав `SOXX`; решить, нужны ли `AMAT`, `LRCX`, `KLAC`, `MRVL`. Добавить gross margin и EPS revisions. |
+| Mining | Корзина дает общую картину metals/mining, но смешивает diversified/base metals и gold miners. `PICK` ориентирован на broad metals/mining proxy. | Проверить официальный состав `PICK`; оставить общую картину, но пометить, где gold miners могут искажать связь с proxy. Добавить P/NAV и commodity price adjustment. |
+| Energy | Корзина majors + service логична. `XLE` - хороший US energy proxy, но не полностью отражает `SHEL`/`TTE`. | Проверить официальный состав `XLE`; пока оставить как грубый proxy. Добавить oil/gas price adjustment, reserve life, production cost, leverage. |
+| Utilities | Корзина regulated utilities подходит к `XLU`. | Проверить официальный состав `XLU`; gas infrastructure пока не добавлять в общий score без отдельной midstream логики. |
+| Consumer Discretionary | Корзина без `TSLA` соответствует пользовательской классификации. `XLY` остается грубым benchmark, хотя официальный `XLY` может включать TSLA. | Проверить официальный состав `XLY`; в файле сектора явно писать, что TSLA исключена осознанно, а `XLY` используется только для проверки состава и ценового контекста, не для расчета исторического sector_score. |
+| Agriculture & Chemicals | Корзина логична для chemicals/ag inputs, `XLB` подходит как broad materials proxy, но не чистый agriculture proxy. | Проверить официальный состав `XLB`; оставить mixed basket, но добавить fertilizer cycle и raw material input costs. |
+| AI Infrastructure | Это thematic basket, а не классический GICS-сектор. `AIQ` подходит как тематический proxy. | Проверить официальный состав `AIQ`; везде называть это theme score. Добавить capex/compute demand, EPS revisions, AI revenue exposure. |
+| China | `MCHI` подходит как broad China proxy, но корзина неполная для китайского рынка. | Проверить официальный состав `MCHI`; позже добавить недостающих лидеров, если есть надежные ratio sources. |
+| Commodities | Общая commodities-корзина дает нужную широкую картину, но пересекается с Mining и использует тот же `PICK`. | Проверить официальный состав `PICK`; оставить общую картину, но явно пометить пересечение с Mining и разные commodity cycles. |
+| Delivery & Logistics | `IYT` официально дает transportation exposure, а наша корзина шире: parcel/freight плюс platforms и Amazon logistics. | Проверить официальный состав `IYT`; решить, достаточно ли он подходит как price proxy для такой широкой корзины. |
+| Drugs | Large pharma basket логична. `XLV` слишком широкий, но подходит как broad healthcare fallback. | Проверить официальный состав `XLV`; позже добавить patent cliff/pipeline/rNPV. |
+| Food & Staples | `XLP` хорошо подходит для staples, но `MCD` и `SBUX` дают restaurant exposure. | Проверить официальный состав `XLP`; пока оставить общую картину Food & Staples, но пометить restaurant exposure. |
+| Insurance | `KIE` подходит для insurance industry. Текущая корзина шире: P&C, health insurance, broker and Berkshire. | Проверить официальный состав `KIE`; решить, оставлять ли broad insurance basket или сузить его под pure insurance proxy. |
+| Medical Services | `IHI` - medical devices ETF. Корзина больше похожа на medtech/devices + life sciences tools. | Проверить официальный состав `IHI`; возможно переименовать score в `Medical Devices / MedTech`, если корзина остается такой. |
+| REIT | `VNQ` подходит как broad real estate/REIT proxy. | Проверить официальный состав `VNQ`; добавить P/FFO, AFFO yield, NAV discount/premium, cap rates, debt maturity/cost. |
+| Solar | `TAN` подходит как solar proxy; корзина в целом логична. | Проверить официальный состав `TAN`; добавить bookings, gross margin, policy/rates и balance-sheet risk. |
+| Technology | Корзина шире официального `XLK`, потому что включает `GOOG`/`META`. Это допустимо для нашей общей technology-картины, но `XLK` является грубым proxy. | Проверить официальный состав `XLK`; решить, нужен ли custom basket proxy для широкой technology-корзины. Для software добавить EV/Sales, FCF margin, growth/Rule of 40. |
+| Telecom & Streaming | `XLC` подходит как broad communication services proxy; корзина смешивает telecom operators, streaming, media and platforms. | Проверить официальный состав `XLC`; пока оставить общую communication/streaming картину. Для telecom добавить FCF yield, leverage, dividend sustainability, capex intensity. |
+
+#### Источники для проверки ETF-proxy
+
+- `XLY`, `XLK`, `XLC`, `XLV`, `XLP`, `XLE`, `XLB`, `XLU` - официальный сайт [State Street / Select Sector SPDR](https://www.ssga.com/us/en/intermediary/capabilities/equities/sector-investing/select-sector-etfs).
+- `SOXX` - официальный сайт [iShares Semiconductor ETF](https://www.ishares.com/us/products/239705/ishares-semiconductor-etf).
+- `IYT` - официальный сайт [iShares U.S. Transportation ETF](https://www.ishares.com/us/products/239501/ishares-us-transportation-etf).
+- `PICK` - официальный сайт [iShares MSCI Global Metals & Mining Producers ETF](https://www.ishares.com/us/products/239655/ishares-msci-global-metals-mining-producers-etf).
+- `IHI` - официальный сайт [iShares U.S. Medical Devices ETF](https://www.ishares.com/us/products/239516/ishares-us-medical-devices-etf).
+- `VNQ` - официальный сайт [Vanguard Real Estate ETF](https://investor.vanguard.com/investment-products/etfs/profile/vnq).
+- `AIQ` - официальный сайт [Global X Artificial Intelligence & Technology ETF](https://www.globalxetfs.com/funds/aiq/).
+- `KIE` - официальный сайт [State Street SPDR S&P Insurance ETF](https://www.ssga.com/us/en/intermediary/etfs/spdr-sp-insurance-etf-kie).
+- StockAnalysis ETF history использовать только как источник цен ETF/benchmark и для проверки рыночного движения, но не как замену фактических historical valuation data.
+
+#### Правило качества перед следующими расчетами
+
+Перед тем как добавлять или обновлять секторную точку, нужно ответить на четыре вопроса:
+
+1. Это GICS-like sector, theme basket или custom idea basket?
+2. ETF-proxy действительно отражает эту корзину или используется только как грубый price proxy?
+3. Вес метрик соответствует экономике сектора или это временная valuation-only замена?
+4. Есть ли earnings/cycle signal, который объясняет, почему дороговизна может быть оправданной, а дешевизна может быть ловушкой?
 
 ### Как учитывать прибыль
 

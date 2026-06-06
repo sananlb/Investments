@@ -28,3 +28,5 @@ Thumbs.db
 data/market_quotes/*.backup.*
 data/market_quotes/fund_*.csv
 data/market_quotes/fund_*.json
+
+.claude/scheduled_tasks.lock

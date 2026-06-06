@@ -7,6 +7,11 @@
 - `sector_quote_tickers.json` - список секторных корзин и провайдеров.
 - `anchor_quotes.csv` - закрытия на якорные даты 10/20/30 в табличном виде.
 - `anchor_quotes.json` - те же данные с metadata.
+- `sector_scores.csv` - компоненты итогового `sector_score` по датам, секторам и метрикам.
+- `sector_scores.json` - те же итоговые данные с metadata.
+- `sector_scores_preview.csv` - одна прямая точка `sector_score` на дату/сектор в формате HTML-дашборда.
+- `sector_score_components_preview.csv` и `sector_scores_preview.json` - legacy preview-артефакты; график их не использует.
+- `sector_metric_baselines.csv` - 5-летние company-level нормы по метрикам, когда они уже собраны в строгом формате.
 
 ## Команда обновления
 
@@ -15,6 +20,16 @@ python3 scripts/fetch_anchor_quotes.py --as-of 2026-06-01 --count 10
 ```
 
 Без `--as-of` скрипт берет текущую дату.
+
+Итоговый `sector_score` и dashboard preview по уже собранному фундаменталу:
+
+```bash
+python3 scripts/update_all.py --skip-current
+```
+
+`compute_sector_scores.py` всегда формирует `sector_scores_preview.csv` рядом с `--out-csv`. Preview строится только из итогового `sector_scores.csv`: `date=anchor_date`, `coefficient=sector_score`, одна строка на сектор и дату. На 2026-06-06 файл содержит current-точки 17 секторов; прошлые anchors сохраняются там, где уже есть реальные point-in-time данные.
+
+`sector_valuation_dashboard.html` загружает этот CSV через локальный HTTP-сервер и заменяет им legacy/prototype строки всех секторов, присутствующих в preview. Компоненты точки остаются в `sector_scores.csv` и кратко перечисляются в поле `comment` preview-файла.
 
 Для Twelve Data fallback по бесплатному ключу скрипт по умолчанию держит паузу `8` секунд между запросами, чтобы не превысить free limit `8` credits/minute. При платном ключе это можно изменить:
 
@@ -31,6 +46,7 @@ python3 scripts/fetch_anchor_quotes.py --twelve-data-min-interval 0
 - Twelve Data `/time_series` как бесплатный fallback для дневных исторических цен: https://twelvedata.com/docs#time-series
 - Twelve Data pricing/free limits: https://twelvedata.com/pricing
 - Alpha Vantage `TIME_SERIES_DAILY` как резервный бесплатный источник: https://www.alphavantage.co/documentation/#daily
+- StockAnalysis financial ratios для 5-летних company-level baseline: https://stockanalysis.com/stocks/
 - MOEX ISS history для российских инструментов.
 
 FMP key не хранится в этом репозитории. Скрипт читает `FMP_API_KEY`, `FINANCIAL_MODELING_PREP_API_KEY` или `FINANCIALMODELINGPREP_API_KEY`; если их нет, локально использует legacy key из старого проекта на рабочем столе.

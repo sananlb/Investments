@@ -1,0 +1,124 @@
+sector,symbol,metric,raw_field,baseline_average,baseline_period,baseline_source,source_url,updated_at,comment
+Technology,AAPL,forward_pe,,28.42,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/aapl/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,AAPL,pe,pe,30.08,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/aapl/financials/ratios/,2026-05-31,
+Technology,AAPL,ev_ebitda,ev_ebitda,22.58,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/aapl/financials/ratios/,2026-05-31,
+Technology,AAPL,ps,ps,7.50,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/aapl/financials/ratios/,2026-05-31,
+Technology,AAPL,p_fcf,fcf_yield,28.81,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/aapl/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,MSFT,forward_pe,,32.23,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/msft/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,MSFT,pe,pe,33.96,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/msft/financials/ratios/,2026-05-31,
+Technology,MSFT,ev_ebitda,ev_ebitda,23.01,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/msft/financials/ratios/,2026-05-31,
+Technology,MSFT,ps,ps,12.08,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/msft/financials/ratios/,2026-05-31,
+Technology,MSFT,p_fcf,fcf_yield,40.95,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/msft/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,GOOG,forward_pe,,23.53,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/goog/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,GOOG,pe,pe,24.44,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/goog/financials/ratios/,2026-05-31,
+Technology,GOOG,ev_ebitda,ev_ebitda,18.40,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/goog/financials/ratios/,2026-05-31,
+Technology,GOOG,ps,ps,6.65,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/goog/financials/ratios/,2026-05-31,
+Technology,GOOG,p_fcf,fcf_yield,31.32,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/goog/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,META,forward_pe,,21.68,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/meta/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,META,pe,pe,22.98,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/meta/financials/ratios/,2026-05-31,
+Technology,META,ev_ebitda,ev_ebitda,14.56,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/meta/financials/ratios/,2026-05-31,
+Technology,META,ps,ps,6.91,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/meta/financials/ratios/,2026-05-31,
+Technology,META,p_fcf,fcf_yield,24.84,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/meta/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,ADBE,forward_pe,,28.70,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/adbe/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,ADBE,pe,pe,41.61,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/adbe/financials/ratios/,2026-05-31,
+Technology,ADBE,ev_ebitda,ev_ebitda,29.37,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/adbe/financials/ratios/,2026-05-31,
+Technology,ADBE,ps,ps,11.60,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/adbe/financials/ratios/,2026-05-31,
+Technology,ADBE,p_fcf,fcf_yield,29.27,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/adbe/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,CRM,forward_pe,,32.96,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/crm/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,CRM,pe,pe,220.98,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/crm/financials/ratios/,2026-05-31,
+Technology,CRM,ev_ebitda,ev_ebitda,27.03,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/crm/financials/ratios/,2026-05-31,
+Technology,CRM,ps,ps,7.04,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/crm/financials/ratios/,2026-05-31,
+Technology,CRM,p_fcf,fcf_yield,27.70,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/crm/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,NOW,forward_pe,,61.64,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/now/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,NOW,pe,pe,229.54,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/now/financials/ratios/,2026-05-31,
+Technology,NOW,ev_ebitda,ev_ebitda,81.61,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/now/financials/ratios/,2026-05-31,
+Technology,NOW,ps,ps,16.20,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/now/financials/ratios/,2026-05-31,
+Technology,NOW,p_fcf,fcf_yield,52.18,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/now/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,ACN,forward_pe,,26.78,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/acn/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,ACN,pe,pe,29.00,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/acn/financials/ratios/,2026-05-31,
+Technology,ACN,ev_ebitda,ev_ebitda,17.14,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/acn/financials/ratios/,2026-05-31,
+Technology,ACN,ps,ps,3.19,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/acn/financials/ratios/,2026-05-31,
+Technology,ACN,p_fcf,fcf_yield,21.66,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/acn/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Technology,IBM,forward_pe,,17.93,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ibm/financials/ratios/,2026-05-31,stored for future estimates source
+Technology,IBM,pe,pe,36.94,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ibm/financials/ratios/,2026-05-31,
+Technology,IBM,ev_ebitda,ev_ebitda,17.99,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ibm/financials/ratios/,2026-05-31,
+Technology,IBM,ps,ps,2.80,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ibm/financials/ratios/,2026-05-31,
+Technology,IBM,p_fcf,fcf_yield,15.28,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ibm/financials/ratios/,2026-05-31,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Banks,JPM,forward_pe,,12.85,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/jpm/financials/ratios/,2026-06-03,stored for future estimates source
+Banks,JPM,pe,pe,12.02,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/jpm/financials/ratios/,2026-06-03,
+Banks,JPM,pb,pb,1.76,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/jpm/financials/ratios/,2026-06-03,
+Banks,JPM,p_tbv,,1.80,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/jpm/financials/ratios/,2026-06-03,stored for future tangible book source
+Banks,BAC,forward_pe,,11.97,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bac/financials/ratios/,2026-06-03,stored for future estimates source
+Banks,BAC,pe,pe,12.42,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bac/financials/ratios/,2026-06-03,
+Banks,BAC,pb,pb,1.13,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bac/financials/ratios/,2026-06-03,
+Banks,BAC,p_tbv,,1.18,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bac/financials/ratios/,2026-06-03,stored for future tangible book source
+Banks,C,forward_pe,,9.44,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/c/financials/ratios/,2026-06-03,stored for future estimates source
+Banks,C,pe,pe,10.74,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/c/financials/ratios/,2026-06-03,
+Banks,C,pb,pb,0.62,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/c/financials/ratios/,2026-06-03,
+Banks,C,p_tbv,,0.65,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/c/financials/ratios/,2026-06-03,stored for future tangible book source
+Banks,GS,forward_pe,,12.24,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gs/financials/ratios/,2026-06-03,stored for future estimates source
+Banks,GS,pe,pe,13.19,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gs/financials/ratios/,2026-06-03,
+Banks,GS,pb,pb,1.35,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gs/financials/ratios/,2026-06-03,
+Banks,GS,p_tbv,,1.45,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gs/financials/ratios/,2026-06-03,stored for future tangible book source
+Banks,MS,forward_pe,,14.73,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ms/financials/ratios/,2026-06-03,stored for future estimates source
+Banks,MS,pe,pe,15.45,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ms/financials/ratios/,2026-06-03,
+Banks,MS,pb,pb,1.81,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ms/financials/ratios/,2026-06-03,
+Banks,MS,p_tbv,,1.83,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/ms/financials/ratios/,2026-06-03,stored for future tangible book source
+Semiconductors,NVDA,forward_pe,,38.45,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nvda/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,NVDA,ps,ps,22.49,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nvda/financials/ratios/,2026-06-03,
+Semiconductors,NVDA,pb,pb,30.45,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nvda/financials/ratios/,2026-06-03,
+Semiconductors,NVDA,ev_ebitda,ev_ebitda,51.11,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nvda/financials/ratios/,2026-06-03,
+Semiconductors,AMD,forward_pe,,37.09,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/amd/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,AMD,ps,ps,8.68,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/amd/financials/ratios/,2026-06-03,
+Semiconductors,AMD,pb,pb,7.75,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/amd/financials/ratios/,2026-06-03,
+Semiconductors,AMD,ev_ebitda,ev_ebitda,42.28,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/amd/financials/ratios/,2026-06-03,
+Semiconductors,AVGO,forward_pe,,24.10,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/avgo/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,AVGO,ps,ps,13.28,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/avgo/financials/ratios/,2026-06-03,
+Semiconductors,AVGO,pb,pb,13.05,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/avgo/financials/ratios/,2026-06-03,
+Semiconductors,AVGO,ev_ebitda,ev_ebitda,27.20,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/avgo/financials/ratios/,2026-06-03,
+Semiconductors,TSM,ps,ps,9.68,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/tsm/financials/ratios/,2026-06-03,
+Semiconductors,TSM,pb,pb,6.81,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/tsm/financials/ratios/,2026-06-03,
+Semiconductors,TSM,ev_ebitda,ev_ebitda,13.59,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/tsm/financials/ratios/,2026-06-03,
+Semiconductors,ASML,ps,ps,10.89,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/asml/financials/ratios/,2026-06-03,
+Semiconductors,ASML,pb,pb,18.73,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/asml/financials/ratios/,2026-06-03,
+Semiconductors,ASML,ev_ebitda,ev_ebitda,27.17,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/asml/financials/ratios/,2026-06-03,
+Semiconductors,MU,forward_pe,,10.49,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/mu/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,MU,ps,ps,3.57,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/mu/financials/ratios/,2026-06-03,
+Semiconductors,MU,pb,pb,1.95,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/mu/financials/ratios/,2026-06-03,
+Semiconductors,MU,ev_ebitda,ev_ebitda,14.13,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/mu/financials/ratios/,2026-06-03,
+Semiconductors,QCOM,forward_pe,,13.41,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/qcom/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,QCOM,ps,ps,3.97,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/qcom/financials/ratios/,2026-06-03,
+Semiconductors,QCOM,pb,pb,8.76,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/qcom/financials/ratios/,2026-06-03,
+Semiconductors,QCOM,ev_ebitda,ev_ebitda,12.85,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/qcom/financials/ratios/,2026-06-03,
+Semiconductors,TXN,forward_pe,,26.95,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/txn/financials/ratios/,2026-06-03,stored for future estimates source
+Semiconductors,TXN,ps,ps,9.12,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/txn/financials/ratios/,2026-06-03,
+Semiconductors,TXN,pb,pb,10.45,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/txn/financials/ratios/,2026-06-03,
+Semiconductors,TXN,ev_ebitda,ev_ebitda,18.92,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/txn/financials/ratios/,2026-06-03,
+Mining,BHP,ev_ebitda,ev_ebitda,4.96,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bhp/financials/ratios/,2026-06-03,
+Mining,BHP,p_fcf,fcf_yield,9.60,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bhp/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,BHP,pb,pb,2.84,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bhp/financials/ratios/,2026-06-03,
+Mining,BHP,pe,pe,12.56,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/bhp/financials/ratios/,2026-06-03,
+Mining,RIO,ev_ebitda,ev_ebitda,4.06,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/rio/financials/ratios/,2026-06-03,
+Mining,RIO,p_fcf,fcf_yield,12.07,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/rio/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,RIO,pb,pb,1.61,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/rio/financials/ratios/,2026-06-03,
+Mining,RIO,pe,pe,9.61,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/rio/financials/ratios/,2026-06-03,
+Mining,VALE,ev_ebitda,ev_ebitda,4.11,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/vale/financials/ratios/,2026-06-03,
+Mining,VALE,p_fcf,fcf_yield,28.20,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/vale/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,VALE,pb,pb,1.20,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/vale/financials/ratios/,2026-06-03,only 3 positive historical values available in FY2021-FY2025 window
+Mining,VALE,pe,pe,9.17,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/vale/financials/ratios/,2026-06-03,
+Mining,FCX,ev_ebitda,ev_ebitda,8.28,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/fcx/financials/ratios/,2026-06-03,
+Mining,FCX,p_fcf,fcf_yield,53.26,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/fcx/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,FCX,pb,pb,3.69,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/fcx/financials/ratios/,2026-06-03,
+Mining,FCX,pe,pe,25.25,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/fcx/financials/ratios/,2026-06-03,
+Mining,SCCO,ev_ebitda,ev_ebitda,11.42,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/scco/financials/ratios/,2026-06-03,
+Mining,SCCO,p_fcf,fcf_yield,23.88,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/scco/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,SCCO,pb,pb,7.73,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/scco/financials/ratios/,2026-06-03,
+Mining,SCCO,pe,pe,21.25,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/scco/financials/ratios/,2026-06-03,
+Mining,NEM,ev_ebitda,ev_ebitda,14.89,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nem/financials/ratios/,2026-06-03,
+Mining,NEM,p_fcf,fcf_yield,114.74,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nem/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation
+Mining,NEM,pb,pb,2.08,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nem/financials/ratios/,2026-06-03,
+Mining,NEM,pe,pe,21.27,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/nem/financials/ratios/,2026-06-03,only 4 positive historical values available in FY2021-FY2025 window
+Mining,GOLD,ev_ebitda,ev_ebitda,7.93,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gold/financials/ratios/,2026-06-03,
+Mining,GOLD,p_fcf,fcf_yield,7.76,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gold/financials/ratios/,2026-06-03,baseline is P/FCF; raw SEC field is FCF yield and is inverted during calculation; only 3 positive historical values available in FY2021-FY2025 window
+Mining,GOLD,pb,pb,1.30,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gold/financials/ratios/,2026-06-03,
+Mining,GOLD,pe,pe,11.42,FY2021-FY2025 average,StockAnalysis financial ratios,https://stockanalysis.com/stocks/gold/financials/ratios/,2026-06-03,

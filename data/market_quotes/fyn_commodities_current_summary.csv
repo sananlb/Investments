@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,28.7627,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,3.89275,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,3.8591,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,16.4137,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.030658,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+net_margin,0.22345,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06
+gross_margin,0.1844,1,1,ok,MEDIAN current TTM snapshot as of 2026-06-06
+revenue_growth_yoy,0.14785,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06
+earnings_growth_yoy,0.52655,4,4,ok,MEDIAN current TTM snapshot as of 2026-06-06

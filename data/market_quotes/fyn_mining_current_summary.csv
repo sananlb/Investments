@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,28.7627,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+ps,4.2636,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+pb,4.6705,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+ev_ebitda,13.22425,2,2,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+fcf_yield,0.029925,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+net_margin,0.3387,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06
+gross_margin,,0,0,missing,no valid current observations across the basket
+revenue_growth_yoy,0.217,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06
+earnings_growth_yoy,0.6682,3,3,ok,MEDIAN current TTM snapshot as of 2026-06-06
