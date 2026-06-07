@@ -1,0 +1,10 @@
+metric,five_year_average,n_companies,n_observations,status,comment
+pe,58.1433,7,22,ok,"two-level median: per-company 5Y median, then median across companies; price ratios exclude non-positive values and non-USD filers; excluded from price metrics: none"
+ps,10.7905,7,22,ok,"two-level median: per-company 5Y median, then median across companies; price ratios exclude non-positive values and non-USD filers; excluded from price metrics: none"
+pb,2.1321,7,22,ok,"two-level median: per-company 5Y median, then median across companies; price ratios exclude non-positive values and non-USD filers; excluded from price metrics: none"
+ev_ebitda,23.37425,4,12,ok,"two-level median: per-company 5Y median, then median across companies; price ratios exclude non-positive values and non-USD filers; excluded from price metrics: none"
+fcf_yield,0.01722,2,5,ok,"two-level median: per-company 5Y median, then median across companies; price ratios exclude non-positive values and non-USD filers; excluded from price metrics: none"
+net_margin,0.1841,7,35,ok,"two-level median: per-company 5Y median, then median across companies"
+gross_margin,,0,0,missing,no valid observations across the basket
+revenue_growth_yoy,0.1722,7,35,ok,"two-level median: per-company 5Y median, then median across companies"
+earnings_growth_yoy,0.1446,7,35,ok,"two-level median: per-company 5Y median, then median across companies"

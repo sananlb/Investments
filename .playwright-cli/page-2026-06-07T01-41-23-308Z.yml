@@ -1,0 +1,139 @@
+- main [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]: Investment Research
+    - heading "Рыночный дашборд" [level=1] [ref=e6]
+  - generic [ref=e7]:
+    - region "Секторная оценка" [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]:
+            - heading "Секторная оценка" [level=2] [ref=e12]
+            - group "Периодичность секторного графика" [ref=e13]:
+              - button "Декада (10/20/30)" [ref=e14] [cursor=pointer]
+              - button "Месяц (1-е число)" [pressed] [ref=e15] [cursor=pointer]
+          - button "Banks" [pressed] [ref=e257] [cursor=pointer]:
+            - generic [ref=e259]: Banks
+        - img "Sector valuation chart" [ref=e68]:
+          - generic [ref=e260]: "0.7"
+          - generic [ref=e261]: "0.9"
+          - generic [ref=e262]: "1.1"
+          - generic [ref=e263]: "1.3"
+          - generic [ref=e264]: "1.5"
+          - generic [ref=e265]: "1.7"
+          - generic [ref=e266]: "1.9"
+          - generic [ref=e267]: 09-10
+          - generic [ref=e268]: 11-10
+          - generic [ref=e269]: 01-10
+          - generic [ref=e270]: 03-10
+          - generic [ref=e271]: 05-10
+          - generic [ref=e272]: "1.0"
+          - 'generic "Banks 2025-09-10: 1.64" [ref=e274]'
+          - 'generic "Banks 2025-10-10: 1.63" [ref=e275]'
+          - 'generic "Banks 2025-11-10: 1.66" [ref=e276]'
+          - 'generic "Banks 2025-12-10: 1.79" [ref=e277]'
+          - 'generic "Banks 2026-01-10: 1.90" [ref=e278]'
+          - 'generic "Banks 2026-02-10: 1.89" [ref=e279]'
+          - 'generic "Banks 2026-03-10: 1.67" [ref=e280]'
+          - 'generic "Banks 2026-04-10: 1.83" [ref=e281]'
+          - 'generic "Banks 2026-05-10: 1.87" [ref=e282]'
+      - generic [ref=e151]:
+        - heading "Текущие значения" [level=2] [ref=e154]
+        - generic [ref=e284]:
+          - generic "Banks" [ref=e286]
+          - generic [ref=e287]: "1.87"
+    - complementary "Рыночные виджеты" [ref=e225]:
+      - navigation "Группы рыночных виджетов" [ref=e226]:
+        - button "Индексы" [ref=e227] [cursor=pointer]
+        - button "Валюты" [ref=e228] [cursor=pointer]
+        - button "Облигации" [ref=e229] [cursor=pointer]
+      - generic [ref=e231]:
+        - generic [ref=e232]:
+          - heading "S&P 500" [level=2] [ref=e233]
+          - iframe [ref=e236]:
+            - generic [ref=f7e4]:
+              - table [ref=f7e10]:
+                - row [ref=f7e11]:
+                  - cell
+                  - cell [ref=f7e12]
+                  - cell [ref=f7e14]
+                - row [ref=f7e16]:
+                  - cell
+                  - cell [ref=f7e17]
+                  - cell [ref=f7e19]
+              - generic [ref=f7e21]:
+                - link "Посетите TradingView — платформу для финансового анализа и социальную сеть для трейдеров.":
+                  - /url: https://ru.tradingview.com?utm_campaign=symbol-overview-logo&utm_medium=widget&utm_source=127.0.0.1
+                - img [ref=f7e23]
+                - img [ref=f7e26]
+        - generic [ref=e237]:
+          - heading "Nasdaq 100" [level=2] [ref=e238]
+          - iframe [ref=e241]:
+            - generic [ref=f9e4]:
+              - table [ref=f9e10]:
+                - row [ref=f9e11]:
+                  - cell
+                  - cell [ref=f9e12]
+                  - cell [ref=f9e14]
+                - row [ref=f9e16]:
+                  - cell
+                  - cell [ref=f9e17]
+                  - cell [ref=f9e19]
+              - generic [ref=f9e21]:
+                - link "Посетите TradingView — платформу для финансового анализа и социальную сеть для трейдеров.":
+                  - /url: https://ru.tradingview.com?utm_campaign=symbol-overview-logo&utm_medium=widget&utm_source=127.0.0.1
+                - img [ref=f9e23]
+                - img [ref=f9e26]
+        - generic [ref=e242]:
+          - heading "MOEX (МосБиржа)" [level=2] [ref=e243]
+          - iframe [ref=e246]:
+            - generic [ref=f6e4]:
+              - table [ref=f6e10]:
+                - row [ref=f6e11]:
+                  - cell
+                  - cell [ref=f6e12]
+                  - cell [ref=f6e14]
+                - row [ref=f6e16]:
+                  - cell
+                  - cell [ref=f6e17]
+                  - cell [ref=f6e19]
+              - generic [ref=f6e21]:
+                - link "Посетите TradingView — платформу для финансового анализа и социальную сеть для трейдеров.":
+                  - /url: https://ru.tradingview.com?utm_campaign=symbol-overview-logo&utm_medium=widget&utm_source=127.0.0.1
+                - img [ref=f6e23]
+                - img [ref=f6e26]
+        - generic [ref=e247]:
+          - heading "RTS (РТС, $)" [level=2] [ref=e248]
+          - iframe [ref=e251]:
+            - generic [ref=f8e4]:
+              - table [ref=f8e10]:
+                - row [ref=f8e11]:
+                  - cell
+                  - cell [ref=f8e12]
+                  - cell [ref=f8e14]
+                - row [ref=f8e16]:
+                  - cell
+                  - cell [ref=f8e17]
+                  - cell [ref=f8e19]
+              - generic [ref=f8e21]:
+                - link "Посетите TradingView — платформу для финансового анализа и социальную сеть для трейдеров.":
+                  - /url: https://ru.tradingview.com?utm_campaign=symbol-overview-logo&utm_medium=widget&utm_source=127.0.0.1
+                - img [ref=f8e23]
+                - img [ref=f8e26]
+        - generic [ref=e252]:
+          - heading "USD/KZT (Казахстан, прокси)" [level=2] [ref=e253]
+          - iframe [ref=e256]:
+            - generic [ref=f10e4]:
+              - table [ref=f10e10]:
+                - row [ref=f10e11]:
+                  - cell
+                  - cell [ref=f10e12]
+                  - cell [ref=f10e14]
+                - row [ref=f10e16]:
+                  - cell
+                  - cell [ref=f10e17]
+                  - cell [ref=f10e19]
+              - generic [ref=f10e21]:
+                - link "Посетите TradingView — платформу для финансового анализа и социальную сеть для трейдеров.":
+                  - /url: https://ru.tradingview.com?utm_campaign=symbol-overview-logo&utm_medium=widget&utm_source=127.0.0.1
+                - img [ref=f10e23]
+                - img [ref=f10e26]

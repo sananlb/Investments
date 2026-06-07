@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "generated_at": "2026-06-06T05:18:43",
+    "generated_at": "2026-06-07T03:47:42",
     "sector": "Banks",
-    "as_of": "2026-06-06",
+    "as_of": "2026-06-07",
     "symbols": [
       "JPM",
       "BAC",
@@ -10,8 +10,8 @@
       "GS",
       "MS"
     ],
-    "fundamental_source": "SEC EDGAR XBRL companyconcept TTM facts filed<=2026-06-06",
-    "price_source": "Twelve Data time_series, adjust=none latest close on/before as_of",
+    "fundamental_source": "SEC EDGAR XBRL companyconcept TTM facts filed<=2026-06-07",
+    "price_source": "Nasdaq historical API close",
     "is_point_in_time": true,
     "purpose": "current snapshot using the same basket/formulas as the FY norm"
   },
@@ -22,7 +22,7 @@
       "n_companies": 5,
       "n_observations": 5,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
     },
     {
       "metric": "ps",
@@ -30,7 +30,7 @@
       "n_companies": 2,
       "n_observations": 2,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
     },
     {
       "metric": "pb",
@@ -38,7 +38,7 @@
       "n_companies": 5,
       "n_observations": 5,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none"
     },
     {
       "metric": "ev_ebitda",
@@ -62,7 +62,7 @@
       "n_companies": 2,
       "n_observations": 2,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07"
     },
     {
       "metric": "gross_margin",
@@ -78,7 +78,7 @@
       "n_companies": 2,
       "n_observations": 2,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07"
     },
     {
       "metric": "earnings_growth_yoy",
@@ -86,7 +86,7 @@
       "n_companies": 5,
       "n_observations": 5,
       "status": "ok",
-      "comment": "MEDIAN current TTM snapshot as of 2026-06-06"
+      "comment": "MEDIAN current TTM snapshot as of 2026-06-07"
     }
   ],
   "rows": [
@@ -123,8 +123,8 @@
       "gross_margin": "",
       "revenue_growth_yoy": "",
       "earnings_growth_yoy": -0.0146,
-      "price_source": "Twelve Data time_series adjust=none latest close",
-      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-06",
+      "price_source": "Nasdaq historical API close",
+      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-07",
       "status": "ok",
       "comment": "no clean TTM revenue: latest TTM quarter is stale (8 quarters)"
     },
@@ -161,8 +161,8 @@
       "gross_margin": "",
       "revenue_growth_yoy": 0.0713,
       "earnings_growth_yoy": 0.146,
-      "price_source": "Twelve Data time_series adjust=none latest close",
-      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-06",
+      "price_source": "Nasdaq historical API close",
+      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-07",
       "status": "ok",
       "comment": ""
     },
@@ -199,8 +199,8 @@
       "gross_margin": "",
       "revenue_growth_yoy": 0.0558,
       "earnings_growth_yoy": 0.1281,
-      "price_source": "Twelve Data time_series adjust=none latest close",
-      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-06",
+      "price_source": "Nasdaq historical API close",
+      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-07",
       "status": "ok",
       "comment": ""
     },
@@ -224,8 +224,8 @@
       "equity": 122782000000,
       "debt": 396304000000,
       "cash": 179530000000,
-      "market_cap": 306418322795.0,
-      "enterprise_value": 523192322795.0,
+      "market_cap": 306418308044.0,
+      "enterprise_value": 523192308044.0,
       "ebitda": "",
       "fcf": -41922000000.0,
       "pe": 16.9592,
@@ -237,8 +237,8 @@
       "gross_margin": "",
       "revenue_growth_yoy": "",
       "earnings_growth_yoy": 0.2141,
-      "price_source": "Twelve Data time_series adjust=none latest close",
-      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-06",
+      "price_source": "Nasdaq historical API close",
+      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-07",
       "status": "ok",
       "comment": "no clean TTM revenue: no quarterly/YTD facts filed<=as_of (0 quarters)"
     },
@@ -262,8 +262,8 @@
       "equity": 114286000000,
       "debt": 363010000000,
       "cash": 133529000000,
-      "market_cap": 334273955494.0,
-      "enterprise_value": 563754955494.0,
+      "market_cap": 334273971267.0,
+      "enterprise_value": 563754971267.0,
       "ebitda": "",
       "fcf": "",
       "pe": 18.4549,
@@ -275,8 +275,8 @@
       "gross_margin": "",
       "revenue_growth_yoy": "",
       "earnings_growth_yoy": 0.2673,
-      "price_source": "Twelve Data time_series adjust=none latest close",
-      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-06",
+      "price_source": "Nasdaq historical API close",
+      "fundamental_source": "SEC EDGAR XBRL companyconcept TTM filed<=2026-06-07",
       "status": "ok",
       "comment": "no clean TTM revenue: latest TTM quarter is stale (8 quarters)"
     },
@@ -284,7 +284,7 @@
       "symbol": "BASKET_AVG",
       "cik": "",
       "fiscal_year": "current",
-      "fy_end": "2026-06-06",
+      "fy_end": "2026-06-07",
       "currency": "USD",
       "fy_end_close": "",
       "close_date": "",
@@ -314,7 +314,7 @@
       "revenue_growth_yoy": 0.06355,
       "earnings_growth_yoy": 0.146,
       "price_source": "Twelve Data latest close",
-      "fundamental_source": "current TTM basket median filed<=2026-06-06",
+      "fundamental_source": "current TTM basket median filed<=2026-06-07",
       "status": "aggregate",
       "comment": "median over current company observations with valid values"
     }

@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,38.5721,6,6,ok,"MEDIAN current TTM snapshot as of 2026-04-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+ps,11.2775,6,6,ok,"MEDIAN current TTM snapshot as of 2026-04-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+pb,9.2608,6,6,ok,"MEDIAN current TTM snapshot as of 2026-04-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+ev_ebitda,12.7586,3,3,ok,"MEDIAN current TTM snapshot as of 2026-04-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+fcf_yield,0.018974,6,6,ok,"MEDIAN current TTM snapshot as of 2026-04-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+net_margin,0.32425,6,6,ok,MEDIAN current TTM snapshot as of 2026-04-10
+gross_margin,0.5844,5,5,ok,MEDIAN current TTM snapshot as of 2026-04-10
+revenue_growth_yoy,0.2978,6,6,ok,MEDIAN current TTM snapshot as of 2026-04-10
+earnings_growth_yoy,1.0633,6,6,ok,MEDIAN current TTM snapshot as of 2026-04-10

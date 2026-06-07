@@ -47,11 +47,22 @@ TWELVE_DATA_KEY_NAMES = (
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Fetch 10/20/30 anchor-date quote closes.")
+    parser = argparse.ArgumentParser(
+        description="Fetch anchor-date quote closes (decade 10/20/30 or monthly 1st)."
+    )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--out-csv", type=Path, default=DEFAULT_CSV)
     parser.add_argument("--out-json", type=Path, default=DEFAULT_JSON)
     parser.add_argument("--as-of", default=dt.date.today().isoformat())
+    parser.add_argument(
+        "--mode",
+        choices=["decade", "monthly"],
+        default="decade",
+        help=(
+            "Anchor cadence: 'decade' = 10/20/30 of each month (default), "
+            "'monthly' = 1st of each month."
+        ),
+    )
     parser.add_argument("--count", type=int, default=10)
     parser.add_argument("--lookback-days", type=int, default=10)
     parser.add_argument("--twelve-data-min-interval", type=float, default=8.0)
@@ -129,14 +140,35 @@ def sanitize_error(error: BaseException, api_key: Optional[str]) -> str:
     return text
 
 
-def anchor_dates(as_of: dt.date, count: int) -> List[dt.date]:
+def anchor_dates(as_of: dt.date, count: int, mode: str = "decade") -> List[dt.date]:
+    """Return the most recent ``count`` anchor dates up to ``as_of``.
+
+    Two cadences are supported:
+
+    - ``"decade"`` (default): the 10th, 20th and 30th of each month, where the
+      30th collapses to the last calendar day in short months. This is the
+      original behaviour and the data we have already collected.
+    - ``"monthly"``: the 1st of each month.
+
+    In both cases an anchor is the *calendar* target; the quote fetcher then
+    snaps each anchor back to the most recent trading day on/before it via
+    ``pick_anchor_row`` (so a 1st/10th/20th/30th that is a weekend or holiday is
+    served by the previous trading day's close).
+    """
+    if mode == "monthly":
+        anchor_days: Tuple[int, ...] = (1,)
+    elif mode == "decade":
+        anchor_days = (10, 20, 30)
+    else:
+        raise ValueError(f"Unknown anchor mode: {mode!r} (expected 'decade' or 'monthly')")
+
     anchors: List[dt.date] = []
     year, month = as_of.year, as_of.month
 
     for _ in range(36):
         last_day = calendar.monthrange(year, month)[1]
-        for day in (10, 20, min(30, last_day)):
-            anchor = dt.date(year, month, day)
+        for day in anchor_days:
+            anchor = dt.date(year, month, min(day, last_day))
             if anchor <= as_of:
                 anchors.append(anchor)
 
@@ -553,7 +585,7 @@ def main() -> int:
     args = parse_args()
     as_of = dt.date.fromisoformat(args.as_of)
     config = json.loads(args.config.read_text(encoding="utf-8"))
-    anchors = anchor_dates(as_of, args.count)
+    anchors = anchor_dates(as_of, args.count, args.mode)
     fmp_api_key, fmp_key_source = get_fmp_api_key()
     twelve_data_api_key, twelve_data_key_source = get_twelve_data_api_key()
 
@@ -587,6 +619,7 @@ def main() -> int:
     metadata = {
         "generated_at": dt.datetime.now().replace(microsecond=0).isoformat(),
         "as_of": as_of.isoformat(),
+        "mode": args.mode,
         "anchors": [anchor.isoformat() for anchor in anchors],
         "config": str(args.config),
         "sector_filter": args.sector or "all",

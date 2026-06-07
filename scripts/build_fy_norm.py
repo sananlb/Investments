@@ -43,8 +43,10 @@ Default output: data/market_quotes/fyn_semis_norm.csv (+ .json), one row per
 company-FY plus aggregate basket rows (symbol=BASKET_AVG) carrying the
 five_year_average per metric. With --current, writes fyn_<slug>_current.csv /
 fyn_<slug>_current_summary.csv from the same basket and formulas, using the
-latest available close and SEC facts filed on/before today. Missing values use
-status/comment, never invented numbers.
+latest available close and SEC facts filed on/before today. With
+--current --as-of YYYY-MM-DD, the date is included in the output filenames and
+all facts/prices are limited to that date. Missing values use status/comment,
+never invented numbers.
 """
 
 from __future__ import annotations
@@ -67,6 +69,7 @@ from typing import Any, Dict, List, Optional, Tuple
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ENV_PATH = PROJECT_ROOT / ".env"
 OUT_DIR = PROJECT_ROOT / "data" / "market_quotes"
+SEC_CACHE_DIR = OUT_DIR / ".sec_cache"
 # These three are rebound in main() once the sector slug is known; defaults keep
 # the module importable and match the original Semiconductors output names.
 OUT_CSV = OUT_DIR / "fyn_semis_norm.csv"
@@ -78,6 +81,8 @@ SEC_SUBMISSIONS_URL = "https://data.sec.gov/submissions/CIK{cik:010d}.json"
 SEC_CONCEPT_URL = "https://data.sec.gov/api/xbrl/companyconcept/CIK{cik:010d}/{taxonomy}/{tag}.json"
 USER_AGENT = "Investment Library research nalbantovfml@gmail.com"
 SEC_PAUSE = 0.25
+SEC_CACHE_MAX_AGE = dt.timedelta(days=7)
+SEC_CACHE_ENABLED = True
 HTTP_ATTEMPTS = 4
 HTTP_RETRY_DELAYS = (2, 4, 8)
 NETWORK_EXCEPTIONS = (urllib.error.URLError, socket.gaierror, TimeoutError, ConnectionError)
@@ -101,7 +106,74 @@ FMP_KEY_NAMES = (
 
 # Default basket (the semiconductor norm task). Overridable via --tickers.
 SEMIS = ["NVDA", "AMD", "AVGO", "TSM", "ASML", "MU", "QCOM", "TXN"]
-FY_YEARS = [2021, 2022, 2023, 2024, 2025]
+
+# Number of fiscal years in the rolling valuation norm.
+FY_WINDOW = 5
+
+# 10-K filing-lag cutoff month. A US annual report (10-K) for a fiscal year that
+# ends ~Dec 31 is typically filed within 60-90 days, i.e. by late March (large
+# accelerated filers must file within 60 days; the SEC absolute deadline is
+# 90 days). So we treat "calendar year minus 1" as a fully-available FY only once
+# we are PAST that filing window; before then the most recent fully-filed FY is
+# "calendar year minus 2". Set to 4 (April) so the rolling window does not pull a
+# fiscal year whose 10-K may not yet be on EDGAR for the whole basket.
+FY_FILING_LAG_CUTOFF_MONTH = 4
+
+# Safe default window for 2026 (the window the already-collected fyn_*_norm*
+# files were built on). default_fy_years() must reproduce this for any as_of in
+# calendar 2026; if the heuristic ever disagrees for 2026 it warns and falls back
+# to this list rather than silently rebuilding the existing norms on a new window.
+SAFE_2026_FY_YEARS = [2021, 2022, 2023, 2024, 2025]
+
+
+def default_fy_years(
+    as_of: Optional[dt.date] = None,
+    window: int = FY_WINDOW,
+) -> List[int]:
+    """Last `window` COMPLETED fiscal years whose 10-Ks should be on SEC by as_of.
+
+    Rolling-window heuristic (see FY_FILING_LAG_CUTOFF_MONTH):
+      - A company's "FY20YY" is the annual period whose period END falls in
+        calendar year 20YY (same convention as the rest of this module).
+      - The 10-K for FY = (current calendar year - 1) is normally filed within
+        60-90 days of fiscal-year end, i.e. by late March for Dec-fiscal filers.
+        So once we are at/after FY_FILING_LAG_CUTOFF_MONTH (April), we treat
+        (year - 1) as the most-recent fully-available FY; before April we use
+        (year - 2), because the just-closed year's 10-K may not yet be filed
+        across the whole basket.
+      - The window is the `window` consecutive fiscal years ending at that most
+        recent available FY.
+
+    Worked examples:
+      as_of 2026-06-07 -> month 6 >= 4 -> newest FY = 2025 -> [2021..2025]
+      as_of 2027-01-15 -> month 1 <  4 -> newest FY = 2025 -> [2021..2025]
+      as_of 2027-06-07 -> month 6 >= 4 -> newest FY = 2026 -> [2022..2026]
+
+    No `as_of` means "today", which keeps the historical no-args behaviour of a
+    last-5-fiscal-years norm.
+    """
+    if as_of is None:
+        as_of = dt.date.today()
+    newest_fy = as_of.year - 1 if as_of.month >= FY_FILING_LAG_CUTOFF_MONTH else as_of.year - 2
+    years = list(range(newest_fy - window + 1, newest_fy + 1))
+
+    # Guardrail: never silently rebuild the already-collected 2026 norms on a
+    # different window. If the heuristic disagrees for a 2026 as_of, warn and use
+    # the known-good SAFE_2026_FY_YEARS instead (documented in the module).
+    if as_of.year == 2026 and window == FY_WINDOW and years != SAFE_2026_FY_YEARS:
+        print(
+            f"  WARNING: rolling window {years} for as_of {as_of.isoformat()} "
+            f"differs from the collected 2026 norm window {SAFE_2026_FY_YEARS}; "
+            f"using the safe 2026 default to avoid rebuilding existing norms."
+        )
+        return list(SAFE_2026_FY_YEARS)
+    return years
+
+
+# Module-level FY_YEARS: the rolling last-5-fiscal-years window for today. Kept
+# as a module global (rebound in main()) so existing references continue to work.
+# For any 2026 run this resolves to [2021..2025], matching the collected norms.
+FY_YEARS = default_fy_years()
 SECTOR_NAME = "Semiconductors"
 SECTOR_SLUG = "semis"
 
@@ -255,15 +327,72 @@ def fetch_submission_metadata(cik: int) -> Dict[str, Any]:
     return data
 
 
+def sec_concept_cache_path(cik: int, taxonomy: str, tag: str) -> Path:
+    return SEC_CACHE_DIR / f"CIK{cik:010d}_{taxonomy}_{tag}.json"
+
+
+def read_sec_concept_cache(
+    path: Path,
+) -> Tuple[bool, Optional[Dict[str, List[Dict[str, Any]]]]]:
+    try:
+        age = time.time() - path.stat().st_mtime
+    except OSError:
+        return False, None
+    if age >= SEC_CACHE_MAX_AGE.total_seconds():
+        return False, None
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False, None
+    if not isinstance(data, dict):
+        return False, None
+    if data.get("_sec_cache_status") == 404:
+        return True, None
+    units = data.get("units", {})
+    return True, units or None
+
+
+def write_sec_concept_cache(path: Path, data: Dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        temp_path.write_text(
+            json.dumps(data, ensure_ascii=False, separators=(",", ":")),
+            encoding="utf-8",
+        )
+        os.replace(temp_path, path)
+    finally:
+        try:
+            temp_path.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def fetch_concept_units(cik: int, taxonomy: str, tag: str) -> Optional[Dict[str, List[Dict[str, Any]]]]:
+    """Return raw concept units; point-in-time filtering remains in callers."""
+    cache_path = sec_concept_cache_path(cik, taxonomy, tag)
+    if SEC_CACHE_ENABLED:
+        cache_hit, units = read_sec_concept_cache(cache_path)
+        if cache_hit:
+            return units
+
     url = SEC_CONCEPT_URL.format(cik=cik, taxonomy=taxonomy, tag=tag)
     try:
         data = http_json(url)
     except urllib.error.HTTPError as error:
+        time.sleep(SEC_PAUSE)
         if error.code == 404:
+            if SEC_CACHE_ENABLED:
+                write_sec_concept_cache(
+                    cache_path,
+                    {"_sec_cache_status": 404, "url": url},
+                )
             return None
         raise
     time.sleep(SEC_PAUSE)
+    if SEC_CACHE_ENABLED:
+        write_sec_concept_cache(cache_path, data)
     return data.get("units", {}) or None
 
 
@@ -642,7 +771,10 @@ def fetch_latest_nasdaq_close(
     params = {
         "assetclass": "stocks",
         "fromdate": (as_of - dt.timedelta(days=10)).isoformat(),
-        "limit": 20,
+        # Nasdaq returns rows newest-first through today, even when fromdate is
+        # historical. Request enough rows for the as-of window, then enforce
+        # the point-in-time cutoff below.
+        "limit": 5000,
     }
     url = (
         f"{NASDAQ_HISTORY_BASE}/{urllib.parse.quote(symbol)}/historical?"
@@ -1332,7 +1464,10 @@ def build_basket_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     row.update({
         "symbol": "BASKET_AVG", "cik": "", "fiscal_year": "five_year_average", "fy_end": "",
         "currency": "USD",
-        "fundamental_source": "five-year (FY2021-FY2025) basket norm, pooled across all company-FY observations",
+        "fundamental_source": (
+            f"five-year (FY{FY_YEARS[0]}-FY{FY_YEARS[-1]}) basket norm, "
+            "pooled across all company-FY observations"
+        ),
         "price_source": "", "status": "aggregate",
         "comment": (
             "USD-fundamental companies only for price ratios; "
@@ -1575,6 +1710,15 @@ def write_current_outputs(
     )
 
 
+def parse_iso_date(value: str) -> dt.date:
+    try:
+        return dt.date.fromisoformat(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            f"invalid date {value!r}; expected YYYY-MM-DD"
+        ) from exc
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build a one-time 5-year FY valuation norm for a sector basket.")
@@ -1583,11 +1727,25 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tickers", nargs="+", default=None,
                         help="Override the basket (e.g. --tickers NVDA AMD). Defaults to the sector basket.")
     parser.add_argument("--years", nargs="+", type=int, default=None,
-                        help="Override fiscal years (default 2021 2022 2023 2024 2025).")
+                        help=("Override fiscal years explicitly. When omitted, the "
+                              "norm uses the rolling last-5-fiscal-years window for "
+                              "--as-of (or today), which is [2021..2025] in 2026."))
     parser.add_argument("--slug", default=None,
                         help="Filename slug; default 'semis' for Semiconductors else the lowercased sector.")
     parser.add_argument("--current", action="store_true",
                         help="Build a current TTM snapshot instead of the FY2021-FY2025 norm.")
+    parser.add_argument(
+        "--as-of",
+        type=parse_iso_date,
+        default=None,
+        metavar="YYYY-MM-DD",
+        help=(
+            "Point-in-time date. For --current it is the snapshot date (and is "
+            "included in current output filenames). For the norm it selects the "
+            "rolling fiscal-year window via default_fy_years(as_of). Defaults to "
+            "today. Ignored if --years is given explicitly."
+        ),
+    )
     parser.add_argument(
         "--price-provider",
         choices=("twelve", "fmp", "nasdaq", "auto"),
@@ -1609,16 +1767,24 @@ def parse_args() -> argparse.Namespace:
         metavar="TICKER",
         help="Add tickers to the built-in exclusions from price-based metrics.",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Force SEC companyconcept network requests; do not read or write the disk cache.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     global SEMIS, FY_YEARS, SECTOR_NAME, SECTOR_SLUG, OUT_CSV, OUT_SUMMARY_CSV, OUT_JSON
-    global PRICE_RATIO_EXCLUDE
+    global PRICE_RATIO_EXCLUDE, SEC_CACHE_ENABLED
 
     args = parse_args()
+    SEC_CACHE_ENABLED = not args.no_cache
     if args.current and args.resummarize_from_detail:
         raise SystemExit("--current and --resummarize-from-detail are mutually exclusive")
+    # --as-of now applies to the norm too (it selects the rolling FY window). It
+    # only affects current OUTPUT FILENAMES, so for the norm it stays metadata.
     PRICE_RATIO_EXCLUDE = set(BASE_PRICE_RATIO_EXCLUDE)
     PRICE_RATIO_EXCLUDE.update(
         ticker.strip().upper() for ticker in args.exclude_price if ticker.strip()
@@ -1630,7 +1796,14 @@ def main() -> int:
         SEMIS = SECTOR_BASKETS[args.sector]
     # else: keep default basket
     if args.years:
+        # Explicit manual override always wins (unchanged behaviour).
         FY_YEARS = args.years
+    elif not args.current:
+        # Norm mode, no explicit --years: use the rolling last-5-fiscal-years
+        # window for --as-of (or today). For any 2026 date this is [2021..2025],
+        # so the already-collected norms are not rebuilt on a different window.
+        FY_YEARS = default_fy_years(args.as_of)
+    # --current mode keeps its own date-driven TTM logic and ignores FY_YEARS.
     if args.slug:
         SECTOR_SLUG = args.slug
     elif args.sector.lower().startswith("semi"):
@@ -1638,7 +1811,10 @@ def main() -> int:
     else:
         SECTOR_SLUG = args.sector.lower().replace(" ", "_").replace("/", "_")
 
-    suffix = "current" if args.current else "norm"
+    if args.current and args.as_of is not None:
+        suffix = f"current_{args.as_of:%Y%m%d}"
+    else:
+        suffix = "current" if args.current else "norm"
     OUT_CSV = OUT_DIR / f"fyn_{SECTOR_SLUG}_{suffix}.csv"
     OUT_SUMMARY_CSV = OUT_DIR / f"fyn_{SECTOR_SLUG}_{suffix}_summary.csv"
     OUT_JSON = OUT_DIR / f"fyn_{SECTOR_SLUG}_{suffix}.json"
@@ -1655,7 +1831,7 @@ def main() -> int:
             )
         return 0
 
-    as_of = dt.date.today()
+    as_of = args.as_of or dt.date.today()
     if args.current:
         print(f"Sector: {SECTOR_NAME} | basket: {', '.join(SEMIS)} | current TTM as of {as_of.isoformat()}")
     else:
