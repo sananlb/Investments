@@ -207,9 +207,26 @@
 
     .series-line {
       fill: none;
-      stroke-width: 3;
+      stroke-width: 1.5;
+      stroke-opacity: 0.5;
       stroke-linejoin: round;
       stroke-linecap: round;
+      transition: stroke-width 150ms ease, stroke-opacity 150ms ease;
+    }
+
+    .series-line.is-active {
+      stroke-width: 3;
+      stroke-opacity: 1;
+    }
+
+    .series-hit {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 12;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      pointer-events: stroke;
+      cursor: pointer;
     }
 
     .point {
@@ -948,9 +965,9 @@
           <div class="panel-header">
             <div class="chart-title">
               <h2>Секторная оценка</h2>
-              <div class="mode-toggle" role="group" aria-label="Периодичность секторного графика">
-                <button type="button" class="is-active" data-sector-mode="decade" aria-pressed="true">Декада (10/20/30)</button>
-                <button type="button" data-sector-mode="monthly" aria-pressed="false">Месяц (1-е число)</button>
+              <div class="mode-toggle" role="group" aria-label="Период секторного графика">
+                <button type="button" class="is-active" data-sector-mode="year" aria-pressed="true">Год</button>
+                <button type="button" data-sector-mode="2year" aria-pressed="false">2 года</button>
               </div>
             </div>
           </div>
@@ -2054,10 +2071,10 @@
 	    const hiddenSectors = new Set();
 	    const sectorModeButtons = [...document.querySelectorAll("[data-sector-mode]")];
 	    const sectorDataSources = {
-	      decade: "data/market_quotes/sector_scores_preview.csv",
-	      monthly: "data/market_quotes/sector_scores_preview_monthly.csv"
+	      year: "data/market_quotes/sector_scores_preview_year.csv",
+	      "2year": "data/market_quotes/sector_scores_preview_2year.csv"
 	    };
-	    let activeSectorMode = "decade";
+	    let activeSectorMode = "year";
 	    let sectorLoadRequest = 0;
     let sectorRows = parseCsv(csvInput.value);
 
@@ -2380,12 +2397,20 @@
           return `${command}${x(point.date)},${y(point.coefficient)}`;
         }).join(" ");
 
-        addSvg("path", {
+        const line = addSvg("path", {
           d: path,
           class: "series-line",
           stroke: item.color,
           "data-sector": item.sector
         });
+
+        const hit = addSvg("path", {
+          d: path,
+          class: "series-hit",
+          "data-sector": item.sector
+        });
+        hit.addEventListener("mouseenter", () => line.classList.add("is-active"));
+        hit.addEventListener("mouseleave", () => line.classList.remove("is-active"));
 
         item.points.forEach((point) => {
           const circle = addSvg("circle", {
@@ -2400,7 +2425,6 @@
           circle.appendChild(document.createElementNS("http://www.w3.org/2000/svg", "title"))
             .textContent = `${point.sector} ${point.date}: ${point.coefficient.toFixed(2)}`;
         });
-
       });
 
       renderTable(data, sectorColor);

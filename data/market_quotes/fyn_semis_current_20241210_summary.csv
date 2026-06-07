@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,82.9848,6,6,ok,"MEDIAN current TTM snapshot as of 2024-12-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+ps,9.7874,6,6,ok,"MEDIAN current TTM snapshot as of 2024-12-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+pb,8.33125,6,6,ok,"MEDIAN current TTM snapshot as of 2024-12-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+ev_ebitda,15.2202,3,3,ok,"MEDIAN current TTM snapshot as of 2024-12-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+fcf_yield,0.012778,6,6,ok,"MEDIAN current TTM snapshot as of 2024-12-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: ASML, TSM"
+net_margin,0.18455,6,6,ok,MEDIAN current TTM snapshot as of 2024-12-10
+gross_margin,0.5863,5,5,ok,MEDIAN current TTM snapshot as of 2024-12-10
+revenue_growth_yoy,0.2096,6,6,ok,MEDIAN current TTM snapshot as of 2024-12-10
+earnings_growth_yoy,0.0508,6,6,ok,MEDIAN current TTM snapshot as of 2024-12-10

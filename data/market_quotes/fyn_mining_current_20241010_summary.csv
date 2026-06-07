@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,24.5237,2,2,ok,MEDIAN current TTM snapshot as of 2024-10-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+ps,4.1192,3,3,ok,MEDIAN current TTM snapshot as of 2024-10-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+pb,4.09,3,3,ok,MEDIAN current TTM snapshot as of 2024-10-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+ev_ebitda,12.6765,2,2,ok,MEDIAN current TTM snapshot as of 2024-10-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+fcf_yield,0.021045,3,3,ok,MEDIAN current TTM snapshot as of 2024-10-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: GOLD
+net_margin,0.1818,5,5,ok,MEDIAN current TTM snapshot as of 2024-10-10
+gross_margin,0.25545,2,2,ok,MEDIAN current TTM snapshot as of 2024-10-10
+revenue_growth_yoy,0.0793,4,4,ok,MEDIAN current TTM snapshot as of 2024-10-10
+earnings_growth_yoy,0.3304,5,5,ok,MEDIAN current TTM snapshot as of 2024-10-10

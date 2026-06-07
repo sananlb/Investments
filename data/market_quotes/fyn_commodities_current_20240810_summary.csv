@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,20.7077,2,2,ok,MEDIAN current TTM snapshot as of 2024-08-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,3.05535,4,4,ok,MEDIAN current TTM snapshot as of 2024-08-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,2.6262,4,4,ok,MEDIAN current TTM snapshot as of 2024-08-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,10.802,2,2,ok,MEDIAN current TTM snapshot as of 2024-08-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.025397,3,3,ok,MEDIAN current TTM snapshot as of 2024-08-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+net_margin,0.0573,4,4,ok,MEDIAN current TTM snapshot as of 2024-08-10
+gross_margin,-0.0832,1,1,ok,MEDIAN current TTM snapshot as of 2024-08-10
+revenue_growth_yoy,0.0793,4,4,ok,MEDIAN current TTM snapshot as of 2024-08-10
+earnings_growth_yoy,0.1599,4,4,ok,MEDIAN current TTM snapshot as of 2024-08-10
