@@ -119,6 +119,28 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument(
+        "--mode",
+        choices=["decade", "monthly"],
+        default="decade",
+        help=(
+            "Preview cadence. 'decade' (default) writes one point per decade "
+            "anchor (10/20/30). 'monthly' additionally derives a 1st-of-month "
+            "preview from the same decade points (the closest decade point "
+            "on/before each month start is reused as a proxy, marked "
+            "provisional) and writes it to --monthly-preview-csv. The decade "
+            "preview is always written and never overwritten by the monthly run."
+        ),
+    )
+    parser.add_argument(
+        "--monthly-preview-csv",
+        type=Path,
+        default=None,
+        help=(
+            "Monthly (1st-of-month) dashboard CSV path used when --mode monthly. "
+            "Defaults to sector_scores_preview_monthly.csv next to --out-csv."
+        ),
+    )
+    parser.add_argument(
         "--aggregate",
         choices=["median", "mean"],
         default="median",
@@ -425,6 +447,16 @@ def main() -> int:
     preview_rows = build_dashboard_preview_rows(out_rows)
     write_dashboard_preview_csv(preview_csv, preview_rows)
 
+    monthly_preview_csv = None
+    monthly_preview_rows: List[Dict[str, Any]] = []
+    if args.mode == "monthly":
+        monthly_preview_csv = (
+            args.monthly_preview_csv
+            or args.out_csv.with_name("sector_scores_preview_monthly.csv")
+        )
+        monthly_preview_rows = build_monthly_preview_rows(preview_rows)
+        write_dashboard_preview_csv(monthly_preview_csv, monthly_preview_rows)
+
     # Console summary: final sector_score on the latest anchor.
     if anchors:
         latest = anchors[-1]
@@ -438,6 +470,14 @@ def main() -> int:
     print(f"CSV:  {args.out_csv}")
     print(f"JSON: {args.out_json}")
     print(f"Dashboard preview: {preview_csv} ({len(preview_rows)} points)")
+    if monthly_preview_csv is not None:
+        missing_monthly = sum(1 for r in monthly_preview_rows if r["coefficient"] == "")
+        ok_monthly = len(monthly_preview_rows) - missing_monthly
+        print(
+            f"Monthly preview:   {monthly_preview_csv} "
+            f"({len(monthly_preview_rows)} points: {ok_monthly} proxied, "
+            f"{missing_monthly} missing)"
+        )
     print(
         "NOTE: rows are provisional when a real norm or a configured weighted "
         "current metric is missing."
@@ -519,6 +559,142 @@ def write_dashboard_preview_csv(path: Path, rows: List[Dict[str, Any]]) -> None:
         )
         writer.writeheader()
         writer.writerows(rows)
+
+
+def month_starts(first: dt.date, last: dt.date) -> List[dt.date]:
+    """All 1st-of-month dates in ``[first_month_start, last]`` inclusive."""
+    starts: List[dt.date] = []
+    year, month = first.year, first.month
+    while True:
+        start = dt.date(year, month, 1)
+        if start > last:
+            break
+        starts.append(start)
+        month += 1
+        if month == 13:
+            month = 1
+            year += 1
+    return starts
+
+
+# Max number of days a month-start anchor may borrow a decade point that lies
+# AFTER it (forward proxy). Kept small so a month is only filled by a genuinely
+# nearby point (e.g. a 2026-06-06 current snapshot serving 2026-06-01), never by
+# a point a whole decade-cycle away. On/before points are always preferred and
+# are not subject to this window.
+MONTHLY_FORWARD_PROXY_DAYS = 9
+
+
+def build_monthly_preview_rows(decade_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """Derive a 1st-of-month preview from the decade preview points.
+
+    Fundamentals are currently collected only on decade anchors (10/20/30),
+    so there is no independent point-in-time basket for the 1st of each month.
+    Rather than invent values, each month-start anchor reuses the closest real
+    decade ``sector_score`` point as a proxy and records that substitution in
+    the ``comment`` (HONESTY RULE, see module docstring and AGENTS.md):
+
+    - A decade point on/before the month start is always preferred (no
+      look-ahead). This is the normal case for historical months.
+    - If no point exists on/before the month start, the nearest point AFTER it
+      is used only when it falls within ``MONTHLY_FORWARD_PROXY_DAYS`` (e.g. a
+      2026-06-06 current snapshot serving the 2026-06-01 anchor); this is
+      flagged as a forward proxy.
+    - Otherwise the month is emitted as ``missing`` with an empty coefficient
+      instead of being fabricated.
+
+    Input rows are dashboard preview rows from ``build_dashboard_preview_rows``
+    (one per date/sector). Output rows use the same schema.
+    """
+    by_sector: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
+    for row in decade_rows:
+        by_sector[str(row["sector"])].append(row)
+
+    monthly_rows: List[Dict[str, Any]] = []
+    for sector in sorted(by_sector):
+        points = sorted(by_sector[sector], key=lambda r: str(r["date"]))
+        point_dates = [dt.date.fromisoformat(str(r["date"])) for r in points]
+        first_date = point_dates[0]
+        last_date = point_dates[-1]
+        # Month span: from the month of the first point through the month of the
+        # last point, so the current (latest) month is always represented even
+        # when its only data point is a few days after the 1st.
+        for anchor in month_starts(first_date, last_date):
+            proxy: Optional[Dict[str, Any]] = None
+            proxy_date: Optional[dt.date] = None
+            forward = False
+            # Prefer the closest decade point on/before this month start.
+            for point, point_date in zip(points, point_dates):
+                if point_date <= anchor:
+                    proxy = point
+                    proxy_date = point_date
+                else:
+                    break
+            # Fall back to the nearest point shortly AFTER the anchor.
+            if proxy is None:
+                for point, point_date in zip(points, point_dates):
+                    if point_date > anchor:
+                        if (point_date - anchor).days <= MONTHLY_FORWARD_PROXY_DAYS:
+                            proxy = point
+                            proxy_date = point_date
+                            forward = True
+                        break
+            if proxy is None or proxy_date is None:
+                monthly_rows.append({
+                    "date": anchor.isoformat(),
+                    "sector": sector,
+                    "coefficient": "",
+                    "metric": "sector_score",
+                    "metric_coefficient": "",
+                    "metric_weight": "",
+                    "source": "compute_sector_scores.py --mode monthly (proxy from decade points)",
+                    "comment": (
+                        "missing: no decade sector_score point within proxy range "
+                        "of this month start; monthly fundamentals are not "
+                        "collected separately yet"
+                    ),
+                })
+                continue
+            base_source = str(proxy.get("source") or "")
+            base_comment = str(proxy.get("comment") or "")
+            if proxy_date == anchor:
+                proxy_note = (
+                    "monthly anchor coincides with a decade point "
+                    f"{proxy_date.isoformat()}"
+                )
+            elif forward:
+                proxy_note = (
+                    "monthly anchor proxied FORWARD from decade point "
+                    f"{proxy_date.isoformat()} (nearest decade sector_score after "
+                    "this month start; no earlier point available); monthly "
+                    "fundamentals are not collected separately yet"
+                )
+            else:
+                proxy_note = (
+                    "monthly anchor proxied from decade point "
+                    f"{proxy_date.isoformat()} (closest decade sector_score "
+                    "on/before this month start); monthly fundamentals are not "
+                    "collected separately yet"
+                )
+            monthly_rows.append({
+                "date": anchor.isoformat(),
+                "sector": sector,
+                "coefficient": proxy["coefficient"],
+                "metric": "sector_score",
+                "metric_coefficient": "",
+                "metric_weight": "",
+                "source": (
+                    f"{base_source}; compute_sector_scores.py --mode monthly "
+                    "(proxy from decade points)"
+                    if base_source
+                    else "compute_sector_scores.py --mode monthly (proxy from decade points)"
+                ),
+                "comment": (
+                    f"{proxy_note}; {base_comment}" if base_comment else proxy_note
+                ),
+            })
+    monthly_rows.sort(key=lambda r: (str(r["sector"]), str(r["date"])))
+    return monthly_rows
 
 
 def write_json(path: Path, rows: List[Dict[str, Any]], sectors: List[str],

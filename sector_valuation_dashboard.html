@@ -40,9 +40,9 @@
     }
 
     main {
-      max-width: 1220px;
+      max-width: 1600px;
       margin: 0 auto;
-      padding: 30px 24px 40px;
+      padding: 34px clamp(20px, 4vw, 56px) 48px;
     }
 
     header {
@@ -115,43 +115,48 @@
       font-size: 14px;
     }
 
-    .legend {
+    .chart-title {
       display: flex;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 13px;
     }
 
-    .legend button {
+    .mode-toggle {
       display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 8px;
+      gap: 3px;
+      padding: 3px;
       border: 1px solid var(--line-soft);
       border-radius: 8px;
       background: var(--panel-soft);
+    }
+
+    .mode-toggle button {
+      padding: 6px 9px;
+      border-color: transparent;
+      background: transparent;
       color: var(--muted);
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 1.2;
-      box-shadow: none;
-      transition: background 160ms ease, border-color 160ms ease, color 160ms ease, opacity 160ms ease;
-    }
-
-    .legend button:hover {
-      border-color: #cfd7e6;
-      color: var(--text);
+      font-size: 12px;
       box-shadow: none;
     }
 
-    .legend button.is-hidden {
-      opacity: 0.42;
-      background: #f3f5f8;
+    .mode-toggle button:hover {
+      border-color: var(--line);
+      background: #fff;
+      box-shadow: none;
     }
 
-    .legend button.is-hidden .dot {
-      opacity: 0.45;
+    .mode-toggle button.is-active {
+      border-color: #cbd8f2;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .panel-hint {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
     }
 
     .dot {
@@ -257,17 +262,24 @@
       display: none;
     }
 
-    .data-panel {
-      padding: 16px;
-      margin-bottom: 16px;
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+      gap: 16px;
+      align-items: start;
     }
 
-    /* --- Вкладки --- */
+    .sector-column,
+    .market-sidebar {
+      min-width: 0;
+    }
+
+    /* --- Вкладки правой колонки --- */
     .tabs {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 6px;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       border-bottom: 1px solid var(--line-soft);
       padding-bottom: 0;
     }
@@ -278,7 +290,8 @@
       background: transparent;
       color: var(--muted);
       border-radius: 8px 8px 0 0;
-      padding: 9px 16px;
+      padding: 9px 6px;
+      font-size: 12px;
       font-weight: 600;
       box-shadow: none;
       margin-bottom: -1px;
@@ -318,6 +331,31 @@
       border: 1px solid var(--line-soft);
       border-radius: 8px;
       background: var(--panel-soft);
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      box-shadow: none;
+      transition: border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease, background 160ms ease;
+    }
+
+    .latest-chip:hover {
+      border-color: #cfd7e6;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+    }
+
+    .latest-chip.is-hidden {
+      opacity: 0.45;
+      background: #f3f5f8;
+      border-color: var(--line-soft);
+    }
+
+    .latest-chip.is-hidden .dot {
+      opacity: 0.4;
+    }
+
+    .latest-chip.is-hidden .chip-score {
+      color: var(--muted-2) !important;
     }
 
     .latest-chip .dot {
@@ -390,6 +428,27 @@
       grid-column: 1 / -1;
     }
 
+    .market-sidebar .widget-grid {
+      gap: 12px;
+    }
+
+    .market-sidebar .widget-grid.cols-2 {
+      grid-template-columns: 1fr;
+    }
+
+    .market-sidebar .widget-card {
+      padding: 12px;
+    }
+
+    .market-sidebar .widget-card h2 {
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .market-sidebar .widget-card.is-wide {
+      grid-column: auto;
+    }
+
     .tv-box {
       position: relative;
       width: 100%;
@@ -406,7 +465,7 @@
     }
 
     .tv-symbol-box {
-      min-height: 300px;
+      min-height: 220px;
     }
 
     .tv-fallback {
@@ -422,6 +481,10 @@
       line-height: 1.45;
       pointer-events: none;
       z-index: 0;
+    }
+
+    .tv-box.tv-loaded .tv-fallback {
+      display: none;
     }
 
     .tv-box .tradingview-widget-container {
@@ -440,6 +503,12 @@
       text-decoration: none;
     }
 
+    @media (max-width: 980px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 820px) {
       main {
         padding: 14px;
@@ -453,45 +522,418 @@
         margin-bottom: 14px;
       }
 
-      .widget-grid.cols-2 {
-        grid-template-columns: 1fr;
-      }
-
       svg {
         height: 420px;
       }
     }
+
+    /* Разделитель «график → сектора» внутри одной панели */
+    .chart-divider {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 18px 0 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .chart-divider-label {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      color: var(--text);
+    }
+
+    .chart-divider .panel-hint {
+      margin: 0;
+    }
+
+    /* Рыночные паттерны */
+    .patterns-panel {
+      padding: 20px;
+    }
+
+    .patterns-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .patterns-head h2 {
+      margin: 0;
+    }
+
+    .patterns-asof-pill {
+      flex: none;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #d7e3fb;
+      padding: 4px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .patterns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+    }
+
+    .pattern-card {
+      position: relative;
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      padding: 16px 16px 15px;
+      background: var(--panel);
+      overflow: hidden;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .pattern-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+    }
+
+    .pattern-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .pattern-card.is-active::before {
+      background: linear-gradient(90deg, var(--expensive), #e8856f);
+    }
+
+    .pattern-card.is-tailwind::before {
+      background: linear-gradient(90deg, var(--cheap), #4cae9a);
+    }
+
+    .pattern-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 9px;
+    }
+
+    .pattern-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.25;
+    }
+
+    .pattern-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      flex: none;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .pattern-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .pattern-card.is-active .pattern-status {
+      color: var(--expensive);
+      background: var(--expensive-soft);
+    }
+
+    .pattern-card.is-tailwind .pattern-status {
+      color: var(--cheap);
+      background: var(--cheap-soft);
+    }
+
+    .pattern-note {
+      margin: 0;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: var(--neutral);
+    }
+
+    .patterns-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .patterns-key {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .key-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--neutral);
+      white-space: nowrap;
+    }
+
+    .key-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+
+    .key-tailwind {
+      background: var(--cheap);
+    }
+
+    .key-caution {
+      background: var(--expensive);
+    }
+
+    .patterns-footnote {
+      margin: 0;
+      flex: 1 1 280px;
+      min-width: 220px;
+      text-align: right;
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--muted-2);
+    }
+
+    @media (max-width: 700px) {
+      .patterns-footnote {
+        text-align: left;
+      }
+    }
+
+    /* Кликабельность карточек паттернов */
+    .pattern-card {
+      cursor: pointer;
+    }
+
+    .pattern-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Модальное окно паттерна */
+    .pattern-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 4vw, 48px);
+    }
+
+    .pattern-modal[hidden] {
+      display: none;
+    }
+
+    .pattern-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(2px);
+      opacity: 0;
+      transition: opacity 220ms ease;
+    }
+
+    .pattern-modal-card {
+      position: relative;
+      width: min(720px, 100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--line-soft);
+      border-radius: 16px;
+      box-shadow: 0 30px 70px rgba(15, 23, 42, 0.28);
+      padding: 28px clamp(20px, 4vw, 36px) 30px;
+      opacity: 0;
+      transform: translateY(16px) scale(0.97);
+      transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .pattern-modal.is-open .pattern-modal-backdrop {
+      opacity: 1;
+    }
+
+    .pattern-modal.is-open .pattern-modal-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .pattern-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+    }
+
+    .pattern-modal-close:hover {
+      background: #f3f5f8;
+      color: var(--text);
+      border-color: #cfd7e6;
+    }
+
+    .modal-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 4px 11px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+
+    .modal-status::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: currentColor;
+    }
+
+    .modal-status.is-active {
+      color: var(--expensive);
+      background: var(--expensive-soft);
+    }
+
+    .modal-status.is-tailwind {
+      color: var(--cheap);
+      background: var(--cheap-soft);
+    }
+
+    .modal-title {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 3vw, 26px);
+      line-height: 1.18;
+      color: var(--text);
+      padding-right: 30px;
+    }
+
+    .modal-lede {
+      margin: 0 0 18px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--neutral);
+    }
+
+    .modal-chart {
+      background: var(--panel-soft);
+      border: 1px solid var(--line-soft);
+      border-radius: 12px;
+      padding: 18px 18px 10px;
+      margin-bottom: 18px;
+    }
+
+    .modal-chart-title {
+      margin: 0 0 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-chart svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .modal-chart-caption {
+      margin: 8px 0 0;
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--muted-2);
+    }
+
+    .modal-section {
+      margin: 0 0 16px;
+    }
+
+    .modal-section h4 {
+      margin: 0 0 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .modal-section p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--neutral);
+    }
+
+    .modal-section ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--neutral);
+    }
+
+    .modal-source {
+      margin: 18px 0 0;
+      padding-top: 14px;
+      border-top: 1px solid var(--line-soft);
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--muted-2);
+    }
+
+    /* SVG-графики паттернов */
+    .pg-axis { stroke: var(--line); stroke-width: 1; }
+    .pg-grid { stroke: var(--line-soft); stroke-width: 1; }
+    .pg-axis-text { fill: var(--muted-2); font-size: 10px; font-family: inherit; }
+    .pg-bar-label { fill: var(--text); font-size: 11px; font-weight: 700; font-family: inherit; }
+    .pg-zone-label { font-size: 10px; font-weight: 700; font-family: inherit; text-transform: uppercase; letter-spacing: 0.03em; }
+    .pg-line { fill: none; stroke-width: 2.4; }
+    .pg-now { stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 4 4; }
+    .pg-now-text { fill: var(--accent); font-size: 10px; font-weight: 700; font-family: inherit; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .pattern-modal-backdrop,
+      .pattern-modal-card { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <!-- Бегущая лента TradingView (Ticker Tape) -->
-  <div class="tv-box" style="border-radius:0;border-left:none;border-right:none;border-top:none;">
-    <div class="tv-fallback">Лента TradingView (откройте через локальный сервер)</div>
-    <div class="tradingview-widget-container">
-      <div class="tradingview-widget-container__widget"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-      {
-        "symbols": [
-          {"proName": "SP:SPX", "title": "S&P 500"},
-          {"proName": "NASDAQ:NDX", "title": "Nasdaq 100"},
-          {"proName": "TVC:RUT", "title": "Russell 2000"},
-          {"proName": "MOEX:IMOEX", "title": "MOEX"},
-          {"proName": "TVC:DXY", "title": "DXY"},
-          {"proName": "FX_IDC:USDRUB", "title": "USD/RUB"},
-          {"proName": "TVC:UKOIL", "title": "Brent"},
-          {"proName": "TVC:GOLD", "title": "Золото"},
-          {"proName": "TVC:US10Y", "title": "UST 10Y"}
-        ],
-        "isTransparent": true,
-        "showSymbolLogo": true,
-        "displayMode": "adaptive",
-        "colorTheme": "light",
-        "locale": "ru"
-      }
-      </script>
-    </div>
-  </div>
-
   <main>
     <header>
       <div class="header-copy">
@@ -500,41 +942,82 @@
       </div>
     </header>
 
-    <nav class="tabs" id="tabs">
-      <button type="button" class="tab is-active" data-tab="sectors">Секторная оценка</button>
-      <button type="button" class="tab" data-tab="indices">Индексы</button>
-      <button type="button" class="tab" data-tab="fx">Валюты и сырьё</button>
-      <button type="button" class="tab" data-tab="bonds">Облигации и календарь</button>
-    </nav>
-
-    <!-- ВКЛАДКА: Секторная оценка -->
-    <div class="tab-panel" id="panel-sectors">
-      <section class="chart-panel panel">
-        <div class="panel-header">
-          <div>
-            <h2>Секторная оценка</h2>
+    <div class="dashboard-layout">
+      <section class="sector-column" aria-label="Секторная оценка">
+        <section class="chart-panel panel">
+          <div class="panel-header">
+            <div class="chart-title">
+              <h2>Секторная оценка</h2>
+              <div class="mode-toggle" role="group" aria-label="Периодичность секторного графика">
+                <button type="button" class="is-active" data-sector-mode="decade" aria-pressed="true">Декада (10/20/30)</button>
+                <button type="button" data-sector-mode="monthly" aria-pressed="false">Месяц (1-е число)</button>
+              </div>
+            </div>
           </div>
-          <div class="legend" id="legend"></div>
-        </div>
-        <svg id="chart" role="img" aria-label="Sector valuation chart"></svg>
+          <svg id="chart" role="img" aria-label="Sector valuation chart"></svg>
+          <div class="chart-divider">
+            <span class="chart-divider-label">Сектора</span>
+            <span class="panel-hint">Нажмите на сектор, чтобы скрыть или показать его на графике.</span>
+          </div>
+          <div id="tableWrap"></div>
+        </section>
+
+        <section class="patterns-panel panel" aria-label="Рыночные паттерны сейчас">
+          <div class="patterns-head">
+            <div>
+              <h2>Рыночные паттерны сейчас</h2>
+              <p class="panel-hint">Статус повторяемых рыночных закономерностей из «Принципов инвестиций» на текущий момент. Фон для оценки риска, а не торговые сигналы.</p>
+            </div>
+            <span class="patterns-asof-pill">июнь 2026</span>
+          </div>
+
+          <div class="patterns-grid">
+            <article class="pattern-card is-active" data-pattern="midterm" role="button" tabindex="0" aria-label="Подробнее: Президентский цикл, midterm-год">
+              <div class="pattern-head">
+                <span class="pattern-name">Президентский цикл: midterm-год</span>
+                <span class="pattern-status">Осторожно</span>
+              </div>
+              <p class="pattern-note">2026 — 2-й год цикла (midterm). Историческая слабая зона март→сентябрь midterm-года; до осенних выборов в Конгресс выше обычного риск волатильности и ложных пробоев. Сильное окно начинается ближе к Q4.</p>            </article>
+
+            <article class="pattern-card is-tailwind" data-pattern="spring" role="button" tabindex="0" aria-label="Подробнее: Сильный весенний рывок">
+              <div class="pattern-head">
+                <span class="pattern-name">Сильный весенний рывок</span>
+                <span class="pattern-status">Попутный ветер</span>
+              </div>
+              <p class="pattern-note">Апрель+май 2026 дали ~+15.9% — 2-й результат в истории после 2020. По данным Carson Group, в редких прошлых случаях роста 10+% за эти два месяца июнь и остаток года были выше. Выборка крошечная (~5 случаев), поэтому только фон.</p>            </article>
+
+            <article class="pattern-card is-active" data-pattern="sixmonths" role="button" tabindex="0" aria-label="Подробнее: Лучшие и худшие 6 месяцев">
+              <div class="pattern-head">
+                <span class="pattern-name">Лучшие/худшие 6 месяцев</span>
+                <span class="pattern-status">Слабый сезон</span>
+              </div>
+              <p class="pattern-note">Сейчас идёт слабая половина года (май→октябрь, исторически ~+2.1% против ~+7.2% в ноя→апр). Это не повод выходить из рынка, но повод быть строже к новому риску и плечу — особенно в наложении с midterm.</p>            </article>
+          </div>
+
+          <div class="patterns-foot">
+            <div class="patterns-key">
+              <span class="key-item"><i class="key-dot key-tailwind"></i>Попутный ветер</span>
+              <span class="key-item"><i class="key-dot key-caution"></i>Зона осторожности</span>
+            </div>
+            <p class="patterns-footnote">Источник — «Принципы инвестиций.md», разделы 1, 5, 7. Ни один паттерн не используется в одиночку: решение всегда сверяется со ставками, прибылью, ликвидностью и трендом.</p>
+          </div>
+        </section>
       </section>
 
-      <section class="data-panel panel">
-        <div class="panel-header">
-          <div>
-            <h2>Текущие значения</h2>
-          </div>
-        </div>
-        <div id="tableWrap"></div>
-      </section>
-    </div>
+      <aside class="market-sidebar" aria-label="Рыночные виджеты">
+        <nav class="tabs" id="tabs" aria-label="Группы рыночных виджетов">
+          <button type="button" class="tab is-active" data-tab="indices">Индексы</button>
+          <button type="button" class="tab" data-tab="fx">Валюты</button>
+          <button type="button" class="tab" data-tab="commodities">Commodities</button>
+          <button type="button" class="tab" data-tab="etf">ETF</button>
+        </nav>
 
-    <!-- ВКЛАДКА: Индексы -->
-    <div class="tab-panel" id="panel-indices" hidden>
+        <!-- ВКЛАДКА: Индексы -->
+        <div class="tab-panel" id="panel-indices">
       <div class="widget-grid cols-2">
         <section class="widget-card panel">
           <h2>S&amp;P 500</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="SP:SPX" data-title="S&amp;P 500">
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FOREXCOM:SPXUSD" data-title="S&amp;P 500">
             <div class="tv-fallback">График TradingView для S&amp;P 500 не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
@@ -544,8 +1027,28 @@
 
         <section class="widget-card panel">
           <h2>Nasdaq 100</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:NDX" data-title="Nasdaq 100">
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FOREXCOM:NSXUSD" data-title="Nasdaq 100">
             <div class="tv-fallback">График TradingView для Nasdaq 100 не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>MOEX (МосБиржа)</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="MOEX:IMOEX" data-title="MOEX (МосБиржа)">
+            <div class="tv-fallback">График TradingView для индекса МосБиржи не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>RTS (РТС, $)</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="MOEX:RTSI" data-title="RTS (РТС, $)">
+            <div class="tv-fallback">График TradingView для индекса РТС не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
             </div>
@@ -554,12 +1057,12 @@
       </div>
     </div>
 
-    <!-- ВКЛАДКА: Валюты и сырьё -->
-    <div class="tab-panel" id="panel-fx" hidden>
+    <!-- ВКЛАДКА: Валюты -->
+        <div class="tab-panel" id="panel-fx" hidden>
       <div class="widget-grid cols-2">
         <section class="widget-card panel">
           <h2>USD/RUB</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX_IDC:USDRUB" data-title="USD/RUB">
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX_IDC:USDRUB" data-title="USD/RUB">
             <div class="tv-fallback">График TradingView для USD/RUB не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
@@ -569,7 +1072,7 @@
 
         <section class="widget-card panel">
           <h2>USD/KZT</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX_IDC:USDKZT" data-title="USD/KZT">
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX_IDC:USDKZT" data-title="USD/KZT">
             <div class="tv-fallback">График TradingView для USD/KZT не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
@@ -578,29 +1081,29 @@
         </section>
 
         <section class="widget-card panel">
-          <h2>DXY</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:DXY" data-title="DXY">
+          <h2>EUR/USD</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX:EURUSD" data-title="EUR/USD">
+            <div class="tv-fallback">График TradingView для EUR/USD не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>USD/CNY</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="FX_IDC:USDCNY" data-title="USD/CNY">
+            <div class="tv-fallback">График TradingView для USD/CNY не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>DXY (индекс доллара)</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="CAPITALCOM:DXY" data-title="DXY">
             <div class="tv-fallback">График TradingView для DXY не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="widget-card panel">
-          <h2>Нефть Brent</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:UKOIL" data-title="Нефть Brent">
-            <div class="tv-fallback">График TradingView для нефти Brent не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
-            <div class="tradingview-widget-container">
-              <div class="tradingview-widget-container__widget"></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="widget-card panel">
-          <h2>Золото</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:GOLD" data-title="Золото">
-            <div class="tv-fallback">График TradingView для золота не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
             </div>
@@ -609,13 +1112,13 @@
       </div>
     </div>
 
-    <!-- ВКЛАДКА: Облигации и календарь -->
-    <div class="tab-panel" id="panel-bonds" hidden>
+    <!-- ВКЛАДКА: Commodities -->
+        <div class="tab-panel" id="panel-commodities" hidden>
       <div class="widget-grid cols-2">
         <section class="widget-card panel">
-          <h2>UST 10Y</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:US10Y" data-title="UST 10Y">
-            <div class="tv-fallback">График TradingView для UST 10Y не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+          <h2>Нефть Brent</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:UKOIL" data-title="Нефть Brent">
+            <div class="tv-fallback">График TradingView для нефти Brent не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
             </div>
@@ -623,36 +1126,122 @@
         </section>
 
         <section class="widget-card panel">
-          <h2>UST 2Y</h2>
-          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:300px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:US02Y" data-title="UST 2Y">
-            <div class="tv-fallback">График TradingView для UST 2Y не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+          <h2>Нефть WTI</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:USOIL" data-title="Нефть WTI">
+            <div class="tv-fallback">График TradingView для нефти WTI не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
             </div>
           </div>
         </section>
 
-        <section class="widget-card panel is-wide">
-          <h2>Экономический календарь</h2>
-          <div class="tv-box tv-lazy-widget" style="height:460px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-events.js">
-            <div class="tv-fallback">Виджет TradingView "Economic Calendar" не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+        <section class="widget-card panel">
+          <h2>Золото</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:GOLD" data-title="Золото">
+            <div class="tv-fallback">График TradingView для золота не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
             <div class="tradingview-widget-container">
               <div class="tradingview-widget-container__widget"></div>
             </div>
-            <script type="application/json" class="tv-widget-config">
-            {
-              "colorTheme": "light",
-              "isTransparent": true,
-              "locale": "ru",
-              "countryFilter": "us,eu,ru,kz,cn,gb,jp",
-              "importanceFilter": "0,1",
-              "width": "100%",
-              "height": "100%"
-            }
-            </script>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>Серебро</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:SILVER" data-title="Серебро">
+            <div class="tv-fallback">График TradingView для серебра не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>Медь</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="CAPITALCOM:COPPER" data-title="Медь">
+            <div class="tv-fallback">График TradingView для меди не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>Природный газ</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="TVC:NATGAS" data-title="Природный газ">
+            <div class="tv-fallback">График TradingView для природного газа не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
           </div>
         </section>
       </div>
+    </div>
+
+    <!-- ВКЛАДКА: ETF -->
+        <div class="tab-panel" id="panel-etf" hidden>
+      <div class="widget-grid cols-2">
+        <section class="widget-card panel">
+          <h2>SOXX — Полупроводники</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:SOXX" data-title="SOXX — Полупроводники">
+            <div class="tv-fallback">График TradingView для SOXX не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>SMH — Полупроводники</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:SMH" data-title="SMH — Полупроводники">
+            <div class="tv-fallback">График TradingView для SMH не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>CIBR — Кибербезопасность</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:CIBR" data-title="CIBR — Кибербезопасность">
+            <div class="tv-fallback">График TradingView для CIBR не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>AIQ — ИИ и технологии</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:AIQ" data-title="AIQ — ИИ и технологии">
+            <div class="tv-fallback">График TradingView для AIQ не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>QQQ — Nasdaq 100</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="NASDAQ:QQQ" data-title="QQQ — Nasdaq 100">
+            <div class="tv-fallback">График TradingView для QQQ не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="widget-card panel">
+          <h2>XLK — US Technology</h2>
+          <div class="tv-box tv-symbol-box tv-lazy-widget" style="height:220px;" data-widget-src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" data-symbol="AMEX:XLK" data-title="XLK — US Technology">
+            <div class="tv-fallback">График TradingView для XLK не загрузился.<br>Откройте страницу через локальный сервер (http://localhost).</div>
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+            </div>
+          </div>
+        </section>
+      </div>
+        </div>
+      </aside>
     </div>
 
     <textarea id="csvInput" spellcheck="false" hidden aria-hidden="true">date,sector,coefficient,metric,metric_coefficient,metric_weight,source,comment
@@ -1440,6 +2029,16 @@
 
   </main>
 
+  <div class="pattern-modal" id="patternModal" hidden role="dialog" aria-modal="true" aria-labelledby="patternModalTitle">
+    <div class="pattern-modal-backdrop" data-modal-close></div>
+    <div class="pattern-modal-card" role="document">
+      <button type="button" class="pattern-modal-close" data-modal-close aria-label="Закрыть">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <div class="pattern-modal-body" id="patternModalBody"></div>
+    </div>
+  </div>
+
   <script>
     const colors = [
       "#2563eb", "#16a34a", "#dc2626", "#9333ea", "#ea580c",
@@ -1451,9 +2050,15 @@
 
     const csvInput = document.getElementById("csvInput");
 	    const chart = document.getElementById("chart");
-	    const legend = document.getElementById("legend");
 	    const tableWrap = document.getElementById("tableWrap");
 	    const hiddenSectors = new Set();
+	    const sectorModeButtons = [...document.querySelectorAll("[data-sector-mode]")];
+	    const sectorDataSources = {
+	      decade: "data/market_quotes/sector_scores_preview.csv",
+	      monthly: "data/market_quotes/sector_scores_preview_monthly.csv"
+	    };
+	    let activeSectorMode = "decade";
+	    let sectorLoadRequest = 0;
     let sectorRows = parseCsv(csvInput.value);
 
 	    function initTradingViewWidgets(root) {
@@ -1467,11 +2072,19 @@
 	        if (!container || !widget || !config || !box.dataset.widgetSrc) return;
 
 	        widget.innerHTML = "";
+	        const observer = new MutationObserver(() => {
+	          if (!container.querySelector("iframe")) return;
+	          box.classList.add("tv-loaded");
+	          observer.disconnect();
+	        });
+	        observer.observe(container, { childList: true, subtree: true });
+
 	        const script = document.createElement("script");
 	        script.type = "text/javascript";
 	        script.src = box.dataset.widgetSrc;
 	        script.async = true;
 	        script.textContent = JSON.stringify(config, null, 2);
+	        script.addEventListener("error", () => observer.disconnect(), { once: true });
 	        container.appendChild(script);
 	        box.dataset.tvInitialized = "true";
 	      });
@@ -1520,7 +2133,7 @@
 	      };
 	    }
 
-	    // --- Переключение вкладок ---
+	    // --- Переключение вкладок правой колонки ---
 	    const tabButtons = [...document.querySelectorAll(".tab")];
 	    tabButtons.forEach((btn) => {
 	      btn.addEventListener("click", () => {
@@ -1533,10 +2146,12 @@
 	          panel.hidden = !isActive;
 	          if (isActive) activePanel = panel;
 	        });
-	        // SVG-график должен пересчитать размеры после показа его вкладки.
-	        if (name === "sectors") render();
-	        initTradingViewWidgets(activePanel);
+	        requestAnimationFrame(() => initTradingViewWidgets(activePanel));
 	      });
+	    });
+
+	    requestAnimationFrame(() => {
+	      initTradingViewWidgets(document.querySelector(".tab-panel:not([hidden])"));
 	    });
 
     function parseCsv(text) {
@@ -1631,23 +2246,59 @@
       return [...direct, ...computed];
     }
 
-    async function loadPreviewSectorRows() {
+    function updateSectorModeButtons(mode) {
+      sectorModeButtons.forEach((button) => {
+        const isActive = button.dataset.sectorMode === mode;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+      });
+    }
+
+    async function loadSectorRows(mode) {
+      const source = sectorDataSources[mode];
+      if (!source) return;
+
+      const requestId = ++sectorLoadRequest;
+      sectorModeButtons.forEach((button) => {
+        button.disabled = true;
+      });
+
       try {
-        const response = await fetch("data/market_quotes/sector_scores_preview.csv", { cache: "no-store" });
+        const response = await fetch(source, { cache: "no-store" });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
         const previewRows = parseCsv(await response.text());
-        if (!previewRows.length) return;
+        if (!previewRows.length) throw new Error("CSV contains no sector rows");
+        if (requestId !== sectorLoadRequest) return;
 
         const previewSectors = new Set(previewRows.map((row) => row.sector));
         const legacyRows = parseCsv(csvInput.value)
           .filter((row) => !previewSectors.has(row.sector));
         sectorRows = [...legacyRows, ...previewRows];
+        activeSectorMode = mode;
+        chart.dataset.mode = mode;
+        chart.dataset.source = source;
+        updateSectorModeButtons(mode);
         render();
       } catch (error) {
-        console.warn("Preview sector scores are not available; using embedded sector data.", error);
+        if (requestId !== sectorLoadRequest) return;
+        console.warn(`Sector scores are not available from ${source}; keeping the current data.`, error);
+      } finally {
+        if (requestId === sectorLoadRequest) {
+          sectorModeButtons.forEach((button) => {
+            button.disabled = false;
+          });
+        }
       }
     }
+
+    sectorModeButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.sectorMode;
+        if (mode === activeSectorMode && chart.dataset.mode === mode) return;
+        loadSectorRows(mode);
+      });
+    });
 
     function splitCsvLine(line) {
       const result = [];
@@ -1674,7 +2325,6 @@
       const allData = buildPoints(sectorRows);
       const data = limitToLatestDates(allData, 10);
       chart.innerHTML = "";
-      legend.innerHTML = "";
 
       if (!data.length) {
         tableWrap.innerHTML = "";
@@ -1686,7 +2336,6 @@
         if (!sectors.includes(sector)) hiddenSectors.delete(sector);
       });
       const sectorColor = new Map(sectors.map((sector, index) => [sector, colors[index % colors.length]]));
-      renderLegend(sectors);
 
       const visibleData = data.filter((row) => !hiddenSectors.has(row.sector));
       const dates = [...new Set(visibleData.map((row) => row.date))].sort();
@@ -1755,35 +2404,6 @@
       });
 
       renderTable(data, sectorColor);
-    }
-
-    function renderLegend(sectors) {
-      sectors.forEach((sector, index) => {
-        const hidden = hiddenSectors.has(sector);
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = hidden ? "is-hidden" : "";
-        button.setAttribute("aria-pressed", String(!hidden));
-        button.title = hidden ? "Показать сектор на графике" : "Убрать сектор с графика";
-
-        const dot = document.createElement("i");
-        dot.className = "dot";
-        dot.style.background = colors[index % colors.length];
-
-        const text = document.createElement("span");
-        text.textContent = sector;
-
-        button.append(dot, text);
-        button.addEventListener("click", () => {
-          if (hiddenSectors.has(sector)) {
-            hiddenSectors.delete(sector);
-          } else {
-            hiddenSectors.add(sector);
-          }
-          render();
-        });
-        legend.appendChild(button);
-      });
     }
 
     function limitToLatestDates(data, limit) {
@@ -1898,16 +2518,29 @@
         <div class="latest-grid">
           ${rows.map((row) => {
             const color = (sectorColor && sectorColor.get(row.sector)) || "var(--accent)";
+            const hidden = hiddenSectors.has(row.sector);
             return `
-              <div class="latest-chip is-${chipState(row.coefficient)}">
+              <button type="button" class="latest-chip is-${chipState(row.coefficient)}${hidden ? " is-hidden" : ""}" data-sector="${escapeHtml(row.sector)}" aria-pressed="${String(!hidden)}" title="${hidden ? "Показать сектор на графике" : "Убрать сектор с графика"}">
                 <i class="dot" style="background:${color}"></i>
-                <span class="chip-name" title="${escapeHtml(row.sector)}">${escapeHtml(row.sector)}</span>
+                <span class="chip-name">${escapeHtml(row.sector)}</span>
                 <span class="chip-score">${row.coefficient.toFixed(2)}</span>
-              </div>
+              </button>
             `;
           }).join("")}
         </div>
       `;
+
+      tableWrap.querySelectorAll(".latest-chip[data-sector]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const sector = button.getAttribute("data-sector");
+          if (hiddenSectors.has(sector)) {
+            hiddenSectors.delete(sector);
+          } else {
+            hiddenSectors.add(sector);
+          }
+          render();
+        });
+      });
     }
 
     function chipState(value) {
@@ -1925,7 +2558,247 @@
     }
 
     render();
-    loadPreviewSectorRows();
+    loadSectorRows(activeSectorMode);
+
+    /* ---------- Рыночные паттерны: модальное окно с SVG-графиками ---------- */
+    const patternData = {
+      midterm: {
+        statusClass: "is-active",
+        statusText: "Зона осторожности",
+        title: "Президентский цикл: midterm-год",
+        lede: "Четырёхлетний президентский цикл США делит рынок на post-election, midterm, pre-election и election годы. Midterm-год (2-й) исторически — самая слабая и волатильная фаза цикла.",
+        chartTitle: "Средний 4-летний президентский цикл S&P 500",
+        chart: cycleChart,
+        chartCaption: "Среднеисторический кумулятив (база 100), рассчитан из месячного ряда S&P 500 c 1950 года (19 циклов, price return). Годовые приросты композита: 2025 +7.5%, midterm 2026 +4.2%, 2027 +16.2%, 2028 +8.7%. Дно midterm — около сентября.",
+        sections: [
+          { h: "Суть закономерности", p: "Первая половина цикла, особенно midterm-год, в среднем слабее и волатильнее. Внутри midterm выделяется слабая зона примерно с весны по сентябрь и сильная зона, начинающаяся в Q4 и продолжающаяся в предвыборный год." },
+          { h: "Почему может работать", p: "После выборов новая администрация чаще проводит непопулярные меры; к промежуточным выборам растёт политическая неопределённость. После midterm она снимается, а власти стремятся поддержать экономику перед следующими президентскими выборами." },
+          { h: "Ограничение", p: "Выборка мала — около 25 циклов за столетие. Крупные кризисы (1929, 1973, 2008, 2020, 2022) полностью ломают сезонность, поэтому это контекст, а не причинно-следственная модель." }
+        ],
+        source: "Stock Trader's Almanac (Hirsch); U.S. Bank; Capital Group; S&P Global."
+      },
+      spring: {
+        statusClass: "is-tailwind",
+        statusText: "Попутный ветер",
+        title: "Сильный весенний рывок",
+        lede: "Аномально сильный рост рынка за апрель и май исторически чаще был сигналом продолжения роста, чем разворота. Здравый смысл подсказывает обратное, но статистика говорит о силе тренда.",
+        chartTitle: "Что было после сильного апреля+мая (рост 10+%)",
+        chart: springChart,
+        chartCaption: "По данным Carson Group / Ryan Detrick: в редких прошлых случаях роста 10+% за апрель+май июнь и остаток года были выше, чем в обычный год.",
+        sections: [
+          { h: "Суть наблюдения", p: "С 1950 года рост на 10+% за апрель и май вместе случался лишь несколько раз, и все — за последние ~20 лет. Во всех прошлых случаях рынок продолжал расти и в июне, и до конца года." },
+          { h: "Почему может работать", p: "Широкий и быстрый рост в обычно нейтральные весенние месяцы отражает сильный приток ликвидности, рост прогнозов прибыли и устойчивый аппетит к риску — такие режимы редко разворачиваются мгновенно." },
+          { h: "Ограничение", p: "Около пяти наблюдений — это не вероятность, а иллюстрация. Все случаи пришлись на эпоху низких ставок и QE, поэтому в другом макрорежиме паттерн может не повториться." }
+        ],
+        source: "Carson Group / Ryan Detrick; пересказы Seeking Alpha, Benzinga."
+      },
+      sixmonths: {
+        statusClass: "is-active",
+        statusText: "Слабый сезон",
+        title: "Лучшие и худшие шесть месяцев",
+        lede: "У рынка США устойчивая сезонная асимметрия: период ноябрь→апрель исторически заметно сильнее, чем май→октябрь. Это «научная» версия правила Sell in May.",
+        chartTitle: "Средняя доходность S&P 500 по полугодиям (1950–2024, total return)",
+        chart: sixMonthsChart,
+        chartCaption: "Ноябрь→апрель ~+7.2% против май→октябрь ~+2.1%. Разрыв около 5 процентных пунктов держится десятилетиями.",
+        sections: [
+          { h: "Суть закономерности", p: "Полугодие ноябрь→апрель в среднем приносило около +7.2%, а май→октябрь — около +2.1%. Это устойчивая структура года, а не разовое совпадение." },
+          { h: "Почему это работает", p: "Денежные потоки после налогового сезона и в начале года, бонусы и ребалансировка к концу года; летом ликвидность ниже, а осенью исторически чаще случались крахи (1929, 1987, 2008)." },
+          { h: "Ограничение", p: "Буквальная стратегия выхода в мае последние два десятилетия часто проигрывала простому «купить и держать». Это сезонный фон, а не механический сигнал." }
+        ],
+        source: "Stock Trader's Almanac (Yale/Jeffrey Hirsch); Fidelity."
+      }
+    };
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    function el(name, attrs, text) {
+      const node = document.createElementNS(svgNS, name);
+      for (const k in attrs) node.setAttribute(k, attrs[k]);
+      if (text != null) node.textContent = text;
+      return node;
+    }
+    function svgRoot(w, h) {
+      const s = el("svg", { viewBox: `0 0 ${w} ${h}`, role: "img" });
+      return s;
+    }
+
+    // График 1: средний 4-летний президентский цикл S&P 500.
+    // Точный среднеисторический кумулятив: рассчитан из месячного ряда S&P 500 (price) c 1950 года,
+    // 19 циклов, усреднение помесячной доходности по году цикла. База = 100 (дек. года выборов).
+    // Данные: data/market_quotes/presidential_cycle_composite.json (наш расчёт).
+    function cycleChart() {
+      const w = 640, h = 252, m = { t: 18, r: 16, b: 44, l: 40 };
+      const iw = w - m.l - m.r, ih = h - m.t - m.b;
+      const s = svgRoot(w, h);
+      const idx = [100,100.89,101.07,100.43,101,103.66,103.91,104.95,105.49,104.55,105.5,106.9,107.55,107.67,107.15,108.51,109.28,108.44,107.4,106.45,107.34,107.11,107.65,110.79,112.01,115.41,118.75,120.17,123.38,124.85,126.16,128.57,127.42,128.48,127.59,127.65,130.17,132.34,132.9,132.42,133.94,134.23,136.27,137.36,139.07,139.45,138.1,139.64,141.55];
+      const bottomI = 19; // реальное дно midterm (~сентябрь midterm-года) из расчёта
+      const n = idx.length - 1;
+      const minV = 98, maxV = 144;
+      const x = (i) => m.l + (i / n) * iw;
+      const y = (v) => m.t + (maxV - v) / (maxV - minV) * ih;
+      [100, 110, 120, 130, 140].forEach((lvl) => {
+        s.appendChild(el("line", { x1: m.l, y1: y(lvl), x2: m.l + iw, y2: y(lvl), class: "pg-grid" }));
+        s.appendChild(el("text", { x: m.l - 6, y: y(lvl) + 3, "text-anchor": "end", class: "pg-axis-text" }, String(lvl)));
+      });
+      s.appendChild(el("line", { x1: m.l, y1: m.t + ih, x2: m.l + iw, y2: m.t + ih, class: "pg-axis" }));
+      // подписи текущего цикла: год выборов 2024 → 2025 post, 2026 midterm, 2027 pre, 2028 election
+      const labels = ["2025", "2026 (midterm)", "2027", "2028"];
+      for (let g = 0; g <= 4; g++) {
+        const xi = x(g * 12);
+        if (g > 0 && g < 4) s.appendChild(el("line", { x1: xi, y1: m.t, x2: xi, y2: m.t + ih, class: "pg-grid" }));
+        if (g < 4) s.appendChild(el("text", { x: x(g * 12 + 6), y: h - 14, "text-anchor": "middle", class: "pg-axis-text" }, labels[g]));
+      }
+      const d = idx.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+      s.appendChild(el("path", { d, class: "pg-line", stroke: "var(--accent)" }));
+      s.appendChild(el("circle", { cx: x(bottomI), cy: y(idx[bottomI]), r: 3.5, fill: "var(--expensive)" }));
+      s.appendChild(el("text", { x: x(bottomI) + 6, y: y(idx[bottomI]) + 14, class: "pg-axis-text", fill: "var(--expensive)" }, "дно midterm"));
+      return s;
+    }
+
+    // График 2: бары "остаток года" после сильного апр+мая
+    function springChart() {
+      const w = 640, h = 240, m = { t: 18, r: 18, b: 40, l: 40 };
+      const iw = w - m.l - m.r, ih = h - m.t - m.b;
+      const s = svgRoot(w, h);
+      const bars = [
+        { label: "Июнь (обычно)", v: -0.2, color: "var(--muted-2)" },
+        { label: "Июнь (после рывка)", v: 1.0, color: "var(--cheap)" },
+        { label: "Остаток года (обычно)", v: 4.9, color: "var(--muted-2)" },
+        { label: "Остаток года (после рывка)", v: 10.5, color: "var(--cheap)" }
+      ];
+      const maxV = 12, minV = -2;
+      const y = (v) => m.t + (maxV - v) / (maxV - minV) * ih;
+      const zeroY = y(0);
+      // нулевая линия
+      s.appendChild(el("line", { x1: m.l, y1: zeroY, x2: m.l + iw, y2: zeroY, class: "pg-axis" }));
+      const bw = iw / bars.length * 0.52;
+      bars.forEach((b, i) => {
+        const cx = m.l + (i + 0.5) * (iw / bars.length);
+        const top = b.v >= 0 ? y(b.v) : zeroY;
+        const hgt = Math.abs(y(b.v) - zeroY);
+        s.appendChild(el("rect", { x: cx - bw / 2, y: top, width: bw, height: Math.max(hgt, 1), rx: 4, fill: b.color }));
+        s.appendChild(el("text", { x: cx, y: (b.v >= 0 ? y(b.v) - 6 : y(b.v) + 14), "text-anchor": "middle", class: "pg-bar-label" }, (b.v > 0 ? "+" : "") + b.v.toFixed(1) + "%"));
+        // двустрочная подпись
+        const words = b.label.split(" (");
+        s.appendChild(el("text", { x: cx, y: h - 22, "text-anchor": "middle", class: "pg-axis-text" }, words[0]));
+        if (words[1]) s.appendChild(el("text", { x: cx, y: h - 10, "text-anchor": "middle", class: "pg-axis-text" }, "(" + words[1]));
+      });
+      return s;
+    }
+
+    // График 3: лучшие/худшие 6 месяцев
+    function sixMonthsChart() {
+      const w = 640, h = 240, m = { t: 22, r: 18, b: 38, l: 40 };
+      const iw = w - m.l - m.r, ih = h - m.t - m.b;
+      const s = svgRoot(w, h);
+      const bars = [
+        { label: "Ноябрь → апрель", v: 7.2, color: "var(--cheap)", now: false },
+        { label: "Май → октябрь", v: 2.1, color: "var(--expensive)", now: true }
+      ];
+      const maxV = 8;
+      const y = (v) => m.t + (maxV - v) / maxV * ih;
+      const zeroY = y(0);
+      s.appendChild(el("line", { x1: m.l, y1: zeroY, x2: m.l + iw, y2: zeroY, class: "pg-axis" }));
+      const bw = iw / bars.length * 0.42;
+      bars.forEach((b, i) => {
+        const cx = m.l + (i + 0.5) * (iw / bars.length);
+        s.appendChild(el("rect", { x: cx - bw / 2, y: y(b.v), width: bw, height: zeroY - y(b.v), rx: 5, fill: b.color }));
+        s.appendChild(el("text", { x: cx, y: y(b.v) - 8, "text-anchor": "middle", class: "pg-bar-label" }, "+" + b.v.toFixed(1) + "%"));
+        s.appendChild(el("text", { x: cx, y: h - 14, "text-anchor": "middle", class: "pg-axis-text" }, b.label));
+        if (b.now) {
+          s.appendChild(el("text", { x: cx, y: m.t - 6, "text-anchor": "middle", class: "pg-now-text" }, "← сейчас"));
+        }
+      });
+      return s;
+    }
+
+    // Сборка и управление модалкой
+    const modal = document.getElementById("patternModal");
+    const modalBody = document.getElementById("patternModalBody");
+    let lastFocused = null;
+
+    function buildModal(key) {
+      const d = patternData[key];
+      if (!d) return;
+      modalBody.innerHTML = "";
+      const status = document.createElement("span");
+      status.className = "modal-status " + d.statusClass;
+      status.textContent = d.statusText;
+      const title = document.createElement("h3");
+      title.className = "modal-title";
+      title.id = "patternModalTitle";
+      title.textContent = d.title;
+      const lede = document.createElement("p");
+      lede.className = "modal-lede";
+      lede.textContent = d.lede;
+      modalBody.append(status, title, lede);
+
+      const chartWrap = document.createElement("div");
+      chartWrap.className = "modal-chart";
+      const ct = document.createElement("p");
+      ct.className = "modal-chart-title";
+      ct.textContent = d.chartTitle;
+      chartWrap.appendChild(ct);
+      chartWrap.appendChild(d.chart());
+      const cap = document.createElement("p");
+      cap.className = "modal-chart-caption";
+      cap.textContent = d.chartCaption;
+      chartWrap.appendChild(cap);
+      modalBody.appendChild(chartWrap);
+
+      d.sections.forEach((sec) => {
+        const wrap = document.createElement("div");
+        wrap.className = "modal-section";
+        const hh = document.createElement("h4");
+        hh.textContent = sec.h;
+        const pp = document.createElement("p");
+        pp.textContent = sec.p;
+        wrap.append(hh, pp);
+        modalBody.appendChild(wrap);
+      });
+
+      const src = document.createElement("p");
+      src.className = "modal-source";
+      src.textContent = "Источник: " + d.source;
+      modalBody.appendChild(src);
+    }
+
+    function openModal(key) {
+      buildModal(key);
+      lastFocused = document.activeElement;
+      modal.hidden = false;
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => modal.classList.add("is-open"));
+      const closeBtn = modal.querySelector(".pattern-modal-close");
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("is-open");
+      document.body.style.overflow = "";
+      const onEnd = () => {
+        modal.hidden = true;
+        modal.removeEventListener("transitionend", onEnd);
+      };
+      modal.addEventListener("transitionend", onEnd);
+      // fallback на случай отсутствия transitionend
+      setTimeout(() => { if (!modal.classList.contains("is-open")) modal.hidden = true; }, 320);
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+
+    document.querySelectorAll(".pattern-card[data-pattern]").forEach((card) => {
+      const open = () => openModal(card.dataset.pattern);
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+      });
+    });
+
+    modal.querySelectorAll("[data-modal-close]").forEach((node) => {
+      node.addEventListener("click", closeModal);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.hidden) closeModal();
+    });
   </script>
 </body>
 </html>
