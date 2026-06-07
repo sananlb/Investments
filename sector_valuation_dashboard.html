@@ -101,6 +101,46 @@
       margin-bottom: 16px;
     }
 
+    .chart-area {
+      position: relative;
+    }
+
+    .sector-hover-label {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-4px);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 11px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12);
+      font-size: 12.5px;
+      font-weight: 600;
+      line-height: 1;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 150ms ease, transform 150ms ease;
+      z-index: 5;
+    }
+
+    .sector-hover-label.is-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .sector-hover-label .sector-hover-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      flex: 0 0 auto;
+      background: var(--accent);
+    }
+
     .panel-header,
     .toolbar {
       display: flex;
@@ -971,7 +1011,13 @@
               </div>
             </div>
           </div>
-          <svg id="chart" role="img" aria-label="Sector valuation chart"></svg>
+          <div class="chart-area">
+            <div id="sectorHoverLabel" class="sector-hover-label" aria-hidden="true">
+              <span class="sector-hover-dot"></span>
+              <span class="sector-hover-name"></span>
+            </div>
+            <svg id="chart" role="img" aria-label="Sector valuation chart"></svg>
+          </div>
           <div class="chart-divider">
             <span class="chart-divider-label">Сектора</span>
             <span class="panel-hint">Нажмите на сектор, чтобы скрыть или показать его на графике.</span>
@@ -2067,7 +2113,21 @@
 
     const csvInput = document.getElementById("csvInput");
 	    const chart = document.getElementById("chart");
+	    const sectorHoverLabel = document.getElementById("sectorHoverLabel");
+	    const sectorHoverDot = sectorHoverLabel.querySelector(".sector-hover-dot");
+	    const sectorHoverName = sectorHoverLabel.querySelector(".sector-hover-name");
 	    const tableWrap = document.getElementById("tableWrap");
+
+	    function showSectorHoverLabel(name, color) {
+	      sectorHoverName.textContent = name;
+	      sectorHoverName.style.color = color;
+	      sectorHoverDot.style.background = color;
+	      sectorHoverLabel.classList.add("is-visible");
+	    }
+
+	    function hideSectorHoverLabel() {
+	      sectorHoverLabel.classList.remove("is-visible");
+	    }
 	    const hiddenSectors = new Set();
 	    const sectorModeButtons = [...document.querySelectorAll("[data-sector-mode]")];
 	    const sectorDataSources = {
@@ -2409,8 +2469,14 @@
           class: "series-hit",
           "data-sector": item.sector
         });
-        hit.addEventListener("mouseenter", () => line.classList.add("is-active"));
-        hit.addEventListener("mouseleave", () => line.classList.remove("is-active"));
+        hit.addEventListener("mouseenter", () => {
+          line.classList.add("is-active");
+          showSectorHoverLabel(item.sector, item.color);
+        });
+        hit.addEventListener("mouseleave", () => {
+          line.classList.remove("is-active");
+          hideSectorHoverLabel();
+        });
 
         item.points.forEach((point) => {
           const circle = addSvg("circle", {

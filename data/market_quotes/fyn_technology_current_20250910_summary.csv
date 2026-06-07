@@ -1,9 +1,9 @@
 metric,value,n_companies,n_observations,status,comment
-pe,29.4949,8,8,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-ps,6.20905,8,8,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-pb,8.3442,8,8,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-ev_ebitda,20.32145,4,4,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-fcf_yield,0.052632,8,8,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pe,27.1317,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,6.5722,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,8.6986,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,20.5045,5,5,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.051147,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
 net_margin,0.243,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10
 gross_margin,0.73235,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10
 revenue_growth_yoy,0.1063,9,9,ok,MEDIAN current TTM snapshot as of 2025-09-10

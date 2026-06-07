@@ -1,10 +1,10 @@
 metric,value,n_companies,n_observations,status,comment
-pe,31.6882,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-ps,2.72715,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-pb,9.5475,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-ev_ebitda,21.2633,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-fcf_yield,0.030237,5,5,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
-net_margin,0.10885,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10
-gross_margin,0.54805,4,4,ok,MEDIAN current TTM snapshot as of 2025-09-10
-revenue_growth_yoy,0.03125,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10
-earnings_growth_yoy,0.013,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10
+pe,25.8692,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,2.1715,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,8.8842,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,19.5577,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.032872,6,6,ok,MEDIAN current TTM snapshot as of 2025-09-10; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+net_margin,0.0981,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10
+gross_margin,0.5443,5,5,ok,MEDIAN current TTM snapshot as of 2025-09-10
+revenue_growth_yoy,0.0314,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10
+earnings_growth_yoy,-0.0674,7,7,ok,MEDIAN current TTM snapshot as of 2025-09-10
