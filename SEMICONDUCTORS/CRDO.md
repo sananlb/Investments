@@ -1,22 +1,19 @@
 # CRDO
 
-- Группа/сектор: `AI` (по сектору — semiconductors/connectivity; peers см. в [SEMICONDUCTORS/](../SEMICONDUCTORS/): ALAB, MRVL)
-- Источник добавления: расширение universe AI-boom (мелкие/high-asymmetry), Фаза 5 deep-dive — см. [AI_BOOM_DEEPDIVE.md](AI_BOOM_DEEPDIVE.md)
+- Группа TradingView: `Semiconductor` (connectivity / SerDes)
+- Источник: расширение universe AI-boom (мелкие/high-asymmetry); разбор — см. [AI/AI_BOOM_DEEPDIVE.md](../AI/AI_BOOM_DEEPDIVE.md)
+- Статус: разобрана (deep-dive, Фаза 5)
 - Обновлено: 2026-06-24
 - Название: Credo Technology
-- Роль в секторе: SerDes/AEC connectivity — bottleneck передачи данных в AI-кластерах
+- Роль: SerDes/AEC connectivity — bottleneck передачи данных в AI-кластерах (peers: ALAB, MRVL)
 
 ## Инвестиционный тезис
 
-Pure-play на физический bottleneck AI-сетей: на скоростях 800G→1.6T медь не держит сигнал, оптика дорога/греется — в щель встаёт active electrical cable (AEC) на собственном SerDes Credo. FY26 +206% выручки ($1.34B), оп-маржа ~48%, net-cash; гайд Q1 FY27 $465-475M (+126% YoY). High-asymmetry опцион, не core.
+Pure-play на физический bottleneck AI-сетей: на скоростях 800G→1.6T медь не держит сигнал, оптика дорога/греется — в щель встаёт active electrical cable (AEC) на собственном SerDes Credo. FY26 +206% выручки ($1.34B), оп-маржа ~48%, net-cash; гайд Q1 FY27 $465-475M (+126% YoY). High-asymmetry опцион, не core. По valuation — **cheap-and-improving только с поправкой на рост** (PEG ~0.35-0.45; по TTM дорого).
 
 ## Бизнес
 
 AEC = «boring но обязательный» расходник, масштабируется 1:1 с числом ускорителей. Моат — оператора в нише, не крепость: преимущество в энергии/$ SerDes + co-design lock-in, но Broadcom/Marvell имеют SerDes мирового класса и в 10-50x больше R&D. Окно держится, пока ниша мала для серьёзной атаки гигантов. Это окно с признаками rent (2-4 года), не вечная франшиза.
-
-## Секторная оценка
-
-Звено Networking/connectivity. Rent — частичный (high-asymmetry за счёт малой базы и узкого bottleneck). По valuation — **cheap-and-improving только с поправкой на рост** (PEG ~0.35-0.45; по TTM дорого).
 
 ## Финансы
 

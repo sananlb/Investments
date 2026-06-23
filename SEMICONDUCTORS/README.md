@@ -265,6 +265,7 @@ Deloitte отдельно предупреждает, что AI data center mark
 - [ARM](ARM.md)
 - [ASML](ASML.md)
 - [AVGO](AVGO.md)
+- [CRDO](CRDO.md)
 - [DELL](DELL.md)
 - [INTC](INTC.md)
 - [MRVL](MRVL.md)
