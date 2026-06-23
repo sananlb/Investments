@@ -126,6 +126,7 @@ AI Infrastructure sector_score =
 - [AMD](AMD.md)
 - [AMZN](AMZN.md)
 - [AVGO](AVGO.md)
+- [CRDO](CRDO.md)
 - [GOOG](GOOG.md)
 - [META](META.md)
 - [MSFT](MSFT.md)
