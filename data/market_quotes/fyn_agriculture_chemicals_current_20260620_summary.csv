@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,33.4539,5,5,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+ps,3.95456,6,6,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+pb,3.98708,7,7,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+ev_ebitda,17.7089,2,2,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+fcf_yield,0.030706,4,4,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+net_margin,0.128,5,5,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+gross_margin,0.42175,2,2,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+revenue_growth_yoy,0.049,5,5,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+earnings_growth_yoy,0.0448,4,4,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"

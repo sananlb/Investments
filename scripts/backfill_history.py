@@ -3,9 +3,10 @@
 Backfill historical point-in-time sector_score anchors.
 
 For every selected (sector, date) pair, run build_fy_norm.py --current --as-of
-strictly sequentially with Nasdaq historical prices. Completed snapshots are
-skipped when their P/E summary has a normal company count, making the backfill
-safe to resume.
+strictly sequentially with Nasdaq historical prices. By default, auto refresh
+uses prices only between reporting seasons, refreshes only companies with new
+SEC filings, and performs four full audits per year. Completed snapshots are
+skipped when their P/E summary has a normal company count.
 
 After collection, rebuild the canonical 17-sector x 10-date dashboard preview
 from dated current summaries and the existing five-year norm summaries.
@@ -114,6 +115,15 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Pass --no-cache to build_fy_norm.py and force SEC companyconcept requests.",
     )
+    parser.add_argument(
+        "--refresh-mode",
+        choices=("auto", "full", "prices-only"),
+        default="auto",
+        help=(
+            "Fundamentals refresh policy passed to build_fy_norm.py "
+            "(default: auto)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -209,6 +219,7 @@ def run_snapshot(
     tickers: Sequence[str],
     anchor: dt.date,
     no_cache: bool,
+    refresh_mode: str,
 ) -> int:
     cmd = [
         sys.executable,
@@ -224,6 +235,8 @@ def run_snapshot(
         anchor.isoformat(),
         "--price-provider",
         "nasdaq",
+        "--refresh-mode",
+        refresh_mode,
     ]
     if no_cache:
         cmd.append("--no-cache")
@@ -232,7 +245,8 @@ def run_snapshot(
         "  $ "
         f"{Path(sys.executable).name} scripts/build_fy_norm.py "
         f"--sector {name!r} --slug {slug} --current "
-        f"--as-of {anchor.isoformat()} --price-provider nasdaq{cache_arg}"
+        f"--as-of {anchor.isoformat()} --price-provider nasdaq "
+        f"--refresh-mode {refresh_mode}{cache_arg}"
     )
     return subprocess.run(cmd, cwd=REPO_ROOT).returncode
 
@@ -292,8 +306,12 @@ def build_preview_point(
 ) -> Dict[str, Any]:
     detail_path, current_path, json_path = dated_paths(slug, anchor)
     norm_path = norm_summary_path(slug)
+    metadata = load_metadata(json_path)
+    refresh_mode = metadata.get("refresh_mode") or (
+        "prices-only" if "price-only" in str(metadata.get("method") or "") else "legacy-full"
+    )
     source = (
-        "build_fy_norm.py --current --as-of over SEC EDGAR; "
+        f"build_fy_norm.py --current --as-of; refresh_mode={refresh_mode}; "
         f"{current_path.name}; {norm_path.name}"
     )
 
@@ -339,7 +357,6 @@ def build_preview_point(
 
     quality_ok, quality_comment = snapshot_quality(slug, anchor, len(tickers))
     status = "ok" if not missing_metrics and quality_ok else "provisional"
-    metadata = load_metadata(json_path)
     price_source = metadata.get("price_source")
     if price_source:
         if isinstance(price_source, list):
@@ -348,6 +365,7 @@ def build_preview_point(
 
     comments = [
         f"status={status}",
+        f"refresh_mode={refresh_mode}",
         f"actual_trading_date={','.join(actual_trading_dates(detail_path)) or 'missing'}",
         quality_comment,
     ]
@@ -449,7 +467,14 @@ def main() -> int:
 
                 print(f"  collect: {reason}")
                 started_at = time.perf_counter()
-                rc = run_snapshot(slug, sector, tickers, anchor, args.no_cache)
+                rc = run_snapshot(
+                    slug,
+                    sector,
+                    tickers,
+                    anchor,
+                    args.no_cache,
+                    args.refresh_mode,
+                )
                 elapsed = time.perf_counter() - started_at
                 ready, reason = snapshot_quality(slug, anchor, len(tickers))
                 if rc == 0 and ready:

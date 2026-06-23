@@ -64,7 +64,7 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 from statistics import mean, median
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 ENV_PATH = PROJECT_ROOT / ".env"
@@ -83,6 +83,7 @@ USER_AGENT = "Investment Library research nalbantovfml@gmail.com"
 SEC_PAUSE = 0.25
 SEC_CACHE_MAX_AGE = dt.timedelta(days=7)
 SEC_CACHE_ENABLED = True
+SEC_SUBMISSIONS_MEMORY_CACHE: Dict[int, Dict[str, Any]] = {}
 HTTP_ATTEMPTS = 4
 HTTP_RETRY_DELAYS = (2, 4, 8)
 NETWORK_EXCEPTIONS = (urllib.error.URLError, socket.gaierror, TimeoutError, ConnectionError)
@@ -103,6 +104,15 @@ FMP_KEY_NAMES = (
     "FINANCIAL_MODELING_PREP_API_KEY",
     "FINANCIALMODELINGPREP_API_KEY",
 )
+
+# Full basket audits run after the four main US reporting seasons. Between
+# these dates, --refresh-mode auto only refreshes companies that filed one of
+# the forms below since their local fundamentals were last checked.
+QUARTERLY_AUDIT_DATES = frozenset({(3, 20), (5, 20), (8, 20), (11, 20)})
+RELEVANT_SEC_FORMS = frozenset({
+    "10-Q", "10-Q/A", "10-K", "10-K/A", "20-F", "20-F/A",
+    "40-F", "40-F/A", "6-K", "6-K/A",
+})
 
 # Default basket (the semiconductor norm task). Overridable via --tickers.
 SEMIS = ["NVDA", "AMD", "AVGO", "TSM", "ASML", "MU", "QCOM", "TXN"]
@@ -322,9 +332,51 @@ def load_ticker_cik_map() -> Dict[str, int]:
 
 
 def fetch_submission_metadata(cik: int) -> Dict[str, Any]:
+    cached = SEC_SUBMISSIONS_MEMORY_CACHE.get(cik)
+    if cached is not None:
+        return cached
     data = http_json(SEC_SUBMISSIONS_URL.format(cik=cik))
     time.sleep(SEC_PAUSE)
+    SEC_SUBMISSIONS_MEMORY_CACHE[cik] = data
     return data
+
+
+def relevant_filings(
+    submission_metadata: Dict[str, Any],
+    as_of: dt.date,
+) -> List[Dict[str, str]]:
+    """Relevant SEC filings from the recent submissions table, newest first."""
+    recent = ((submission_metadata.get("filings") or {}).get("recent") or {})
+    forms = recent.get("form") or []
+    filing_dates = recent.get("filingDate") or []
+    accessions = recent.get("accessionNumber") or []
+    filings: List[Dict[str, str]] = []
+    for form, filing_date, accession in zip(forms, filing_dates, accessions):
+        if form not in RELEVANT_SEC_FORMS:
+            continue
+        try:
+            parsed_date = dt.date.fromisoformat(filing_date)
+        except (TypeError, ValueError):
+            continue
+        if parsed_date <= as_of:
+            filings.append({
+                "form": str(form),
+                "filing_date": filing_date,
+                "accession_number": str(accession),
+            })
+    return sorted(
+        filings,
+        key=lambda item: (item["filing_date"], item["accession_number"]),
+        reverse=True,
+    )
+
+
+def latest_relevant_filing(
+    submission_metadata: Dict[str, Any],
+    as_of: dt.date,
+) -> Optional[Dict[str, str]]:
+    filings = relevant_filings(submission_metadata, as_of)
+    return filings[0] if filings else None
 
 
 def sec_concept_cache_path(cik: int, taxonomy: str, tag: str) -> Path:
@@ -1245,6 +1297,53 @@ def current_missing_company_row(symbol: str, cik: Optional[int], as_of: dt.date,
     return row
 
 
+def fetch_current_price(
+    symbol: str,
+    as_of: dt.date,
+    twelve_key: Optional[str],
+    fmp_key: Optional[str],
+    price_provider: str,
+) -> Tuple[Optional[float], Optional[str], str, List[str]]:
+    """Fetch one close using the configured provider chain."""
+    close: Optional[float] = None
+    close_date: Optional[str] = None
+    price_note = ""
+    price_source = "missing"
+    notes: List[str] = []
+    if price_provider in ("twelve", "auto"):
+        if twelve_key:
+            close, close_date, price_note = fetch_latest_close(symbol, as_of, twelve_key)
+            time.sleep(TWELVE_PAUSE)
+            if close is not None:
+                price_source = "Twelve Data time_series adjust=none latest close"
+        else:
+            price_note = "no twelvedata key"
+    if close is None and price_provider in ("fmp", "auto"):
+        twelve_note = price_note
+        if fmp_key:
+            close, close_date, price_note = fetch_latest_fmp_close(symbol, as_of, fmp_key)
+            time.sleep(FMP_PAUSE)
+            if close is not None:
+                price_source = "Financial Modeling Prep stable historical-price-eod/full close"
+                if twelve_note:
+                    notes.append(f"{twelve_note}; FMP fallback used")
+        else:
+            price_note = "no FMP key"
+    if close is None and price_provider in ("nasdaq", "auto"):
+        prior_note = price_note
+        close, close_date, price_note = fetch_latest_nasdaq_close(symbol, as_of)
+        time.sleep(NASDAQ_PAUSE)
+        if close is not None:
+            price_source = "Nasdaq historical API close"
+            if prior_note:
+                notes.append(f"{prior_note}; Nasdaq fallback used")
+    if close is not None and price_source == "missing":
+        price_source = "current EOD close"
+    if price_note:
+        notes.append(price_note)
+    return close, close_date, price_source, notes
+
+
 def build_current_company(
     symbol: str,
     cik: int,
@@ -1280,42 +1379,9 @@ def build_current_company(
     debt_point = latest_instant_point(instants["debt"][1], as_of)
     cash_point = latest_instant_point(instants["cash"][1], as_of)
 
-    notes: List[str] = []
-    close: Optional[float] = None
-    close_date: Optional[str] = None
-    price_note = ""
-    price_source = "missing"
-    if price_provider in ("twelve", "auto"):
-        if twelve_key:
-            close, close_date, price_note = fetch_latest_close(symbol, as_of, twelve_key)
-            time.sleep(TWELVE_PAUSE)
-            if close is not None:
-                price_source = "Twelve Data time_series adjust=none latest close"
-        else:
-            price_note = "no twelvedata key"
-    if close is None and price_provider in ("fmp", "auto"):
-        twelve_note = price_note
-        if fmp_key:
-            close, close_date, price_note = fetch_latest_fmp_close(symbol, as_of, fmp_key)
-            time.sleep(FMP_PAUSE)
-            if close is not None:
-                price_source = "Financial Modeling Prep stable historical-price-eod/full close"
-                if twelve_note:
-                    notes.append(f"{twelve_note}; FMP fallback used")
-        else:
-            price_note = "no FMP key"
-    if close is None and price_provider in ("nasdaq", "auto"):
-        prior_note = price_note
-        close, close_date, price_note = fetch_latest_nasdaq_close(symbol, as_of)
-        time.sleep(NASDAQ_PAUSE)
-        if close is not None:
-            price_source = "Nasdaq historical API close"
-            if prior_note:
-                notes.append(f"{prior_note}; Nasdaq fallback used")
-    if close is not None and price_source == "missing":
-        price_source = "current EOD close"
-    if price_note:
-        notes.append(price_note)
+    close, close_date, price_source, notes = fetch_current_price(
+        symbol, as_of, twelve_key, fmp_key, price_provider
+    )
 
     shares = shares_point.get("val") if shares_point else None
     shares_asof = shares_point.get("end", "") if shares_point else ""
@@ -1409,6 +1475,216 @@ def build_current_company(
     return row
 
 
+def read_detail_rows(path: Path) -> List[Dict[str, Any]]:
+    with path.open(encoding="utf-8", newline="") as file:
+        return [dict(row) for row in csv.DictReader(file)]
+
+
+def read_snapshot_json(path: Path) -> Dict[str, Any]:
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def snapshot_json_for_csv(csv_path: Path) -> Path:
+    return csv_path.with_suffix(".json")
+
+
+def snapshot_company_state(
+    json_path: Path,
+    symbols: Sequence[str],
+    seen: Optional[set[Path]] = None,
+) -> Tuple[Dict[str, str], Dict[str, Dict[str, str]]]:
+    """Return per-symbol fundamentals cutoff and latest known filing metadata."""
+    seen = seen or set()
+    resolved = json_path.resolve()
+    if resolved in seen:
+        return {}, {}
+    seen.add(resolved)
+
+    data = read_snapshot_json(json_path)
+    metadata = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
+    dates = {
+        str(symbol): str(value)
+        for symbol, value in (metadata.get("fundamentals_as_of_by_symbol") or {}).items()
+        if value
+    }
+    filings = {
+        str(symbol): dict(value)
+        for symbol, value in (metadata.get("latest_filings_by_symbol") or {}).items()
+        if isinstance(value, dict)
+    }
+
+    method = str(metadata.get("method") or "").lower()
+    refresh_mode = str(metadata.get("refresh_mode") or "").lower()
+    base_name = metadata.get("base_snapshot")
+    if (refresh_mode == "prices-only" or "price-only" in method) and base_name:
+        base_csv = json_path.parent / str(base_name)
+        base_dates, base_filings = snapshot_company_state(
+            snapshot_json_for_csv(base_csv), symbols, seen
+        )
+        dates = {**base_dates, **dates}
+        filings = {**base_filings, **filings}
+
+    as_of = metadata.get("as_of")
+    if as_of and refresh_mode != "prices-only" and "price-only" not in method:
+        for symbol in symbols:
+            dates.setdefault(symbol, str(as_of))
+    return dates, filings
+
+
+def find_price_base_snapshot(
+    slug: str,
+    as_of: dt.date,
+    symbols: Sequence[str],
+) -> Tuple[Optional[Path], List[Dict[str, Any]], Dict[str, Any], Dict[str, str], Dict[str, Dict[str, str]]]:
+    """Find the latest local current detail snapshot not later than as_of."""
+    candidates: List[Tuple[dt.date, float, Path, Dict[str, Any]]] = []
+    for json_path in OUT_DIR.glob(f"fyn_{slug}_current*.json"):
+        data = read_snapshot_json(json_path)
+        metadata = data.get("metadata") if isinstance(data.get("metadata"), dict) else {}
+        date_text = metadata.get("as_of")
+        if not date_text:
+            match = re.search(r"_current_(\d{8})$", json_path.stem)
+            date_text = (
+                dt.datetime.strptime(match.group(1), "%Y%m%d").date().isoformat()
+                if match else None
+            )
+        try:
+            snapshot_date = dt.date.fromisoformat(str(date_text))
+        except (TypeError, ValueError):
+            continue
+        if json_path.resolve() == OUT_JSON.resolve() and snapshot_date >= as_of:
+            continue
+        csv_path = json_path.with_suffix(".csv")
+        if snapshot_date <= as_of and csv_path.exists():
+            candidates.append((snapshot_date, csv_path.stat().st_mtime, csv_path, metadata))
+    if not candidates:
+        return None, [], {}, {}, {}
+
+    _date, _mtime, csv_path, metadata = max(candidates, key=lambda item: (item[0], item[1]))
+    rows = [row for row in read_detail_rows(csv_path) if row.get("symbol") != "BASKET_AVG"]
+    dates, filings = snapshot_company_state(snapshot_json_for_csv(csv_path), symbols)
+    return csv_path, rows, metadata, dates, filings
+
+
+def changed_filing_symbols(
+    symbols: Sequence[str],
+    ticker_map: Dict[str, int],
+    fundamentals_dates: Dict[str, str],
+    known_filings: Dict[str, Dict[str, str]],
+    as_of: dt.date,
+) -> Tuple[List[str], Dict[str, Dict[str, str]]]:
+    """Check cheap SEC submissions metadata and return symbols needing XBRL refresh."""
+    changed: List[str] = []
+    latest_by_symbol: Dict[str, Dict[str, str]] = dict(known_filings)
+    for symbol in symbols:
+        cik = ticker_map.get(symbol.upper())
+        if cik is None:
+            continue
+        try:
+            latest = latest_relevant_filing(fetch_submission_metadata(cik), as_of)
+        except Exception as exc:
+            print(f"  {symbol}: SEC filing check failed; forcing fundamentals refresh ({exc})")
+            changed.append(symbol)
+            continue
+        if latest is None:
+            continue
+        latest_by_symbol[symbol] = latest
+        known = known_filings.get(symbol) or {}
+        if known.get("accession_number") == latest.get("accession_number"):
+            continue
+        try:
+            fundamentals_as_of = dt.date.fromisoformat(fundamentals_dates[symbol])
+        except (KeyError, ValueError):
+            changed.append(symbol)
+            continue
+        if dt.date.fromisoformat(latest["filing_date"]) > fundamentals_as_of:
+            changed.append(symbol)
+    return changed, latest_by_symbol
+
+
+def price_only_company(
+    base_row: Dict[str, Any],
+    base_path: Path,
+    twelve_key: Optional[str],
+    fmp_key: Optional[str],
+    price_provider: str,
+    as_of: dt.date,
+) -> Dict[str, Any]:
+    """Reuse saved fundamentals and recompute every price-derived field."""
+    symbol = str(base_row.get("symbol") or "")
+    close, close_date, price_source, price_notes = fetch_current_price(
+        symbol, as_of, twelve_key, fmp_key, price_provider
+    )
+    row = {field: base_row.get(field, "") for field in FIELDNAMES}
+    shares = to_float(row.get("shares_outstanding"))
+    net_income = to_float(row.get("net_income"))
+    revenue = to_float(row.get("revenue"))
+    equity = to_float(row.get("equity"))
+    debt = to_float(row.get("debt"))
+    cash = to_float(row.get("cash"))
+    operating_income = to_float(row.get("operating_income"))
+    dep_amort = to_float(row.get("dep_amort"))
+    op_cash_flow = to_float(row.get("op_cash_flow"))
+    capex = to_float(row.get("capex"))
+
+    market_cap = close * shares if close is not None and shares is not None else None
+    ebitda = (
+        operating_income + dep_amort
+        if operating_income is not None and dep_amort is not None else None
+    )
+    enterprise_value = (
+        market_cap + (debt or 0) - (cash or 0)
+        if market_cap is not None else None
+    )
+    fcf = (
+        op_cash_flow - capex
+        if op_cash_flow is not None and capex is not None else None
+    )
+    old_comment = str(row.get("comment") or "")
+    price_eligible = (
+        str(row.get("currency") or "") == "USD"
+        and symbol not in PRICE_RATIO_EXCLUDE
+        and "price-based ratios suppressed" not in old_comment
+    )
+
+    row.update({
+        "fy_end_close": rnd(close, 4),
+        "close_date": close_date or "",
+        "market_cap": rnd(market_cap, 0),
+        "enterprise_value": rnd(enterprise_value, 0),
+        "ebitda": ebitda if ebitda is not None else "",
+        "fcf": fcf if fcf is not None else "",
+        "pe": rnd(safe_div(market_cap, net_income), 4) if price_eligible else "",
+        "ps": rnd(safe_div(market_cap, revenue), 4) if price_eligible else "",
+        "pb": rnd(safe_div(market_cap, equity), 4) if price_eligible else "",
+        "ev_ebitda": rnd(safe_div(enterprise_value, ebitda), 4) if price_eligible else "",
+        "fcf_yield": rnd(safe_div(fcf, market_cap), 6) if price_eligible else "",
+        "price_source": f"{price_source}; prices-only refresh" if price_source != "missing" else "missing",
+    })
+    base_fundamental_source = str(row.get("fundamental_source") or "").split("; reused, not refetched", 1)[0]
+    row["fundamental_source"] = (
+        f"{base_fundamental_source}; reused, not refetched for {as_of.isoformat()} prices-only update"
+    )
+
+    have_price_ratio = any(to_float(row.get(metric)) is not None for metric in PRICE_METRICS[:-1])
+    have_neutral = any(to_float(row.get(metric)) is not None for metric in NEUTRAL_METRICS[:2])
+    row["status"] = "ok" if have_price_ratio else ("partial" if have_neutral else "missing")
+    notes = [
+        part for part in old_comment.split("; ")
+        if part and not part.startswith("prices-only refresh from")
+    ]
+    notes.extend(price_notes)
+    notes.append(f"prices-only refresh from {base_path.name}")
+    if close_date and close_date != as_of.isoformat():
+        notes.append(f"anchor={as_of.isoformat()}, close_date={close_date}")
+    row["comment"] = "; ".join(notes)
+    return row
+
+
 def to_float(value: Any) -> Optional[float]:
     if value in ("", None):
         return None
@@ -1480,17 +1756,24 @@ def build_basket_rows(rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return out
 
 
-def build_current_basket_rows(rows: List[Dict[str, Any]], as_of: dt.date) -> List[Dict[str, Any]]:
+def build_current_basket_rows(
+    rows: List[Dict[str, Any]],
+    as_of: dt.date,
+    refresh_mode: str = "full",
+) -> List[Dict[str, Any]]:
     """One current aggregate detail row using the same median logic as the summary."""
-    summary = {row["metric"]: row for row in build_current_summary_rows(rows, as_of)}
+    summary = {
+        row["metric"]: row
+        for row in build_current_summary_rows(rows, as_of, refresh_mode)
+    }
     row = {f: "" for f in FIELDNAMES}
     row.update({
         "symbol": "BASKET_AVG", "cik": "", "fiscal_year": "current",
         "fy_end": as_of.isoformat(), "currency": "USD",
-        "fundamental_source": f"current TTM basket median filed<={as_of.isoformat()}",
-        "price_source": "Twelve Data latest close",
+        "fundamental_source": f"current TTM basket median; refresh_mode={refresh_mode}",
+        "price_source": "current EOD close",
         "status": "aggregate",
-        "comment": "median over current company observations with valid values",
+        "comment": f"median over current company observations; refresh_mode={refresh_mode}",
     })
     for metric, summary_row in summary.items():
         row[metric] = summary_row.get("value", "")
@@ -1560,7 +1843,11 @@ def build_summary_rows(company_rows: List[Dict[str, Any]]) -> List[Dict[str, Any
     return out
 
 
-def build_current_summary_rows(company_rows: List[Dict[str, Any]], as_of: dt.date) -> List[Dict[str, Any]]:
+def build_current_summary_rows(
+    company_rows: List[Dict[str, Any]],
+    as_of: dt.date,
+    refresh_mode: str = "full",
+) -> List[Dict[str, Any]]:
     """One row per metric: current median across the basket."""
     metrics = PRICE_METRICS + NEUTRAL_METRICS
     rows = [r for r in company_rows if r.get("status") in ("ok", "partial")]
@@ -1579,7 +1866,10 @@ def build_current_summary_rows(company_rows: List[Dict[str, Any]], as_of: dt.dat
             vals.append(v)
             companies.add(r["symbol"])
         if vals:
-            comment = f"MEDIAN current TTM snapshot as of {as_of.isoformat()}"
+            comment = (
+                f"MEDIAN current TTM snapshot as of {as_of.isoformat()}; "
+                f"refresh_mode={refresh_mode}"
+            )
             if metric in PRICE_METRICS:
                 comment += (
                     "; price ratios exclude negatives and ADR/foreign-share exceptions; "
@@ -1677,9 +1967,16 @@ def write_current_outputs(
     company_rows: List[Dict[str, Any]],
     summary_rows: List[Dict[str, Any]],
     as_of: dt.date,
+    refresh_mode: str = "full",
+    base_snapshot: Optional[Path] = None,
+    refreshed_symbols: Optional[Sequence[str]] = None,
+    fundamentals_dates: Optional[Dict[str, str]] = None,
+    latest_filings: Optional[Dict[str, Dict[str, str]]] = None,
 ) -> None:
     OUT_CSV.parent.mkdir(parents=True, exist_ok=True)
-    output_rows = company_rows + build_current_basket_rows(company_rows, as_of)
+    output_rows = company_rows + build_current_basket_rows(
+        company_rows, as_of, refresh_mode
+    )
     with OUT_CSV.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=FIELDNAMES, lineterminator="\n")
         writer.writeheader()
@@ -1698,10 +1995,20 @@ def write_current_outputs(
         "sector": SECTOR_NAME,
         "as_of": as_of.isoformat(),
         "symbols": SEMIS,
-        "fundamental_source": f"SEC EDGAR XBRL companyconcept TTM facts filed<={as_of.isoformat()}",
+        "fundamental_source": (
+            f"SEC EDGAR XBRL companyconcept TTM facts filed<={as_of.isoformat()}"
+            if refresh_mode == "full" else
+            "SEC EDGAR XBRL companyconcept TTM facts; per-company cutoffs in fundamentals_as_of_by_symbol"
+        ),
         "price_source": price_sources[0] if len(price_sources) == 1 else price_sources,
         "is_point_in_time": True,
         "purpose": "current snapshot using the same basket/formulas as the FY norm",
+        "refresh_mode": refresh_mode,
+        "quarterly_audit": (as_of.month, as_of.day) in QUARTERLY_AUDIT_DATES,
+        "base_snapshot": base_snapshot.name if base_snapshot else None,
+        "refreshed_symbols": list(refreshed_symbols or []),
+        "fundamentals_as_of_by_symbol": fundamentals_dates or {},
+        "latest_filings_by_symbol": latest_filings or {},
     }
     OUT_JSON.write_text(
         json.dumps({"metadata": metadata, "summary": summary_rows, "rows": output_rows},
@@ -1751,6 +2058,16 @@ def parse_args() -> argparse.Namespace:
         choices=("twelve", "fmp", "nasdaq", "auto"),
         default="twelve",
         help="Current-price provider. 'auto' tries Twelve Data, FMP, then Nasdaq.",
+    )
+    parser.add_argument(
+        "--refresh-mode",
+        choices=("auto", "full", "prices-only"),
+        default="auto",
+        help=(
+            "Current snapshot refresh policy. auto performs full SEC audits on "
+            "Mar/May/Aug/Nov 20 and otherwise refreshes SEC only for companies "
+            "with a new relevant filing; prices-only never calls SEC."
+        ),
     )
     parser.add_argument(
         "--resummarize-from-detail",
@@ -1841,48 +2158,148 @@ def main() -> int:
     print(f"Twelve Data key: {'present' if twelve_key else 'ABSENT'}")
     if args.current and args.price_provider in ("fmp", "auto"):
         print(f"FMP key: {'present' if fmp_key else 'ABSENT -> FMP price ratios will be missing'}")
-    ticker_map = load_ticker_cik_map()
-
     all_rows: List[Dict[str, Any]] = []
     output_rows: List[Dict[str, Any]] = []
     summary_rows: List[Dict[str, Any]] = []
     if args.current:
-        for symbol in SEMIS:
-            cik = ticker_map.get(symbol.upper())
-            if cik is None:
-                print(f"  {symbol}: no CIK in SEC map -> missing")
-                all_rows.append(current_missing_company_row(
-                    symbol,
-                    None,
-                    as_of,
-                    "no CIK in SEC ticker map (no SEC companyconcept facts)",
-                ))
-                summary_rows = build_current_summary_rows(all_rows, as_of)
-                write_current_outputs(all_rows, summary_rows, as_of)
-                continue
-            try:
-                all_rows.append(build_current_company(
-                    symbol,
-                    cik,
-                    twelve_key,
-                    fmp_key,
-                    args.price_provider,
-                    as_of,
-                ))
-            except Exception as exc:
-                print(f"  {symbol}: failed -> missing ({type(exc).__name__}: {exc})")
-                all_rows.append(current_missing_company_row(
-                    symbol,
-                    cik,
-                    as_of,
-                    f"company processing error: {type(exc).__name__}: {exc}",
-                ))
-            summary_rows = build_current_summary_rows(all_rows, as_of)
-            write_current_outputs(all_rows, summary_rows, as_of)
+        (
+            base_path,
+            base_rows,
+            _base_metadata,
+            fundamentals_dates,
+            latest_filings,
+        ) = find_price_base_snapshot(SECTOR_SLUG, as_of, SEMIS)
+        base_by_symbol = {
+            str(row.get("symbol")): row for row in base_rows if row.get("symbol")
+        }
+        ticker_map: Dict[str, int] = {}
+        refresh_mode = args.refresh_mode
+        refreshed_symbols: List[str] = []
 
-        summary_rows = build_current_summary_rows(all_rows, as_of)
-        write_current_outputs(all_rows, summary_rows, as_of)
-        output_rows = all_rows + build_current_basket_rows(all_rows, as_of)
+        if refresh_mode == "auto":
+            if (as_of.month, as_of.day) in QUARTERLY_AUDIT_DATES:
+                refresh_mode = "full"
+                print("Refresh policy: quarterly full SEC audit")
+            elif base_path is None:
+                refresh_mode = "full"
+                print("Refresh policy: no local base snapshot -> full SEC refresh")
+            else:
+                ticker_map = load_ticker_cik_map()
+                changed, latest_filings = changed_filing_symbols(
+                    SEMIS,
+                    ticker_map,
+                    fundamentals_dates,
+                    latest_filings,
+                    as_of,
+                )
+                changed.extend(symbol for symbol in SEMIS if symbol not in base_by_symbol)
+                refreshed_symbols = list(dict.fromkeys(changed))
+                refresh_mode = "incremental" if refreshed_symbols else "prices-only"
+                print(
+                    "Refresh policy: "
+                    + (
+                        "new SEC filings -> incremental fundamentals for "
+                        + ", ".join(refreshed_symbols)
+                        if refreshed_symbols else
+                        "no new SEC filings -> prices only"
+                    )
+                )
+        elif refresh_mode == "full":
+            print("Refresh policy: forced full SEC refresh")
+        else:
+            print("Refresh policy: forced prices only (no SEC requests)")
+
+        if refresh_mode == "prices-only" and base_path is None:
+            raise SystemExit(
+                "--refresh-mode prices-only requires an earlier local current snapshot"
+            )
+        if refresh_mode == "full":
+            refreshed_symbols = list(SEMIS)
+        if refresh_mode in ("full", "incremental") and not ticker_map:
+            ticker_map = load_ticker_cik_map()
+
+        for symbol in SEMIS:
+            refresh_fundamentals = (
+                refresh_mode == "full" or symbol in refreshed_symbols
+            )
+            if not refresh_fundamentals:
+                base_row = base_by_symbol.get(symbol)
+                if base_row is None or base_path is None:
+                    all_rows.append(current_missing_company_row(
+                        symbol, None, as_of, "no local base row for prices-only refresh"
+                    ))
+                else:
+                    print(f"  {symbol}: reusing local fundamentals; refreshing price")
+                    all_rows.append(price_only_company(
+                        base_row,
+                        base_path,
+                        twelve_key,
+                        fmp_key,
+                        args.price_provider,
+                        as_of,
+                    ))
+            else:
+                cik = ticker_map.get(symbol.upper())
+                if cik is None:
+                    print(f"  {symbol}: no CIK in SEC map -> missing")
+                    all_rows.append(current_missing_company_row(
+                        symbol,
+                        None,
+                        as_of,
+                        "no CIK in SEC ticker map (no SEC companyconcept facts)",
+                    ))
+                else:
+                    try:
+                        all_rows.append(build_current_company(
+                            symbol,
+                            cik,
+                            twelve_key,
+                            fmp_key,
+                            args.price_provider,
+                            as_of,
+                        ))
+                        fundamentals_dates[symbol] = as_of.isoformat()
+                        latest = latest_relevant_filing(
+                            fetch_submission_metadata(cik), as_of
+                        )
+                        if latest:
+                            latest_filings[symbol] = latest
+                    except Exception as exc:
+                        print(f"  {symbol}: failed -> missing ({type(exc).__name__}: {exc})")
+                        all_rows.append(current_missing_company_row(
+                            symbol,
+                            cik,
+                            as_of,
+                            f"company processing error: {type(exc).__name__}: {exc}",
+                        ))
+            summary_rows = build_current_summary_rows(
+                all_rows, as_of, refresh_mode
+            )
+            write_current_outputs(
+                all_rows,
+                summary_rows,
+                as_of,
+                refresh_mode,
+                base_path,
+                refreshed_symbols,
+                fundamentals_dates,
+                latest_filings,
+            )
+
+        summary_rows = build_current_summary_rows(all_rows, as_of, refresh_mode)
+        write_current_outputs(
+            all_rows,
+            summary_rows,
+            as_of,
+            refresh_mode,
+            base_path,
+            refreshed_symbols,
+            fundamentals_dates,
+            latest_filings,
+        )
+        output_rows = all_rows + build_current_basket_rows(
+            all_rows, as_of, refresh_mode
+        )
         ok = sum(1 for r in all_rows if r.get("status") == "ok")
         partial = sum(1 for r in all_rows if r.get("status") == "partial")
         missing = sum(1 for r in all_rows if r.get("status") == "missing")
@@ -1896,6 +2313,7 @@ def main() -> int:
                   f"(n_companies={s['n_companies']}, n_obs={s['n_observations']}, {s['status']})")
         return 0
 
+    ticker_map = load_ticker_cik_map()
     for symbol in SEMIS:
         cik = ticker_map.get(symbol.upper())
         if cik is None:

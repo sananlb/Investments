@@ -35,6 +35,7 @@
 - **REIT/Solar: P/E неинформативен.** У REIT амортизация занижает GAAP-прибыль (P/E структурно 50-60, смотреть P/B). У Solar убыточные годы (P/E 90+, смотреть P/S). Это реальность, не баг.
 - **Сверка с внешним эталоном:** Damodaran NYU Stern (`pages.stern.nyu.edu/~adamodar/.../pedata.html`, P/E по индустриям, бесплатно) и Seeking Alpha V-score (Fred Piard, та же логика median vs история). Совпадаем там, где корзины похожи; где расходимся — мы чище (median лидеров vs pooled вся индустрия).
 - **Пересчёт score без сети.** Summary можно пересчитать ОФЛАЙН из готовых `fyn_<slug>_norm.csv` (detail) — агрегация локальная, Twelve Data не нужен. `update_all.py --skip-current` пересчитывает только score.
+- **SEC-фундаментал не тянуть заново на каждой декаде.** Рабочий режим `--refresh-mode auto`: цены обновляются на каждом якоре 10/20/30; SEC submissions metadata проверяется на новые `10-Q/10-K/20-F/40-F/6-K` и amendments; XBRL пересобирается только для компаний с новой формой. Полный аудит всей корзины выполняется 4 раза в год: 20 марта, 20 мая, 20 августа и 20 ноября. Принудительные режимы: `--refresh-mode full` и `--refresh-mode prices-only`. JSON снимка хранит `refresh_mode`, `base_snapshot`, `fundamentals_as_of_by_symbol` и `latest_filings_by_symbol`.
 
 ## Старый сайт учета инвестиций
 

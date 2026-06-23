@@ -82,7 +82,7 @@ sector_score** (решение пользователя, зафиксирова�
 | Уровень | Что это | Как часто пересобирается | Где лежит |
 |---|---|---|---|
 | **5Y НОРМА** | средняя историческая оценка сектора за 5 фискальных лет | раз в год / при сдвиге окна (скользящее) | `fyn_<slug>_norm_summary.csv` |
-| **ТЕКУЩАЯ ТОЧКА** | сегодняшний снимок мультипликаторов (цена + свежие SEC-факты) | каждые 10 дней (якоря 10/20/30) | `fyn_<slug>_current_summary.csv` (+ датированные) |
+| **ТЕКУЩАЯ ТОЧКА** | сегодняшний снимок мультипликаторов (новая цена + актуальный локальный/SEC-фундаментал) | цены каждые 10 дней; полный SEC-аудит 4 раза в год | `fyn_<slug>_current_summary.csv` (+ датированные) |
 | **SCORE** | `текущая / норма` по весам → одна точка на сектор | мгновенно, локально из двух уровней выше | `sector_scores*.csv`, `sector_scores_preview*.csv` |
 
 ### Уровень 1 — 5Y НОРМА (медленный, дорогой)
@@ -102,6 +102,11 @@ sector_score** (решение пользователя, зафиксирова�
 - Снимок «сегодня» = последняя доступная цена × последние SEC-факты с `filed <= as_of`.
 - Обновляется каждые 10 дней (якоря 10/20/30 числа; если не торговый день — последний
   торговый день до якоря; для февраля/месяца без 30-го — последний календарный день).
+- Режим по умолчанию — `--refresh-mode auto`: на каждом якоре обновляются цены и локально
+  пересчитываются все price-derived метрики. Полный SEC-аудит корзины выполняется 20 марта,
+  20 мая, 20 августа и 20 ноября. Между этими датами проверяется лёгкий SEC submissions
+  metadata; XBRL обновляется только для компаний с новой релевантной формой
+  (`10-Q/10-K/20-F/40-F/6-K` и amendments).
 - Недатированный «сегодняшний» снимок (`fyn_<slug>_current_summary.csv`) перезаписывается
   на каждом прогоне; датированные снимки (`--as-of`) копят историю и не трутся.
 
@@ -159,6 +164,10 @@ data/market_quotes/
   `twelve → fmp → nasdaq` (главный обход лимита Twelve Data, см. раздел 6).
 - **SEC-кэш**: companyconcept-факты кэшируются на диск (`.sec_cache/`, TTL 7 дней); `--no-cache`
   форсирует сеть. Цены не кэшируются.
+- **Режим обновления current**: `--refresh-mode auto` выбирает `full`, `incremental` или
+  `prices-only`. `--refresh-mode full` принудительно перечитывает SEC для всей корзины;
+  `--refresh-mode prices-only` вообще не обращается к SEC и требует локальный базовый снимок.
+  В JSON сохраняются режим, базовый файл, даты фундаментала и последние accession numbers.
 - **Офлайн-пересборка summary**: `--resummarize-from-detail` собирает `_norm_summary.csv` из
   уже лежащего `_norm.csv` без сети.
 - **Исключения цен**: `--exclude-price TICKER` добавляет к базовым `{TSM, ASML, GOLD}`.
@@ -173,6 +182,9 @@ python3 scripts/build_fy_norm.py --sector "Energy" --slug energy --years 2022 20
 
 # Снимок на историческую дату через запасной провайдер
 python3 scripts/build_fy_norm.py --sector Mining --slug mining --current --as-of 2026-05-10 --price-provider nasdaq
+
+# Только новые цены, без SEC-запросов
+python3 scripts/build_fy_norm.py --sector Banks --slug banks --current --as-of 2026-06-30 --price-provider nasdaq --refresh-mode prices-only
 
 # Офлайн-пересборка summary из detail (без сети)
 python3 scripts/build_fy_norm.py --sector Food --slug food --resummarize-from-detail
@@ -206,24 +218,28 @@ python3 scripts/compute_sector_scores.py \
 ### `update_all.py` — обновление одной командой (рабочая лошадка)
 
 Декадный апдейт. По порядку: (1) для каждого сектора обновляет текущий снимок через
-`build_fy_norm.py --current`, (2) пересчитывает score через `compute_sector_scores.py`.
+`build_fy_norm.py --current --refresh-mode auto`, (2) пересчитывает score через
+`compute_sector_scores.py`. Nasdaq используется как ценовой провайдер по умолчанию.
 
 - 5Y-норму **не трогает** (это раз-в-год job).
-- Сектора идут **строго последовательно** с паузой (лимит Twelve Data); сектор с большой
-  долей пропавших цен (429) автоматически ретраится один раз после долгой паузы.
+- Сектора идут **строго последовательно**; сектор с большой долей пропавших цен
+  автоматически ретраится один раз. Для Twelve Data сохраняется увеличенная пауза,
+  но штатный Nasdaq не требует ожидания по 8 секунд на запрос.
 
 ```bash
 python3 scripts/update_all.py                 # все сектора, потом score
 python3 scripts/update_all.py --only banks energy
+python3 scripts/update_all.py --refresh-mode full       # принудительный SEC-аудит
+python3 scripts/update_all.py --refresh-mode prices-only # SEC не вызывается
 python3 scripts/update_all.py --skip-current  # только пересчитать score (офлайн, без сети)
 python3 scripts/update_all.py --sector-pause 12
 ```
-Прочие флаги: `--retry-wait`, `--min-ok-fraction`.
+Прочие флаги: `--retry-wait`, `--min-ok-fraction`, `--refresh-mode`, `--price-provider`.
 
 ### `backfill_history.py` — массовый исторический сбор
 
 Заполняет историю: для каждой пары `(сектор, дата)` запускает `build_fy_norm.py --current --as-of`
-**строго последовательно**, по умолчанию с историческими ценами Nasdaq. Готовые снимки (с
+**строго последовательно**, по умолчанию с Nasdaq и `--refresh-mode auto`. Готовые снимки (с
 нормальным числом компаний в P/E) пропускаются — безопасно возобновляется. После сбора
 пересобирает канонический preview (17 секторов × 10 дат). По умолчанию даты — 10 месячных
 якорей; `--rebuild-preview-only` собирает preview из уже лежащих снимков **без сети**.
@@ -233,9 +249,7 @@ python3 scripts/backfill_history.py
 python3 scripts/backfill_history.py --only banks --dates 2026-05-10
 python3 scripts/backfill_history.py --rebuild-preview-only   # офлайн
 ```
-Прочие флаги: `--pause`, `--preview-csv`, `--no-cache`.
-
-> Сейчас идёт фоновый backfill — не мешать ему (не запускать сетевые сборщики параллельно).
+Прочие флаги: `--pause`, `--preview-csv`, `--no-cache`, `--refresh-mode`.
 
 ### `refresh_norm.py` — детектор ежемесячного пересчёта нормы
 
@@ -309,7 +323,10 @@ python3 scripts/fetch_anchor_fundamentals.py --sector Banks
 python3 scripts/update_all.py
 ```
 Обновит текущие снимки всех 17 секторов и пересчитает score. Только этот шаг и нужен между
-сезонами отчётности. Дашборд берёт результат из `sector_scores_preview*.csv`.
+сезонами отчётности. На обычном якоре он обновит цены, проверит список новых SEC-форм и
+пересоберёт фундаментал только затронутых компаний. Полные SEC-аудиты сработают автоматически
+20 марта, 20 мая, 20 августа и 20 ноября. Дашборд берёт результат из
+`sector_scores_preview*.csv`.
 
 Только пересчитать score офлайн (без сети, если снимки уже свежие):
 ```bash

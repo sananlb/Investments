@@ -3,9 +3,10 @@
 One-command decade update for the sector valuation dashboard.
 
 What it does, in order:
-1. For each sector, refresh the CURRENT snapshot of multiples (today's price +
-   latest TTM SEC facts) via build_fy_norm.py --current. This is the recurring
-   "today's point" — run it every 10 days (the 10/20/30 anchor cadence).
+1. For each sector, refresh the CURRENT snapshot of multiples. The default
+   auto policy fetches prices every run, checks cheap SEC submissions metadata,
+   refreshes XBRL only for companies with new filings, and performs full SEC
+   audits on Mar/May/Aug/Nov 20.
 2. Roll those current snapshots against the one-time 5Y FY norms into
    sector_scores.csv / .json via compute_sector_scores.py.
 
@@ -14,11 +15,8 @@ once-a-year job (rerun build_fy_norm.py without --current when a new fiscal year
 closes in SEC). This script only updates the moving "current point" and the
 score, so history accumulates on its own over time.
 
-Rate limit: --current pulls prices from Twelve Data (free plan ~8 req/min), so
-sectors run STRICTLY SEQUENTIALLY with a pause between them, and any sector that
-comes back with too many missing price rows (HTTP 429) is retried once after a
-longer wait. Running sectors in parallel is what previously dropped mega-caps
-from Technology, so do not parallelise.
+Sectors run strictly sequentially. Nasdaq is the default current-price provider
+to avoid the Twelve Data free-plan limit; Twelve/FMP/auto remain selectable.
 
 Usage:
     python3 scripts/update_all.py                 # all sectors, then score
@@ -82,12 +80,24 @@ def parse_args() -> argparse.Namespace:
                    help="Update only these slugs (default: all).")
     p.add_argument("--skip-current", action="store_true",
                    help="Skip refreshing current snapshots; only recompute the score.")
-    p.add_argument("--sector-pause", type=float, default=10.0,
-                   help="Seconds to wait between sectors (Twelve Data rate limit).")
+    p.add_argument("--sector-pause", type=float, default=1.0,
+                   help="Seconds to wait between sectors (default: 1).")
     p.add_argument("--retry-wait", type=float, default=60.0,
                    help="Seconds to wait before retrying a sector that hit 429.")
     p.add_argument("--min-ok-fraction", type=float, default=0.5,
                    help="If fewer than this fraction of price rows are ok, retry the sector once.")
+    p.add_argument(
+        "--refresh-mode",
+        choices=("auto", "full", "prices-only"),
+        default="auto",
+        help="Fundamentals refresh policy (default: auto).",
+    )
+    p.add_argument(
+        "--price-provider",
+        choices=("twelve", "fmp", "nasdaq", "auto"),
+        default="nasdaq",
+        help="Current-price provider (default: nasdaq).",
+    )
     return p.parse_args()
 
 
@@ -108,10 +118,20 @@ def current_price_ok_fraction(slug: str) -> float:
     return (ok / total) if total else 0.0
 
 
-def run_current(slug: str, name: str, tickers: List[str]) -> int:
+def run_current(
+    slug: str,
+    name: str,
+    tickers: List[str],
+    refresh_mode: str,
+    price_provider: str,
+) -> int:
     cmd = [sys.executable, str(SCRIPTS / "build_fy_norm.py"),
-           "--sector", name, "--tickers", *tickers, "--slug", slug, "--current"]
-    print(f"  $ build_fy_norm --current --slug {slug}")
+           "--sector", name, "--tickers", *tickers, "--slug", slug, "--current",
+           "--refresh-mode", refresh_mode, "--price-provider", price_provider]
+    print(
+        f"  $ build_fy_norm --current --slug {slug} "
+        f"--refresh-mode {refresh_mode} --price-provider {price_provider}"
+    )
     return subprocess.run(cmd, cwd=REPO_ROOT).returncode
 
 
@@ -140,12 +160,16 @@ def main() -> int:
         for i, slug in enumerate(slugs):
             name, tickers = SECTORS[slug]
             print(f"[{i+1}/{len(slugs)}] {name}")
-            run_current(slug, name, tickers)
+            run_current(
+                slug, name, tickers, args.refresh_mode, args.price_provider
+            )
             frac = current_price_ok_fraction(slug)
             if frac < args.min_ok_fraction:
                 print(f"  ! only {frac:.0%} price rows ok (likely 429) -> retry in {args.retry_wait:.0f}s")
                 time.sleep(args.retry_wait)
-                run_current(slug, name, tickers)
+                run_current(
+                    slug, name, tickers, args.refresh_mode, args.price_provider
+                )
                 frac = current_price_ok_fraction(slug)
                 print(f"  retry result: {frac:.0%} price rows ok")
             else:
@@ -155,7 +179,10 @@ def main() -> int:
 
     rc = run_score()
     print("\nDone." if rc == 0 else "\nScore step returned non-zero.")
-    print("Next decade: rerun this script. Rebuild 5Y norms (without --current) once a year.")
+    print(
+        "Next decade: rerun this script. Auto mode performs four full SEC audits "
+        "per year and incremental filing refreshes between them."
+    )
     return rc
 
 
