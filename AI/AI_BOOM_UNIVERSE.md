@@ -1,8 +1,8 @@
 # AI-boom Universe — кандидаты на покупку (Фаза 1)
 
-- Обновлено: 2026-06-23
+- Обновлено: 2026-06-24
 - Назначение: единый universe бенефициаров бума ИИ с rent/quality-тегами для отбора 2-4 акций. См. методологию в [AI_BOOM_PLAN.md](AI_BOOM_PLAN.md).
-- Статус: **ревизия Фазы 1 после fact-check 2026-06-23**. Проверены только материальные свежие цифры по последним кварталам/релизам и крупным контрактам; forward-мультипликаторы в этом файле считать грубыми оценками и перед сделкой перепроверять в терминале/модели.
+- Статус: **ревизия Фазы 1 после fact-check 2026-06-23 и расширения 2026-06-24**. Проверены только материальные свежие цифры по последним кварталам/релизам и крупным контрактам; forward-мультипликаторы в этом файле считать грубыми оценками и перед сделкой перепроверять в терминале/модели.
 - Главный фильтр на этом этапе — НЕ оценка, а вопрос: «почему компания заработает СВЕРХНОРМАЛЬНУЮ прибыль от ИИ?» (rent owner Y/N).
 
 ## Как читать теги
@@ -133,3 +133,184 @@
 **Перед сделкой вручную перепроверить:** 1) forward P/E/EV/FCF на свежей цене и консенсусе; 2) customer concentration и долю OpenAI/Stargate в ORCL RPO; 3) debt maturity/refinancing у CRWV/NBIS/ORCL; 4) China/export-control revenue exposure у ASML/AMAT/LRCX/KLAC; 5) HBM share/contract terms у MU и real take-rate в AVGO/MRVL custom ASIC.
 
 > Следующий шаг: Quality/Risk gate по top-10 → Valuation (sector_score + valuation_vs_growth + reverse DCF) → deep-dive 2-4.
+
+---
+
+# Quality / Risk gate — top-10 в Valuation (Фаза 3)
+
+Прогон rent-owners через жёсткие quality/risk-критерии (pricing power, маржа, FCF, баланс, концентрация клиентов/входов, capex, моат, bubble-test). Все 12 имён из shortlist проходят базовый порог (нет круговое-финансирование-фейлов — те уже в watch/drop: CRWV, ORCL, NBIS). Поэтому gate не отсеивает «насмерть», а **ранжирует чистоту и помечает доминирующий риск**, отбирая top-10 в оценку.
+
+| # | Ticker | Слой | Verdict | Сильная сторона качества | Доминирующий риск-флаг | Bubble/circular? |
+|---|---|---|---|---|---|---|
+| 1 | **NVDA** | Compute | **PASS** | GM ~75%, огромный FCF, net-cash, CUDA-моат | Длительность capex-цикла + потеря Китая | Нет |
+| 2 | **TSM** | Compute | **PASS** | Foundry-монополия leading-edge, GM 67%, рента со всего слоя | Тайвань binary гео-риск; H-capex | Нет |
+| 3 | **ASML** | Equipment | **PASS** | 100% EUV/High-NA монополия, net-cash, длиннейший моат | Export-controls/China; near-term WFE orders | Нет |
+| 4 | **GOOGL** | Cloud | **PASS** | Search-кэш-машина + свой TPU (мин. NVDA-завис.), net-cash | ROIC на огромном capex | Нет |
+| 5 | **KLAC** | Equipment | **PASS-flag** | Квази-монополия process control, GM ~60%, software-like маржа | China ~39% выручки | Нет |
+| 6 | **MSFT** | Cloud | **PASS** | Софт-рента (Office/Azure lock-in), GM 69%, net-cash | Прозрачность OpenAI/Azure capex-economics | Нет |
+| 7 | **ANET** | Networking | **PASS-flag** | EOS софт-lock-in, GM 62%, net-cash | **Концентрация: MSFT+Meta ~48% выручки** | Нет |
+| 8 | **GEV** | Power | **PASS-flag** | Олигополия газ-турбин, слоты до 2030, net-cash | Низкая Power-маржа ~25%; execution/valuation жёсткие | Нет |
+| 9 | **CEG** | Power | **PASS-flag** | Невоспроизводимый нукл. baseload, 20-летние PPA | **Левередж после Calpine** + co-location регуляторика | Нет |
+| 10 | **AVGO** | Compute/Net | **PASS-flag** | Networking-монополия + sticky co-design, GM ~69% | **Закредитован (VMware)** + custom-ASIC рента делится с клиентом + конц. H | Частично (custom-ASIC завязан на capex клиентов) |
+| — | VST | Power | **bench** | Нукл.+gas в дефиц. сетях, hedge-видимость | Более циклична (commodity power/hedging, gas) | Нет |
+| — | AMZN | Cloud | **bench** | AWS-рента, net-cash | Retail-микс размывает AI-тезис; гигантский capex | Нет |
+
+**В Valuation идут 10:** NVDA, TSM, ASML, GOOGL, KLAC, MSFT, ANET, GEV, CEG, AVGO.
+**На скамейке (вернуть при просадке/смене веса):** VST (энергия, но циклична), AMZN (нечистый AI-тезис).
+**Энергия в top-10:** GEV + CEG (2 имени) — слой сохранён, несмотря на понижение Codex.
+
+**Что gate НЕ решает (это работа Valuation):** все 10 — отличные бизнесы, но «отличный бизнес ≠ отличная покупка». Дальше нужно отделить *cheap-and-improving* от *priced-for-perfection* через `valuation_vs_history` (sector_score) + `valuation_vs_growth` + reverse-DCF + revision-score. Только после этого — 2-4 на deep-dive.
+
+> Для Valuation нужны свежие мультипликаторы по всем 10 + их 5Y-нормы. Локально частично есть в [README.md](README.md) (NVDA/TSM/AVGO/GOOG/MSFT/AMZN на 2026-05-30, ~3.5 нед. давности); недостают ASML, KLAC, ANET, GEV, CEG → требуется дата-пул.
+
+---
+
+# Quality/Risk gate — новые имена (расширение)
+
+- Обновлено: 2026-06-24.
+- Статус: точечный fact-check по 9 именам, которые доступны пользователю через Interactive Brokers. Это **не valuation** и не рекомендация к сделке: цель — понять, есть ли право на AI-ренту до расчета цены.
+- Основные источники свежих данных: [SK hynix 1Q26](https://www.prnewswire.com/news-releases/sk-hynix-announces-1q26-financial-results-302750959.html), [Credo FQ4/FY26](https://investors.credosemi.com/news-events/news/news-details/2026/Credo-Technology-Group-Holding-Ltd-Reports-Fourth-Quarter-and-Fiscal-Year-2026-Financial-Results/default.aspx) + [Credo FY26 10-K](https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/crdo-20260502.htm), [Camtek 1Q26](https://www.camtek.com/news-and-events/camtek-announces-results-for-the-first-quarter-of-2026/), [Besi 1Q26](https://www.besi.com/investor-relations/press-releases/details/be-semiconductor-industries-nv-announces-q1-26-results/), [Arm FQ4/FY26 6-K](https://www.sec.gov/Archives/edgar/data/1973239/000197323926000062/exhibit992fye26q431-marx26.htm), [BWXT 1Q26](https://investors.bwxt.com/news-releases/news-release-details/bwx-technologies-reports-first-quarter-2026-results/), [Siemens Energy Q2 FY26](https://www.siemens-energy.com/us/en/home/press-releases/earnings-release-q2-fy-2026.html), [NEXTDC 1H26](https://www.nextdc.com/news/asx-release-1h26-record-results) + [May 2026 funding update](https://www.nextdc.com/news/nextdc-bolsters-liquidity-to-a8.4-billion-to-accelerate-ai-infrastructure-rollout), [GDS 1Q26](https://investors.gds-services.com/news-releases/news-release-details/gds-holdings-limited-reports-first-quarter-2026-results).
+
+| Ticker | Слой / рынок | Fact-check свежих цифр | Баланс / концентрация / контрактность | Verdict | Сильная сторона качества | Доминирующий риск-флаг | Bubble/circular? |
+|---|---|---|---|---|---|---|---|
+| **000660.KS / SK Hynix** | Memory / KR | Q1'26 revenue **KRW 52.6T** (+60% QoQ, +198% YoY), operating margin **72%**; gross margin не раскрыт в релизе; рост прямо привязан к HBM, high-capacity server DRAM и eSSD для AI | Cash **KRW 54.3T**, interest-bearing debt **KRW 19.3T**, net cash **KRW 35T**; customer concentration по HBM не раскрыта; контрактность HBM н.д., но компания пишет, что спрос превышает supply capacity | **PASS-flag** | Лучший публичный чистый HBM-лидер, сильнее MU по качеству текущей AI-позиции | Memory cycle + NVDA/HBM customer concentration + капекс-ответ отрасли | N |
+| **CRDO / Credo** | Networking / US | FQ4'26 revenue **$437M** (+7.4% QoQ, +157% YoY), non-GAAP GM **68.3%**; FY26 revenue **>$1.3B**, более чем утроилась; FQ1'27 guide **$465-475M**, non-GAAP GM **67-69%** | Cash/ST investments **~$1.43B**; долг материально не виден; FY26 top-10 customers **~90%** revenue, 2 customers >10%; 10-K прямо говорит, что long-term purchase commitments в основном нет | **PASS-flag** | SerDes/AEC/connectivity IP с софтверно-системной ценностью и очень высокой GM для small/mid-cap | Концентрация клиентов, cancellable orders, конкуренция Broadcom/Marvell, valuation priced-for-perfection | N |
+| **CAMT / Camtek** | Equipment / US+IL | Q1'26 revenue **$121.7M** (+2.5% YoY), non-GAAP GM **51.0%**; Q2 guide **$129-131M**; менеджмент ждет 2H26 revenue **>25% выше** 1H26 на strong demand | Cash/deposits/securities **$849.7M**; Q1 OCF **$3.1M**; backlog/order momentum качественно подтвержден, но backlog value не раскрыт; customer concentration н.д. | **PASS-flag** | Узкий inspection/metrology tollgate для advanced packaging/HBM с малой базой | Lumpy equipment cycle, customer concentration н.д., Israel risk, valuation spike | N |
+| **BESI.AS / Besi** | Equipment / EU | Q1'26 revenue **EUR 184.9M** (+28.3% YoY), GM **63.5%**; orders **EUR 269.7M** (+104.5% YoY), сила в hybrid bonding; Q2 guide revenue **+30-40% QoQ**, GM **64-66%** | Баланс в кратком HTML-релизе: н.д. / проверить full PDF; customer concentration н.д.; China/export-control exposure н.д., но WFE/advanced packaging equipment риск релевантен | **PASS-flag** | Hybrid bonding niche leader: более узкий bottleneck, чем broad WFE | Adoption timing hybrid bonding + WFE-cycle + valuation | N |
+| **ARM / Arm Holdings ADS** | Compute IP / US ADR | FQ4'26 revenue **$1.49B** (+20% YoY), FY26 revenue **$4.92B** (+23%); non-GAAP GM **98.3%**; data-center royalty more than doubled YoY; Arm AGI CPU customer demand **>$2B** across FY27-FY28, Meta lead partner | Cash/ST investments **$3.6B**; net-cash likely, debt н.д. в quick check; FY25 top-5 customers incl. Arm China **~56%** revenue, Arm China **17%**; FY26 concentration н.д. | **PASS** | CPU/IP tollgate с почти software gross margin и royalty flywheel | Valuation, RISC-V, Arm China/governance/licensing risk, silicon strategy execution | N |
+| **BWXT / BWX Technologies** | Nuclear supply chain / US | Q1'26 revenue **$860.2M** (+26% YoY), adjusted EBITDA **$148M** (~17.2% margin), FCF **$50.1M**; FY26 guide raised: adj. EBITDA **$650-665M**, FCF **$315-330M**; gross margin н.д. | Cash **$512M**, long-term debt **$2.02B**; backlog **$8.65B** (Government **$6.93B**, Commercial **$1.72B**); AI/DC mix н.д., связь с AI пока через nuclear/SMR option | **PASS-flag** | Редкая ядерная производственная база и контрактный backlog | AI-связь косвенная, government budget/customer concentration, долг выше cash | N |
+| **ENR.DE / Siemens Energy** | Power: gas turbines + grid / EU | Q2 FY26 revenue **EUR 10.3B** (+8.9% comparable), orders **EUR 17.7B**, backlog **EUR 154B**, book-to-bill **1.72**; FY26 guide raised: growth **14-16%**, profit margin before special items **10-12%**, FCF pre-tax **~EUR 8B**; gross margin н.д. | Net debt/cash: н.д. / проверить в full Q2 PDF; customer concentration низкая; exact AI/DC mix н.д., но demand сильнее в Gas Services/Grid Technologies | **PASS-flag** | Non-US аналог GEV: олигополия gas turbines + grid bottleneck | Siemens Gamesa/wind execution, project risk, already repriced | N |
+| **NXT.AX / NEXTDC** | Data centers / AU | 1H26 net revenue **A$189.2M** (+13%), underlying EBITDA **A$115.3M** (+9%), net loss **A$39.4M**; contracted utilisation **416.6MW** (+137%), forward order book **296.8MW** to FY29; May update: pro-forma contracted utilisation **667MW**, forward order book **544MW** | Liquidity: A$4.2B at 31.12.25; May funding lifts pro-forma liquidity to **~A$8.4B** via debt/equity/hybrids; FY25 two customers **29%** and **18%** of revenue; gross margin н.д. | **PASS-flag** | Scarce powered APAC campuses + network ecosystem, smaller base than US cloud incumbents | Heavy capex, funding/dilution, lease-up timing, tenant concentration | N |
+| **GDS / GDS Holdings ADR** | Data centers / China/SEA | Q1'26 revenue **RMB 3.37B** (+23.6% YoY), but normalized ex one-time only **+7.9%**; gross margin **33.6%** / **23.9% ex one-time**; adjusted GP margin **58.0%** / **51.8% ex one-time** | Cash **RMB 14.8B**, short-term debt **RMB 9.37B**, long-term debt **RMB 36.53B**; area committed/pre-committed **725k sqm**, utilization **77.3%**, pre-commitment under construction **84.4%**; China/VIE + hyperscaler bargaining | **drop-weak** | Real Tier-1 China DC footprint and SEA/DayOne optionality | Levered China DC buildout, weak normalized organic growth, refinancing/VIE/geopolitical risk | N |
+
+## Асимметрия новых имен
+
+**Выше upside, чем у инкумбентов, но выше риск:** **CRDO, CAMT, BESI, NXT.AX**. Причина не в лучшем качестве, а в меньшей базе и более узком bottleneck: SerDes/AEC, HBM/advanced-packaging inspection, hybrid bonding, powered APAC campuses. Цена риска — customer concentration, lumpy orders, funding/dilution или adoption timing.
+
+**Лучшее сочетание качества и AI-релевантности среди новых:** **SK Hynix**. Это не small-cap асимметрия, но как HBM-лидер он ближе к фактической AI-ренте, чем MU. Главный минус — это всё еще memory cycle, где текущая маржа может быть пиком, а не нормой.
+
+**Качественный, но менее асимметричный tollgate:** **ARM**. Рента почти чистая через IP/royalty, но valuation и Arm China/RISC-V делают его кандидатом только после жесткого reverse-DCF.
+
+**Энергослой:** **ENR.DE** выглядит ближе к GEV, чем BWXT к CEG/VST. **BWXT** интересен как nuclear supply-chain option, но AI/DC monetization пока не доказана цифрами.
+
+**Отсев:** **GDS** не проходит gate: это не owner-rent уровня top-10, а levered China DC buildout с высокой долговой нагрузкой, нормализованной органикой <10% и VIE/geopolitical risk.
+
+---
+
+# Финальный объединённый shortlist
+
+Ранжирование ниже — по **уверенности в праве на AI-ренту**, а не по цене акции. `High-asymmetry` означает не «лучше бизнес», а «больше потенциальный upside при подтверждении thesis из-за меньшей базы / более узкого bottleneck».
+
+| # | Ticker | Слой | Тип | Market | Почему здесь | Главный риск |
+|---|---|---|---|---|---|---|
+| 1 | **NVDA** | Compute | incumbent | US | CUDA + full-stack accelerator rent, максимальная видимость AI spend | Capex-cycle duration, China loss |
+| 2 | **ASML** | Equipment | incumbent | EU | 100% EUV/High-NA monopoly, длиннейший технологический moat | Export controls / WFE timing |
+| 3 | **TSM** | Foundry | incumbent | US ADR/TW | Leading-edge foundry tollgate для всего AI compute | Taiwan binary risk, capex intensity |
+| 4 | **KLAC** | Equipment | incumbent | US | Process-control quasi-monopoly, software-like margins | China exposure |
+| 5 | **ARM** | Compute IP | high-asymmetry / IP tollgate | US ADR | 98% GM royalty/IP tollgate; AI data-center CPU demand только начинает раскрываться | Valuation, RISC-V, Arm China |
+| 6 | **GOOGL** | Cloud/TPU | incumbent | US | Search cash engine + TPU stack снижает зависимость от NVDA | ROIC огромного capex |
+| 7 | **MSFT** | Cloud/software | incumbent | US | Software rent + Azure distribution | OpenAI/Azure capex transparency |
+| 8 | **ANET** | Networking | incumbent | US | EOS/software lock-in в AI Ethernet | MSFT+Meta concentration |
+| 9 | **000660.KS / SK Hynix** | Memory/HBM | high-asymmetry | KR | HBM leader с net-cash и текущей AI-рентой | Memory cycle, NVDA/customer concentration |
+| 10 | **BESI.AS** | Advanced packaging equipment | high-asymmetry | EU | Hybrid bonding bottleneck, orders +104.5% YoY | Adoption timing, WFE cycle |
+| 11 | **GEV** | Power | energy-слой | US | Gas turbines/grid slots, net-cash, backlog quality | Execution/valuation |
+| 12 | **ENR.DE** | Power | energy-слой | EU | Gas Services + Grid Technologies, EUR 154B backlog | Wind execution, project risk |
+| 13 | **CEG** | Power/nuclear | energy-слой | US | Невоспроизводимый nuclear baseload и long PPA | Leverage after Calpine, regulation |
+| 14 | **AVGO** | Compute/networking | incumbent | US | Networking + custom ASIC co-design | VMware debt, hyperscaler bargaining |
+| 15 | **CRDO** | Networking/connectivity | high-asymmetry | US | SerDes/AEC bottleneck, 68% GM, revenue >3x | Top-10 customers ~90%, no firm long-term commitments |
+| 16 | **CAMT** | Advanced packaging inspection | high-asymmetry | US/IL | Small-base inspection tollgate for HBM/advanced packaging | Lumpy orders, Israel/customer risk |
+| 17 | **NXT.AX** | Data centers | high-asymmetry | AU | Scarce powered APAC campuses; 544MW pro-forma forward order book | Funding/dilution, lease-up, tenant concentration |
+| 18 | **BWXT** | Nuclear supply chain | energy-слой | US | Rare nuclear manufacturing base + $8.65B backlog | AI-link indirect, government concentration, debt |
+
+**Первые новые кандидаты на deep-dive:** **SK Hynix, BESI, CRDO, CAMT**.
+
+- **SK Hynix** — проверять как core HBM candidate против MU/TSM/NVDA chain: контрактность HBM4/HBM4E, долю NVIDIA, durability 72% operating margin.
+- **BESI** — проверять, не является ли hybrid bonding следующим узким местом advanced packaging с рентой выше broad WFE.
+- **CRDO** — проверять design-win quality и customer concentration: upside выше ANET/MRVL, но thesis может сломаться одним hyperscaler order cut.
+- **CAMT** — проверять, насколько 2H26 acceleration подтвержден заказами, а не только pipeline; это high-beta вариант на HBM/advanced packaging inspection.
+
+**NXT.AX** — отдельный deep-dive только если нужен APAC data-center/power слой. **ARM** — не первый deep-dive, потому что право на ренту очевидно; вопрос почти полностью в valuation/reverse-DCF. **GDS** не включать в shortlist без экстремально дешевой оценки и отдельной China/debt risk-premium модели.
+
+---
+
+# Расширение: мелкие и неамериканские кандидаты (raw, до gate)
+
+- Обновлено: 2026-06-24.
+- Статус: **СЫРОЙ список, не прошёл полный fact-check / quality-gate / valuation**. Часть имен уже перенесена в gate выше: 000660.KS, CRDO, CAMT, BESI.AS, ARM, BWXT, ENR.DE, NXT.AX, GDS. Остальные строки остаются raw.
+- Метод: тот же rent-owner-тест — компания должна владеть дефицитным ресурсом звена или иметь шанс на сверхнормальную прибыль. Если тезис больше похож на commodity/storytelling, это помечено прямо.
+- Точечная проверка листинга/бизнеса сделана экономно: Siemens Energy data centers / IR, Hammond Power data centers, Alchip, SK hynix, Applied Materials-Besi hybrid bonding, Camtek investors, Keppel DC REIT, IREN, а также Yahoo Finance / биржевые страницы по тикерам. Мультипликаторы, текущие цены и свежие квартальные цифры **не проверялись**.
+
+## Корзина 1 — Power bottleneck
+
+В power-слое чистых small-cap rent owners мало: большинство маленьких имён — это pre-revenue SMR, fuel-cell или battery stories. В таблицу попали только те, у кого есть физический дефицитный ресурс: турбины, nuclear manufacturing, transformers, grid/power equipment.
+
+| Ticker / биржа / страна | Звено | Дефицитный ресурс | Rent owner? | Ключевой риск | Предв. тег | Тип |
+|---|---|---|---|---|---|---|
+| **ENR.DE / Xetra / Германия** | Power: turbines + grid | Gas turbines, HVDC/grid equipment, service backlog | **Y/partial — турбины+grid slots scarce** | Execution в wind, уже сильная переоценка, project risk | **keep** | non-US |
+| **7011.T / Tokyo / Япония** | Power: gas turbines + nuclear | Large gas turbines, nuclear engineering, power plants | **Y — олигополия больших турбин** | Длинные циклы заказов, project execution, FX | **keep/watch** | non-US |
+| **BWXT / NYSE / США** | Power: nuclear supply chain | Nuclear components, fuel/services, reactor manufacturing know-how | **Y/partial — ядерная производственная база** | Зависимость от government contracts, SMR timing slow | **watch** | small/mid-cap |
+| **HPS.A.TO / TSX / Канада** | Power: transformers | Dry-type / distribution transformers for electrification and DCs | **N/partial — дефицитно, но копируемо** | Нормализация transformer-маржи, capacity cycle | **watch** | small/mid-cap; non-US |
+
+**Сырые выводы:** ENR.DE и 7011.T — наиболее близкие non-US аналоги GEV по дефициту больших турбин/grid, но уже не дешёвые «неоткрытые» истории. BWXT интереснее как асимметрия: если nuclear/SMR переходит из опциональности в реальные DC PPA, operating leverage выше, чем у CEG/GEV; пока это `watch`, потому что AI-связь косвенная. HPS.A.TO — хороший transformer bottleneck, но rent слабее: это скорее supply-chain shortage, чем технологическая монополия.
+
+## Корзина 2 — Networking / optics
+
+Здесь много commodity optical-module поставщиков. Rent-owner-тест проходят только те, у кого есть SerDes/DSP/IP, масштаб 800G/1.6T или доказанная скорость ramp у гиперскейлеров.
+
+| Ticker / биржа / страна | Звено | Дефицитный ресурс | Rent owner? | Ключевой риск | Предв. тег | Тип |
+|---|---|---|---|---|---|---|
+| **CRDO / Nasdaq / США** | Networking: high-speed connectivity | SerDes/DSP, active electrical cables, AI-cluster connectivity | **Y/partial — SerDes IP + design wins** | Customer concentration, конкуренция Broadcom/Marvell, valuation | **keep** | small/mid-cap |
+| **LITE / Nasdaq / США** | Optics: lasers/components | Lasers / photonic components for high-speed optics | **N/partial — лазеры нужны, рента спорна** | Telecom cycle, debt, price pressure, China exposure | **watch** | small/mid-cap |
+| **300308.SZ / Shenzhen / Китай** | Optics: transceivers | Scale in 800G/1.6T optical modules | **Y/partial — масштаб, но price pressure** | Export controls, China listing risk, ASP compression | **keep/watch** | non-US |
+| **300502.SZ / Shenzhen / Китай** | Optics: transceivers | High-speed optical modules for AI/data centers | **partial — быстрый optical-module ramp** | Конкуренция модулей, customer concentration, China risk | **watch** | non-US |
+
+**Сырые выводы:** CRDO — самый чистый small/mid-cap кандидат в этой корзине: если AEC/SerDes становится новым узким местом AI-scale networking, upside выше, чем у ANET/MRVL, потому что база меньше. Китайские 300308/300502 дают non-US доступ к тому же 800G/1.6T дефициту, но рента менее чистая: optical modules быстро превращаются в ценовую войну. LITE оставить как `watch`, не как rent-owner.
+
+## Корзина 3 — Memory / equipment
+
+Здесь лучшие новые кандидаты не small-cap, а non-US владельцы технологической ренты вокруг HBM и advanced packaging. Это ближе к качеству ASML/KLAC, чем к commodity memory beta.
+
+| Ticker / биржа / страна | Звено | Дефицитный ресурс | Rent owner? | Ключевой риск | Предв. тег | Тип |
+|---|---|---|---|---|---|---|
+| **000660.KS / Korea Exchange / Корея** | Memory: HBM | HBM leadership, packaging/process know-how, NVIDIA qualification | **Y/partial — HBM лидер, но цикл** | Memory cycle, NVDA/customer concentration, capex response | **keep** | non-US |
+| **BESI.AS / Euronext Amsterdam / Нидерланды** | Equipment: advanced packaging | Hybrid bonding / die attach equipment | **Y/partial — hybrid bonding niche leader** | Adoption timing, cyclic WFE, high valuation | **keep** | non-US |
+| **ASM.AS / Euronext Amsterdam / Нидерланды** | Equipment: ALD/epi | Atomic layer deposition / materials precision for advanced nodes | **Y — ALD process leadership** | WFE cycle, China/export controls, order timing | **keep** | non-US |
+| **CAMT / Nasdaq+TASE / Израиль** | Equipment: inspection | Inspection/metrology for advanced packaging and HBM | **Y/partial — inspection niche, high beta** | Customer concentration, Israel risk, valuation spike | **keep/watch** | small/mid-cap; non-US |
+
+**Сырые выводы:** SK Hynix — очевидный пропуск текущего файла: как HBM-лидер он ближе к реальному rent owner, чем MU, хотя цикличность памяти никуда не исчезает. BESI и CAMT дают более высокую асимметрию, чем ASML/KLAC: меньше база и более узкий advanced-packaging bottleneck, но выше риск timing/valuation. ASM.AS — качественный non-US кандидат, но, вероятно, с меньшей асимметрией, чем BESI/CAMT.
+
+## Корзина 4 — Compute / silicon
+
+В compute small-cap публичных чистых winners почти нет: лучшие частные или уже в NVDA/AVGO/TSM ecosystem. Смысл поиска — найти tollgate/IP или design-service узкие места для custom ASIC и sovereign/non-US compute.
+
+| Ticker / биржа / страна | Звено | Дефицитный ресурс | Rent owner? | Ключевой риск | Предв. тег | Тип |
+|---|---|---|---|---|---|---|
+| **ARM / Nasdaq / UK/Japan** | Compute: IP | CPU/IP licensing tollgate for AI servers and custom SoCs | **Y — CPU/IP licensing tollgate** | Valuation, RISC-V, China licensing risk | **keep** | non-US |
+| **3661.TW / TWSE / Тайвань** | Compute: custom ASIC | Advanced-node ASIC design + TSMC proximity | **Y/partial — TSMC-linked ASIC capacity** | Customer concentration, export controls, lumpy programs | **keep/watch** | non-US |
+| **6526.T / Tokyo / Япония** | Compute: custom SoC | ASIC/SoC design services for high-end compute | **partial — ASIC capacity, less moat** | Project lumpiness, customer mix, margin volatility | **watch** | non-US |
+| **688256.SS / Shanghai STAR / Китай** | Compute: AI accelerator | Domestic Chinese AI accelerator supply under sanctions | **N/partial — China scarcity, weak ecosystem** | Sanctions, CUDA gap, valuation, profitability | **watch/drop-weak** | non-US |
+
+**Сырые выводы:** ARM — чистый tollgate, но уже большой и дорогой. На асимметрию интереснее Alchip (3661.TW): если custom ASIC забирает часть роста у NVDA/AVGO, маленькая дизайн-платформа с TSMC proximity может дать больший upside. Socionext похож, но rent слабее. Cambricon — не quality-rent, а China-policy option: высокий upside возможен, но это `watch/drop-weak` до проверки экономики и software moat.
+
+## Корзина 5 — Cloud / data-center operators
+
+У небольших DC-операторов главный риск — они не владельцы ренты, а levered buildout stories. Настоящая рента возникает только если компания владеет редкой площадкой с power, разрешениями, network ecosystem и кредитоспособными клиентами.
+
+| Ticker / биржа / страна | Звено | Дефицитный ресурс | Rent owner? | Ключевой риск | Предв. тег | Тип |
+|---|---|---|---|---|---|---|
+| **NXT.AX / ASX / Австралия** | Data centers: colocation | Scarce powered campuses + network ecosystem in APAC | **Y/partial — scarce powered APAC campuses** | High capex, funding cost, lease-up risk | **keep/watch** | non-US |
+| **9698.HK / HKEX; GDS / Nasdaq / Китай** | Data centers: China/SEA | Tier-1 China sites + Southeast Asia expansion | **partial — Tier-1 sites, leverage heavy** | China risk, debt, utilization, hyperscaler bargaining | **watch** | non-US |
+| **AJBU.SI / SGX / Сингапур** | Data-center REIT | Pure-play DC real estate portfolio in Asia/Europe | **N/partial — assets scarce, REIT capped** | Rates, tenant concentration, limited growth without issuance | **watch** | non-US |
+| **IREN / Nasdaq / Australia/US sites** | AI DC / power sites | Secured power, land, owned data-center sites | **N/partial — secured power, execution unproved** | Bitcoin legacy, financing, customer concentration, GPU debt | **watch** | small/mid-cap |
+
+**Сырые выводы:** NXT.AX — самый чистый non-US DC-кандидат: power/campus scarcity в Австралии/APAC может быть реальной локальной рентой. IREN даёт самую высокую асимметрию, но rent слабый: пока это pivot из bitcoin/power-site owner в AI infrastructure, а не доказанный cloud rent owner. GDS и Keppel DC REIT — полезны для карты non-US DC слоя, но не выглядят сильнее top-10 без дешёвой оценки.
+
+## Самые интересные новые имена по асимметрии
+
+1. **CRDO** — small/mid-cap bottleneck в SerDes/AEC для AI networking; база намного меньше ANET/MRVL, поэтому upside выше при подтверждении design wins.
+2. **3661.TW / Alchip** — чистый рычаг на custom ASIC вне NVDA; если hyperscalers ускоряют собственные XPUs, маленькая ASIC-design платформа может расти быстрее AVGO.
+3. **CAMT** — inspection для HBM/advanced packaging; маленький поставщик на физическом bottleneck, потенциально выше asymmetry, чем у KLAC, но выше customer/valuation risk.
+4. **BESI.AS** — опцион на hybrid bonding как следующий packaging bottleneck; более узкий и высокобета-инструмент, чем ASML/AMAT/LRCX.
+5. **IREN** — самый высокий upside, но самый слабый rent-quality: power-secured AI DC pivot может переоцениться резко, однако это финансируемая buildout story, не доказанный rent owner.
+
+**Предварительный next-step:** в fact-check/quality-gate первыми проверить **CRDO, Alchip, CAMT, BESI, SK Hynix, NXT.AX, BWXT**. IREN держать отдельно как high-risk asymmetric option, а не как core candidate.
