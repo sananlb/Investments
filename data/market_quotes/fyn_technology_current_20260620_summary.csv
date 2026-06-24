@@ -1,10 +1,10 @@
 metric,value,n_companies,n_observations,status,comment
-pe,21.771,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-ps,6.8849,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-pb,6.89965,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-ev_ebitda,15.4449,5,5,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-fcf_yield,0.0472821,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; price ratios; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-net_margin,0.2715,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-gross_margin,0.72435,6,6,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-revenue_growth_yoy,0.1276,9,9,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
-earnings_growth_yoy,0.23155,8,8,ok,"MEDIAN price-only current snapshot as of 2026-06-20; non-price metrics; fundamentals reused from latest local snapshot, prices refreshed from Nasdaq; provisional if filings after base snapshot are not reflected"
+pe,21.771,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,6.8849,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,6.8016,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,15.3456,5,5,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.047282,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+net_margin,0.2715,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental
+gross_margin,0.72435,6,6,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental
+revenue_growth_yoy,0.1276,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental
+earnings_growth_yoy,0.2598,9,9,ok,MEDIAN current TTM snapshot as of 2026-06-20; refresh_mode=incremental

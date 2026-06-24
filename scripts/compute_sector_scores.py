@@ -75,7 +75,7 @@ SECTOR_WEIGHTS: Dict[str, Dict[str, float]] = {
     "Consumer Discretionary": {"pe": 0.30, "ev_ebitda": 0.25, "ps": 0.20, "fcf_yield": 0.15},
     "Food & Staples": {"pe": 0.30, "ev_ebitda": 0.25, "ps": 0.15},
     "Drugs": {"pe": 0.30, "ev_ebitda": 0.20, "ps": 0.10, "fcf_yield": 0.20},
-    "Medical Services": {"pe": 0.30, "ev_ebitda": 0.25, "ps": 0.15},
+    "Medtech & Life Science Tools": {"pe": 0.30, "ev_ebitda": 0.25, "ps": 0.15},
     "Utilities": {"pe": 0.30, "ev_ebitda": 0.25, "pb": 0.15},
     "Telecom & Streaming": {"ev_ebitda": 0.30, "fcf_yield": 0.25, "ps": 0.15},
     "Delivery & Logistics": {"ev_ebitda": 0.30, "pe": 0.25, "ps": 0.20},
@@ -94,6 +94,7 @@ SECTOR_SLUGS = {
     "Delivery & Logistics": "delivery_logistics",
     "Food & Staples": "food",
     "Agriculture & Chemicals": "agriculture_chemicals",
+    "Medtech & Life Science Tools": "medical_services",
 }
 
 

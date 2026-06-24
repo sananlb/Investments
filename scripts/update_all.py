@@ -58,7 +58,7 @@ SECTORS: Dict[str, Tuple[str, List[str]]] = {
     "technology": ("Technology", ["AAPL", "MSFT", "GOOG", "META", "ADBE", "CRM", "NOW", "ACN", "IBM"]),
     "agriculture_chemicals": ("Agriculture & Chemicals", ["LIN", "APD", "SHW", "ECL", "CTVA", "NTR", "FMC"]),
     "consumer_discretionary": ("Consumer Discretionary", ["AMZN", "HD", "LOW", "NKE", "MCD", "LULU"]),
-    "medical_services": ("Medical Services", ["ABT", "ISRG", "SYK", "MDT", "BSX", "TMO", "ALGN"]),
+    "medical_services": ("Medtech & Life Science Tools", ["ABT", "ISRG", "SYK", "MDT", "BSX", "TMO", "ALGN"]),
     "solar": ("Solar", ["FSLR", "NXT", "ENPH", "SEDG", "RUN", "CSIQ", "SHLS"]),
     "reit": ("REIT", ["WELL", "PLD", "EQIX", "AMT", "O", "DLR", "VICI"]),
 }

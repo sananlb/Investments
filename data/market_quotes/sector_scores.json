@@ -11,7 +11,7 @@
       "Energy",
       "Food & Staples",
       "Insurance",
-      "Medical Services",
+      "Medtech & Life Science Tools",
       "Mining",
       "REIT",
       "Semiconductors",
@@ -1288,7 +1288,7 @@
     {
       "anchor_date": "2026-06-06",
       "actual_trading_date": "2026-06-05",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "sector_score": 0.6796,
       "metric": "pe",
       "current_value": 25.594,
@@ -1302,7 +1302,7 @@
     {
       "anchor_date": "2026-06-06",
       "actual_trading_date": "2026-06-05",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "sector_score": 0.6796,
       "metric": "ev_ebitda",
       "current_value": 15.095,
@@ -1316,7 +1316,7 @@
     {
       "anchor_date": "2026-06-06",
       "actual_trading_date": "2026-06-05",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "sector_score": 0.6796,
       "metric": "ps",
       "current_value": 3.5146,

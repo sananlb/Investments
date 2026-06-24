@@ -18,7 +18,118 @@ Large-cap technology, software, cloud, platforms, consulting and payments.
 
 ## Данные для sector_score графика
 
-Обновлено: 2026-05-31.
+Обновлено: 2026-06-23.
+
+### Актуальная оценка на 2026-06-20
+
+Источник текущей точки: SEC EDGAR XBRL-факты с `filed <= 2026-06-20` и закрытие
+Nasdaq от 2026-06-18 (последний торговый день перед якорем). Норма — двухуровневая
+медиана FY2021-FY2025 из `data/market_quotes/fyn_technology_norm.csv`.
+
+| Метрика | Сейчас | 5Y-норма | Коэффициент |
+|---|---:|---:|---:|
+| P/E | `21.77` | `29.93` | `0.727` |
+| EV/EBITDA | `15.35` | `25.36` | `0.605` |
+| P/S | `6.88` | `8.30` | `0.829` |
+| FCF yield | `4.73%` | `3.52%` | `0.745` (инверсия yield) |
+| Итоговый `sector_score` | `0.724` | `1.000` | сектор дешевле нормы |
+
+#### Факты: бизнес не зарабатывает меньше
+
+У всех девяти компаний корзины текущая TTM-чистая прибыль выше FY2025 и FY2021.
+Медианная net margin корзины равна `27.15%` против 5Y-нормы `25.31%`; медианный
+рост прибыли — `25.98%` против нормы `18.72%`. Медианный рост выручки немного
+замедлился: `12.76%` против `13.87%`.
+
+| Компания | TTM revenue | TTM net income | Изм. прибыли к FY2025 | Цена к FY2025 close | P/E сейчас / собственная 5Y-медиана |
+|---|---:|---:|---:|---:|---:|
+| AAPL | `$451.4B` | `$122.6B` | `+9%` | `+17%` | `35.7 / 27.5` |
+| MSFT | `$318.3B` | `$125.2B` | `+23%` | `-24%` | `22.5 / 34.4` |
+| GOOG | `$422.5B` | `$160.2B` | `+21%` | `+17%` | `27.8 / 23.8` |
+| META | `$215.0B` | `$70.6B` | `+17%` | `-13%` | `21.0 / 24.8` |
+| ADBE | `$25.2B` | `$7.2B` | `+1%` | `-39%` | `10.7 / 40.2` |
+| CRM | `$42.8B` | `$8.0B` | `+30%` | `-56%` | `15.5 / 67.5` |
+| NOW | `$14.0B` | `$1.8B` | `+1%` | `-38%` | `55.8 / 154.3` |
+| ACN | `$73.1B` | `$7.8B` | `+1%` | `-51%` | `10.2 / 29.9` |
+| IBM | `$68.9B` | `$10.8B` | `+2%` | `-18%` | `21.8 / 26.7` |
+
+#### Интерпретация
+
+- Дешевизна сосредоточена в software/IT-services: ADBE, CRM, NOW и ACN. У них
+  прибыль не обвалилась, но цена снизилась на `38-56%` относительно FY2025 close.
+- AAPL и GOOG, наоборот, дороже собственных норм. Они удерживают общий score от
+  ещё более низкого значения.
+- Главный отрицательный компонент — EV/EBITDA (`0.605` нормы), затем P/E (`0.727`).
+- Диагностическое разделение той же методикой показывает неоднородность корзины:
+  platforms (`AAPL/MSFT/GOOG/META`) около `1.11`, enterprise software
+  (`ADBE/CRM/NOW`) около `0.24`, IT services/legacy (`ACN/IBM`) около `0.65`.
+  Это не отдельные официальные sector scores, а проверка причины: формулировка
+  «Technology дешёвый» фактически означает сильный de-rating enterprise software
+  и IT services, а не дешевизну всех mega-cap платформ.
+- Последние официальные отчёты не показывают общего слома бизнеса: Adobe сообщил
+  рекордную квартальную выручку и повысил FY26 targets; Salesforce показал рост
+  subscription & support revenue и GAAP operating margin; ServiceNow сохранил
+  рост выручки `22%`; Microsoft увеличил квартальную выручку `18%`, а operating
+  income `20%`.
+
+#### Внешняя сверка и различие корзин
+
+Сверка на 2026-06-23 показывает, что локальный вывод «Technology дешевле нормы»
+нельзя автоматически переносить на официальный S&P 500 Information Technology /
+XLK. В нашей секторной карте полупроводники выделены в отдельный сектор
+`SEMICONDUCTORS`, а `TECHNOLOGY` — это платформы, enterprise software, consulting
+и legacy IT.
+
+Внешние ориентиры дают другую картину для официального tech-сектора:
+
+- State Street XLK на 2026-06-22: `Semiconductors & Semiconductor Equipment`
+  занимают `50.56%` фонда; крупнейшие позиции — NVDA `15.15%`, AAPL `13.08%`,
+  MSFT `8.18%`, MU `5.64%`, AVGO `5.56%`, AMD `4.97%`.
+- WorldPERatio для S&P 500 Information Technology на 2026-06-23: trailing P/E
+  `36.56`, выше 5Y среднего `32.44` и немного выше верхней границы 1σ
+  `[28.78; 36.11]`; источник классифицирует сектор как overvalued.
+- Finviz Groups на 2026-06-23: Technology P/E `40.20`, forward P/E `28.06`,
+  P/S `7.97`, P/B `11.40`, P/FCF `30.69`.
+- Damodaran sector dataset обновлён в январе 2026: software/system &
+  application и semiconductors всё ещё торгуются с высокими forward P/E
+  около `34-37x`, поэтому широкая внешняя tech-корзина не выглядит дешёвой
+  в абсолютном смысле.
+
+Итог: локальный `sector_score=0.724` — это сигнал de-rating внутри нашей
+non-semis technology basket. Для публичного XLK/S&P IT нужен отдельный вывод,
+потому что он уже наполовину semiconductor/AI hardware.
+
+#### Риски и ограничения вывода
+
+- Норма FY2021-FY2025 включает период низкой стоимости капитала и высоких оценок
+  growth-компаний, а также очень высокие ранние P/E CRM/NOW при небольшой
+  GAAP-прибыли. Поэтому часть
+  дисконта — нормализация прежней переоценки, а не гарантированная недооценённость.
+- Рынок закладывает риски AI-disruption для Adobe/SaaS, слабый consulting growth у
+  Accenture, интеграцию приобретений у Salesforce/ServiceNow и высокий AI capex у
+  hyperscalers. Рост прибыли сам по себе не доказывает, что старые мультипликаторы
+  должны восстановиться.
+- `sector_score` — valuation-only сигнал. Перед инвестиционным действием нужны
+  forward growth, EPS revisions, organic growth, SBC/dilution и FCF после AI capex.
+
+#### Предварительный shortlist внутри дешёвой части корзины
+
+| Компания | Revenue growth | Earnings growth | Net margin | P/E | EV/EBITDA | FCF yield | Предварительная оценка |
+|---|---:|---:|---:|---:|---:|---:|---|
+| ADBE | `11.5%` | `5.2%` | `28.7%` | `10.7` | `7.9` | `13.3%` | Самая сильная комбинация качества и цены; главный риск — AI-disruption |
+| CRM | `11.0%` | `29.3%` | `18.7%` | `15.5` | `15.3` | `11.8%` | Привлекательно, но проверить organic growth, Informatica, debt и SBC |
+| ACN | `6.7%` | `-2.0%` | `10.7%` | `10.2` | `n/a` | `15.8%` | Дёшево, но низкий growth и риск AI-давления на labor-based consulting |
+| NOW | `21.7%` | `14.2%` | `12.6%` | `55.8` | `35.1` | `4.7%` | Качественный рост, но не дешёвая акция в абсолютном выражении |
+
+FCF yield для software необходимо дополнительно корректировать на экономическую
+стоимость stock-based compensation и dilution. Без этого ADBE/CRM/ACN могут
+выглядеть дешевле, чем после расчёта owner earnings.
+
+Официальные источники обновления: [Adobe Q2 FY2026](https://news.adobe.com/news/2026/06/adobe-q2fy26-financial-results),
+[Salesforce quarterly results](https://investor.salesforce.com/financials/quarterly-results/default.aspx),
+[ServiceNow Q1 2026](https://investor.servicenow.com/news/news-details/2026/ServiceNow-Reports-First-Quarter-2026-Financial-Results/default.aspx),
+[Accenture Q3 FY2026](https://newsroom.accenture.com/news/2026/accenture-reports-third-quarter-fiscal-2026-results),
+[Microsoft FY2026 Q3](https://www.microsoft.com/en-us/Investor/earnings/FY-2026-Q3/performance).
 
 Для первой версии графика использована корзина: `AAPL`, `MSFT`, `GOOG`, `META`, `ADBE`, `CRM`, `NOW`, `ACN`, `IBM`.
 

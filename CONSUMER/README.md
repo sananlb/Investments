@@ -4,6 +4,8 @@ Consumer discretionary и брендовые потребительские ко
 
 Группа в TradingView: `Consumer`.
 
+Текущие выводы по сектору: [SECTOR_CONCLUSIONS_2026-06-24](SECTOR_CONCLUSIONS_2026-06-24.md).
+
 ## Ключевые компании
 
 - [AMZN](AMZN.md) - Amazon: крупнейший consumer discretionary по market cap.
@@ -12,8 +14,13 @@ Consumer discretionary и брендовые потребительские ко
 - [NKE](NKE.md) - Nike: global athletic brand.
 - [MCD](MCD.md) - McDonald's: global quick-service restaurants.
 - [LULU](LULU.md) - Lululemon: premium athletic apparel.
+- [DECK](DECK.md) - Deckers Brands: HOKA / UGG premium footwear and lifestyle brands.
+- [ONON](ONON.md) - On Holding: premium running / performance lifestyle footwear.
+- [CAVA](CAVA.md) - CAVA Group: Mediterranean fast-casual restaurant growth chain.
 
 Важно: `TSLA` не включается в Consumer Discretionary sector_score. Рабочая классификация для нашей библиотеки: Tesla - это AI / robotics / autonomous taxi thesis, а не автомобильная consumer-компания. Файл перенесен в `AI/TSLA.md`.
+
+Важно: `AMZN` может входить в GICS / ETF-классификацию Consumer Discretionary и использоваться как часть benchmark-сравнения `XLY`, но для инвестиционного shortlist в этой библиотеке Amazon не считать чистой consumer discretionary идеей. Основной инвестиционный тезис по `AMZN` ближе к cloud / AI infrastructure / technology, а не к циклическому потребительскому сектору.
 
 ## Кратко о секторе
 
@@ -32,11 +39,45 @@ Consumer discretionary - циклический потребительский �
 
 Главная особенность: в Consumer Discretionary нельзя смотреть только P/E. Дешевый P/E может быть ловушкой, если падают traffic, gross margin, inventory quality и EPS revisions. Для финальной модели нужно добавить операционные метрики: same-store sales, gross margin trend, inventory turnover и consumer cycle signal.
 
+## Growth shortlist без дивидендного фокуса
+
+Обновлено: 2026-06-24.
+
+Рабочий фильтр пользователя: приоритет не дивидендные mature-компании, а развивающиеся бизнесы, где основной источник доходности - рост бизнеса, операционный рычаг, международная экспансия, переоценка мультипликатора или turnaround.
+
+`AMZN` не включать в этот shortlist как чистую consumer discretionary идею: его основной инвестиционный тезис ближе к cloud / AI infrastructure / technology.
+
+Текущий порядок интересности:
+
+1. `DECK` - лучший баланс growth / качество / оценка; HOKA, international growth, net cash, buybacks.
+2. `LULU` - самая дешевая идея, но это turnaround; нужна стабилизация Americas и gross margin.
+3. `ULTA` - quality growth / buyback compounder; не hyper-growth, но доказанная операционная сила.
+4. `ONON` - самый чистый premium athletic growth, но оценка требовательнее.
+5. `CAVA` - лучший операционный рост, но valuation очень высокая; watch, не "дешевый сектор".
+
+### Сравнение `DECK` / `LULU` / `ULTA`
+
+Обновлено: 2026-06-24. Источники: последние IR-релизы компаний, StockAnalysis / S&P Global consensus, Morningstar, публичные обзоры аналитиков.
+
+| Компания | Тип идеи | Консенсус аналитиков | Средняя цель | Главный плюс | Главный риск | Рабочий статус |
+|---|---|---:|---:|---|---|---|
+| `DECK` | quality brand growth | `Buy` | `$126.86` | HOKA + UGG, net cash, FCF, buybacks | HOKA deceleration, tariffs, FY2027 execution | №1 по балансу |
+| `ULTA` | quality retail compounder | `Buy` | `$627.25` | лучший Street support, positive comps, EPS growth | inventory, margin normalization, beauty cycle | №1 по консенсусу |
+| `LULU` | turnaround / value | `Hold` | `$133.74` | самая низкая оценка, international growth | US/Americas weakness, product relevance, EPS cuts | только watch |
+
+Вывод после чтения аналитиков: первичный порядок `DECK -> LULU -> ULTA` нужно уточнить. Если ранжировать по **риск/качество/видимость**, порядок лучше такой:
+
+1. `DECK` - лучший общий баланс: качество, valuation, баланс, buybacks.
+2. `ULTA` - сильнее поддержана аналитиками и операционно стабильнее, но менее "дешевая growth".
+3. `LULU` - максимальная потенциальная переоценка, но только как turnaround с подтверждением разворота.
+
+Практическое правило: `DECK` можно готовить к полноценному deep-dive первым; `ULTA` сравнить с ним как более стабильную альтернативу; `LULU` не покупать до подтверждения, что падение Americas comps и gross margin pressure остановились.
+
 ## Данные для sector_score графика
 
 Обновлено: 2026-05-31.
 
-Для первой версии графика использована корзина без `TSLA`: `AMZN`, `HD`, `LOW`, `NKE`, `MCD`, `LULU`.
+Для первой версии графика использована корзина без `TSLA`: `AMZN`, `HD`, `LOW`, `NKE`, `MCD`, `LULU`. Для инвестиционного отбора `AMZN` нужно рассматривать отдельно как technology / cloud infrastructure thesis; если пересобирать чистую consumer discretionary модель, его нужно заменить на более профильную consumer growth-компанию.
 
 ETF-proxy / benchmark для проверки состава и цен: `XLY`.
 
@@ -125,6 +166,8 @@ Consumer Discretionary sector_score =
 ## Компании и инструменты
 
 - [AMZN](AMZN.md)
+- [CAVA](CAVA.md)
+- [DECK](DECK.md)
 - [GT](GT.md)
 - [HD](HD.md)
 - [LEN](LEN.md)
@@ -133,5 +176,6 @@ Consumer Discretionary sector_score =
 - [MCD](MCD.md)
 - [MMM](MMM.md)
 - [NKE](NKE.md)
+- [ONON](ONON.md)
 - [RL](RL.md)
 - [ULTA](ULTA.md)

@@ -146,7 +146,7 @@
     },
     {
       "date": "2024-08-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9524",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -316,7 +316,7 @@
     },
     {
       "date": "2024-10-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9974",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -486,7 +486,7 @@
     },
     {
       "date": "2024-12-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "1.0009",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -656,7 +656,7 @@
     },
     {
       "date": "2025-02-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9855",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -826,7 +826,7 @@
     },
     {
       "date": "2025-04-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.7871",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -996,7 +996,7 @@
     },
     {
       "date": "2025-06-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.8894",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -1166,7 +1166,7 @@
     },
     {
       "date": "2025-07-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9461",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -1336,7 +1336,7 @@
     },
     {
       "date": "2025-08-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9127",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -1506,7 +1506,7 @@
     },
     {
       "date": "2025-09-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9141",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -1676,7 +1676,7 @@
     },
     {
       "date": "2025-10-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9426",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -1846,7 +1846,7 @@
     },
     {
       "date": "2025-11-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9427",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2016,7 +2016,7 @@
     },
     {
       "date": "2025-12-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9456",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2186,7 +2186,7 @@
     },
     {
       "date": "2026-01-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9956",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2356,7 +2356,7 @@
     },
     {
       "date": "2026-02-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.9628",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2526,7 +2526,7 @@
     },
     {
       "date": "2026-02-28",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2696,7 +2696,7 @@
     },
     {
       "date": "2026-03-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.8234",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -2866,7 +2866,7 @@
     },
     {
       "date": "2026-03-20",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3036,7 +3036,7 @@
     },
     {
       "date": "2026-03-30",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3206,7 +3206,7 @@
     },
     {
       "date": "2026-04-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.7992",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3376,7 +3376,7 @@
     },
     {
       "date": "2026-04-20",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3546,7 +3546,7 @@
     },
     {
       "date": "2026-04-30",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3716,7 +3716,7 @@
     },
     {
       "date": "2026-05-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.6951",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -3886,7 +3886,7 @@
     },
     {
       "date": "2026-05-20",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -4056,7 +4056,7 @@
     },
     {
       "date": "2026-05-30",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -4226,7 +4226,7 @@
     },
     {
       "date": "2026-06-06",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -4396,7 +4396,7 @@
     },
     {
       "date": "2026-06-10",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "",
       "metric": "sector_score",
       "metric_coefficient": "",
@@ -4537,12 +4537,12 @@
     {
       "date": "2026-06-20",
       "sector": "Technology",
-      "coefficient": "0.7251",
+      "coefficient": "0.724",
       "metric": "sector_score",
       "metric_coefficient": "",
       "metric_weight": "",
-      "source": "build_fy_norm.py --current --as-of over SEC EDGAR; fyn_technology_current_20260620_summary.csv; fyn_technology_norm_summary.csv",
-      "comment": "status=ok; actual_trading_date=2026-06-18; pe.status=ok, n_companies=9 (expected 9); pe: 0.7273 x 28.6% | ev_ebitda: 0.6090 x 28.6% | ps: 0.8294 x 28.6% | fcf_yield: 0.7447 x 14.3%; price-only refresh: Nasdaq close on 2026-06-18; fundamentals reused from latest local snapshot, not SEC-refetched for this point"
+      "source": "build_fy_norm.py --current --as-of; refresh_mode=incremental; fyn_technology_current_20260620_summary.csv; fyn_technology_norm_summary.csv; price source: Nasdaq historical API close, Nasdaq historical API close; prices-only refresh",
+      "comment": "status=ok; refresh_mode=incremental; actual_trading_date=2026-06-18; pe.status=ok, n_companies=9 (expected 9); pe: 0.7273 x 28.6% | ev_ebitda: 0.6050 x 28.6% | ps: 0.8294 x 28.6% | fcf_yield: 0.7447 x 14.3%"
     },
     {
       "date": "2026-06-20",
@@ -4566,13 +4566,13 @@
     },
     {
       "date": "2026-06-20",
-      "sector": "Medical Services",
+      "sector": "Medtech & Life Science Tools",
       "coefficient": "0.6653",
       "metric": "sector_score",
       "metric_coefficient": "",
       "metric_weight": "",
-      "source": "build_fy_norm.py --current --as-of over SEC EDGAR; fyn_medical_services_current_20260620_summary.csv; fyn_medical_services_norm_summary.csv",
-      "comment": "status=ok; actual_trading_date=2026-06-18; pe.status=ok, n_companies=7 (expected 7); pe: 0.6403 x 42.9% | ev_ebitda: 0.6645 x 35.7% | ps: 0.7165 x 21.4%; price-only refresh: Nasdaq close on 2026-06-18; fundamentals reused from latest local snapshot, not SEC-refetched for this point"
+      "source": "build_fy_norm.py --current --as-of; refresh_mode=incremental; fyn_medical_services_current_20260620_summary.csv; fyn_medical_services_norm_summary.csv; price source: Nasdaq historical API close, Nasdaq historical API close; prices-only refresh",
+      "comment": "status=ok; refresh_mode=incremental; actual_trading_date=2026-06-18; pe.status=ok, n_companies=7 (expected 7); pe: 0.6403 x 42.9% | ev_ebitda: 0.6645 x 35.7% | ps: 0.7165 x 21.4%"
     },
     {
       "date": "2026-06-20",

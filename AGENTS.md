@@ -287,7 +287,7 @@ AI boom
 | [CONSUMER](CONSUMER/) | Потребительский сектор |
 | [FOOD](FOOD/) | Продукты, напитки, рестораны, retail |
 | [DRUGS](DRUGS/) | Фармацевтика и биотех |
-| [MEDICAL_SERVICES](MEDICAL_SERVICES/) | Медицинские услуги и medtech |
+| [MEDICAL_SERVICES](MEDICAL_SERVICES/) | Медтехника, диагностика, robotic surgery и life science tools |
 | [ENERGY](ENERGY/) | Нефть, газ, сервисные компании |
 | [UTILITIES_AND_GAS_INFRASTRUCTURE](UTILITIES_AND_GAS_INFRASTRUCTURE/) | Utilities, газовая инфраструктура, power |
 | [SOLAR](SOLAR/) | Солнечная энергетика |
@@ -353,7 +353,7 @@ AI boom
 ├── FOOD/                               # Food
 ├── INSURANCE/                          # Insurance
 ├── JUNIOR/                             # Junior
-├── MEDICAL_SERVICES/                   # medical services
+├── MEDICAL_SERVICES/                   # medtech and life science tools
 ├── MINING/                             # Mining
 ├── REIT/                               # Reit
 ├── SOLAR/                              # Solar
@@ -427,7 +427,7 @@ AI boom
 - [Food](FOOD/) - продукты, напитки, рестораны.
 - [Insurance](INSURANCE/) - страхование и health insurance.
 - [Junior](JUNIOR/) - junior miners и малые циклические идеи.
-- [Medical Services](MEDICAL_SERVICES/) - медицинские услуги и medtech.
+- [Medtech & Life Science Tools](MEDICAL_SERVICES/) - медтехника, диагностика, robotic surgery и life science tools.
 - [Mining](MINING/) - добыча, золото, литий, сырье.
 - [REIT](REIT/) - недвижимость и инфраструктурные REIT.
 - [Solar](SOLAR/) - солнечная энергетика.

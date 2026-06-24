@@ -75,7 +75,7 @@ SECTORS: Dict[str, str] = {
     "technology": "Technology",
     "agriculture_chemicals": "Agriculture & Chemicals",
     "consumer_discretionary": "Consumer Discretionary",
-    "medical_services": "Medical Services",
+    "medical_services": "Medtech & Life Science Tools",
     "solar": "Solar",
     "reit": "REIT",
 }
