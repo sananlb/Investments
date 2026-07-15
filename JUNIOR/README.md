@@ -6,7 +6,7 @@ Junior miners, smaller cyclicals and high-risk commodity optionality.
 
 ## Ключевые компании
 
-- [GLN](GLN.md) - Glencore: large diversified miner/trader used as sector anchor.
+- [GLN](GLN.md) - Galan Lithium: near-production Argentine lithium brine developer.
 - [ALB](ALB.md) - Albemarle: lithium cycle benchmark.
 - [LAC](LAC.md) - Lithium Americas: lithium development optionality.
 - [MP](MP.md) - MP Materials: rare earths and US strategic minerals.
