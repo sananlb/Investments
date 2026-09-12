@@ -40,6 +40,11 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
+if __package__:
+    from .build_fy_norm import is_financial_report_fact
+else:
+    from build_fy_norm import is_financial_report_fact
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_QUOTES = PROJECT_ROOT / "data" / "market_quotes" / "anchor_quotes.csv"
@@ -147,13 +152,17 @@ def fetch_concept(cik: int, taxonomy: str, tag: str) -> Optional[List[Dict[str, 
     key = "USD" if "USD" in units else ("shares" if "shares" in units else None)
     if key is None and units:
         key = next(iter(units))
-    return units.get(key, []) if key else None
+    if key is None:
+        return None
+    return [point for point in units[key] if is_financial_report_fact(point)]
 
 
 def latest_filed(points: List[Dict[str, Any]], on_or_before: dt.date) -> Optional[str]:
     """Most recent `end` among points filed on/before the cutoff date."""
     best_end: Optional[str] = None
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         filed = point.get("filed")
         end = point.get("end")
         if not filed or not end or point.get("val") is None:
@@ -178,6 +187,7 @@ def fetch_best_series(cik: int, candidates: List[Tuple[str, str]], as_of: dt.dat
     best_end: Optional[str] = None
     for taxonomy, tag in candidates:
         points = fetch_concept(cik, taxonomy, tag)
+        points = [point for point in (points or []) if is_financial_report_fact(point)]
         if not points:
             continue
         end = latest_filed(points, as_of)
@@ -217,6 +227,8 @@ def latest_versions_by_end(
     """
     chosen: Dict[str, Dict[str, Any]] = {}
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         filed = point.get("filed")
         end = point.get("end")
         if not filed or not end or point.get("val") is None:

@@ -37,6 +37,9 @@
 - **Пересчёт score без сети.** Summary можно пересчитать ОФЛАЙН из готовых `fyn_<slug>_norm.csv` (detail) — агрегация локальная, Twelve Data не нужен. `update_all.py --skip-current` пересчитывает только score.
 - **SEC-фундаментал не тянуть заново на каждой декаде.** Рабочий режим `--refresh-mode auto`: цены обновляются на каждом якоре 10/20/30; SEC submissions metadata проверяется на новые `10-Q/10-K/20-F/40-F/6-K` и amendments; XBRL пересобирается только для компаний с новой формой. Полный аудит всей корзины выполняется 4 раза в год: 20 марта, 20 мая, 20 августа и 20 ноября. Принудительные режимы: `--refresh-mode full` и `--refresh-mode prices-only`. JSON снимка хранит `refresh_mode`, `base_snapshot`, `fundamentals_as_of_by_symbol` и `latest_filings_by_symbol`.
 
+- **DEF 14A: ловушка масштаба XBRL (2026-09-12).** В proxy/ARS финансовые теги могут содержать миллионы при unit USD: FDX NetIncomeLoss = 4433 вместо 4,433 млрд; более поздняя дата подачи вытесняла 10-K.
+  РЕШЕНИЕ: единый `RELEVANT_SEC_FORMS` в `scripts/build_fy_norm.py` допускает только 10-K/10-Q/20-F/40-F/6-K и amendments во всех выборках фактов, включая `fetch_anchor_fundamentals.py`; ошибочные снимки нужно пересобрать, поскольку prices-only сохраняет старый фундаментал.
+
 ## Старый сайт учета инвестиций
 
 На рабочем столе есть старая копия проекта: `/Users/aleksejnalbantov/Desktop/Project — копия`.

@@ -1,0 +1,10 @@
+metric,value,n_companies,n_observations,status,comment
+pe,23.45275,6,6,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ps,1.73335,6,6,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+pb,5.31695,4,4,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+ev_ebitda,15.9392,5,5,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+fcf_yield,0.041819,5,5,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental; price ratios exclude negatives and ADR/foreign-share exceptions; excluded from price metrics: none
+net_margin,0.10315,6,6,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental
+gross_margin,0.3705,4,4,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental
+revenue_growth_yoy,0.0523,6,6,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental
+earnings_growth_yoy,-0.0361,6,6,ok,MEDIAN current TTM snapshot as of 2026-07-10; refresh_mode=incremental

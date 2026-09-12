@@ -23,8 +23,9 @@ Output schema is byte-for-byte the dashboard preview schema:
 with ``coefficient`` = sector_score and ``metric`` = ``sector_score``.
 
 Used to generate the two dashboard timeframes:
-- ``--mode year``  -> 12 monthly 10th-of-month anchors (Jul 2025 .. Jun 2026)
-- ``--mode 2year`` -> 12 bi-monthly 10th-of-month anchors (Aug 2024 .. Jun 2026)
+- ``--mode year``  -> 12 monthly 10th-of-month anchors (Oct 2025 .. Sep 2026)
+- ``--mode 2year`` -> 12 bi-monthly 10th-of-month anchors (Oct 2024 .. Aug 2026)
+  plus the latest monthly anchor (Sep 2026) as a trailing point
 """
 
 from __future__ import annotations
@@ -50,19 +51,24 @@ DASHBOARD_PREVIEW_FIELDNAMES = [
     "metric_coefficient", "metric_weight", "source", "comment",
 ]
 
-# 12 monthly 10th-of-month anchors. The trailing date is in the future, so it
-# has no snapshot and is honestly dropped (11 real points).
+# 12 monthly anchors (rolling: Oct 2025 .. Sep 2026). June 2026 was collected
+# on the 20th (no 10th snapshot exists), so that anchor is 2026-06-20.
+# Roll this list forward each decade update once the new dated snapshot
+# (fyn_<slug>_current_<YYYYMMDD>_summary.csv) has been collected.
 YEAR_DATES = [
-    "2025-07-10", "2025-08-10", "2025-09-10", "2025-10-10",
-    "2025-11-10", "2025-12-10", "2026-01-10", "2026-02-10",
-    "2026-03-10", "2026-04-10", "2026-05-10", "2026-06-10",
+    "2025-10-10", "2025-11-10", "2025-12-10", "2026-01-10",
+    "2026-02-10", "2026-03-10", "2026-04-10", "2026-05-10",
+    "2026-06-20", "2026-07-10", "2026-08-10", "2026-09-10",
 ]
 
-# 12 bi-monthly 10th-of-month anchors. Trailing date is future -> dropped.
+# 12 bi-monthly 10th-of-month anchors (even-month grid, which is the grid the
+# 2-year history was collected on) plus the latest monthly anchor as a trailing
+# point, so the 2-year view ends on the same fresh date as the 1-year view.
 TWO_YEAR_DATES = [
-    "2024-08-10", "2024-10-10", "2024-12-10", "2025-02-10",
-    "2025-04-10", "2025-06-10", "2025-08-10", "2025-10-10",
-    "2025-12-10", "2026-02-10", "2026-04-10", "2026-06-10",
+    "2024-10-10", "2024-12-10", "2025-02-10", "2025-04-10",
+    "2025-06-10", "2025-08-10", "2025-10-10", "2025-12-10",
+    "2026-02-10", "2026-04-10", "2026-06-20", "2026-08-10",
+    "2026-09-10",
 ]
 
 MODE_DATES = {"year": YEAR_DATES, "2year": TWO_YEAR_DATES}

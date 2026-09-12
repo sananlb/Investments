@@ -109,6 +109,8 @@ FMP_KEY_NAMES = (
 # these dates, --refresh-mode auto only refreshes companies that filed one of
 # the forms below since their local fundamentals were last checked.
 QUARTERLY_AUDIT_DATES = frozenset({(3, 20), (5, 20), (8, 20), (11, 20)})
+# Shared whitelist for submissions AND XBRL facts. Proxy/ARS facts can use
+# financial tags with a different scale (e.g. FDX DEF 14A net income in millions).
 RELEVANT_SEC_FORMS = frozenset({
     "10-Q", "10-Q/A", "10-K", "10-K/A", "20-F", "20-F/A",
     "40-F", "40-F/A", "6-K", "6-K/A",
@@ -448,8 +450,20 @@ def fetch_concept_units(cik: int, taxonomy: str, tag: str) -> Optional[Dict[str,
     return data.get("units", {}) or None
 
 
+def is_financial_report_fact(point: Dict[str, Any]) -> bool:
+    """Only financial reports may supply fundamentals, including cached facts."""
+    return point.get("form") in RELEVANT_SEC_FORMS
+
+
 def pick_unit_points(units: Dict[str, List[Dict[str, Any]]], symbol: str) -> Tuple[Optional[str], List[Dict[str, Any]]]:
     """Choose the currency/unit series. Honour PREFERRED_CCY, else USD, else first."""
+    # Filter before currency/tag selection or period deduplication, so a later
+    # proxy cannot hide an allowed report or make a proxy-only tag win.
+    units = {
+        unit: [point for point in points if is_financial_report_fact(point)]
+        for unit, points in units.items()
+    }
+    units = {unit: points for unit, points in units.items() if points}
     if not units:
         return None, []
     pref = PREFERRED_CCY.get(symbol)
@@ -479,6 +493,8 @@ def annual_by_end_year(points: List[Dict[str, Any]]) -> Dict[int, Dict[str, Any]
     """Latest-filed annual fact keyed by the calendar year of its period END."""
     chosen: Dict[str, Dict[str, Any]] = {}
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         if point.get("val") is None or not point.get("end"):
             continue
         if not is_annual(point):
@@ -512,6 +528,8 @@ def instant_by_end_year(
     """
     chosen: Dict[str, Dict[str, Any]] = {}
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         if point.get("val") is None or not point.get("end") or point.get("start"):
             continue  # instants have no start
         end = point["end"]
@@ -638,6 +656,8 @@ def share_point_near_fy_end(
     target = dt.date.fromisoformat(fy_end)
     original_by_end: Dict[str, Dict[str, Any]] = {}
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         if point.get("val") is None or not point.get("end"):
             continue
         if point_kind == "instant":
@@ -874,6 +894,8 @@ def latest_instant_point(
     """Latest instant fact filed by as_of; stale values are treated as missing."""
     best: Optional[Dict[str, Any]] = None
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         if point.get("val") is None or not point.get("end") or point.get("start"):
             continue
         if not point_filed_on_or_before(point, as_of) or not point_end_on_or_before(point, as_of):
@@ -903,7 +925,8 @@ def latest_current_shares_point(
     candidates = [
         point
         for point in points
-        if point.get("val") is not None
+        if is_financial_report_fact(point)
+        and point.get("val") is not None
         and point.get("end")
         and point_filed_on_or_before(point, as_of)
         and point_end_on_or_before(point, as_of)
@@ -993,6 +1016,8 @@ def build_quarter_facts(points: List[Dict[str, Any]], as_of: dt.date) -> List[Di
     ytd_by_start: Dict[str, Dict[str, Dict[str, Any]]] = {}
 
     for point in points:
+        if not is_financial_report_fact(point):
+            continue
         if point.get("val") is None or not point.get("start") or not point.get("end"):
             continue
         if not point_filed_on_or_before(point, as_of) or not point_end_on_or_before(point, as_of):
