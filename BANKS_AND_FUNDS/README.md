@@ -201,14 +201,23 @@ Banks sector_score =
 - [V](V.md) - Visa: платежная сеть с высокой маржинальностью.
 - [MA](MA.md) - Mastercard: global payments network.
 
+Казахстанские банки (добавлены 2026-07-05, разбор по видео «Дмитрий Ченгаев | Инвестиции KZ» + web-research):
+
+- [HSBK](HSBK.md) - Halyk Bank: крупнейший банк Казахстана; позиция ~10% портфеля.
+- [CCBN](CCBN.md) - Банк ЦентрКредит: средний банк Казахстана; позиция ~9% портфеля.
+- [KSPI](KSPI.md) - Kaspi.kz: супер-апп (Payments + Marketplace + Fintech), Nasdaq; кандидат, позиции нет.
+
 ## Компании и инструменты
 
 - [BAC](BAC.md)
 - [BLK](BLK.md)
 - [C](C.md)
+- [CCBN](CCBN.md)
 - [D05](D05.md)
 - [GS](GS.md)
+- [HSBK](HSBK.md)
 - [JPM](JPM.md)
+- [KSPI](KSPI.md)
 - [MA](MA.md)
 - [MS](MS.md)
 - [SCHW](SCHW.md)
