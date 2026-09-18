@@ -42,8 +42,8 @@
 
 | Документ | Описание |
 |----------|----------|
-| [AI_Research_2026.md](AI/AI_Research_2026.md) | Обзор рынка ИИ: макроэкономика, инвестиции, страны-лидеры, тренды, рекомендации аналитиков |
-| [AMD_vs_NVIDIA_Analysis_2026.md](AI/AMD_vs_NVIDIA_Analysis_2026.md) | Глубокий анализ конкуренции AMD и NVIDIA в сфере AI-чипов |
+| [AI_Research_2026.md](AI/AI_Research_2026.md) | Обзор рынка ИИ: макроэкономика, инвестиции, физические bottlenecks AI-инфраструктуры, `time-to-power` watchlist, тренды, рекомендации аналитиков |
+| [AMD_vs_NVIDIA_Analysis_2026.md](AI/AMD_vs_NVIDIA_Analysis_2026.md) | Глубокий анализ конкуренции AMD и NVIDIA в сфере AI-чипов, обновлён после отчёта AMD Q1 2026 |
 | [Astera Labs и Oracle (Google Docs)](AI/AI%20Компаний_%20Анализ%20Astera%20Labs%20и%20Oracle%20-%20Google%20Документы.html) | Анализ AI-компаний: Astera Labs и Oracle |
 | [AMD: Финансовый анализ (Google Docs)](AI/AMD_%20Финансовый%20анализ%20и%20ИИ-перспективы%20-%20Google%20Документы.html) | Финансовый анализ AMD и ИИ-перспективы |
 | [Marvell Technology (Google Docs)](AI/Анализ%20инвестиционной%20привлекательности%20Marvell%20Technology%20-%20Google%20Документы.mhtml) | Анализ инвестиционной привлекательности Marvell |
@@ -66,4 +66,4 @@
 
 ---
 
-*Последнее обновление: Февраль 2026*
+*Последнее обновление: 6 мая 2026*

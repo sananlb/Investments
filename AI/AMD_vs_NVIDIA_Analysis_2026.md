@@ -1,6 +1,7 @@
 # AMD vs NVIDIA: Глубокий анализ конкуренции в сфере ИИ
 
 **Дата составления:** 16 января 2026
+**Последнее обновление:** 6 мая 2026
 **Тип документа:** Стратегический анализ рынка AI-чипов
 
 ---
@@ -17,6 +18,7 @@
 8. [Партнёрства и экосистемы](#8-партнёрства-и-экосистемы)
 9. [Прогнозы и перспективы](#9-прогнозы-и-перспективы)
 10. [Выводы и рекомендации](#10-выводы-и-рекомендации)
+11. [Обновление после отчёта AMD Q1 2026](#11-обновление-после-отчёта-amd-q1-2026)
 
 ---
 
@@ -28,7 +30,7 @@
 |----------|--------|-----|
 | **Доля рынка AI-ускорителей** | 80-92% | 5-8% |
 | **Рыночная капитализация** | ~$4.58 трлн | ~$350 млрд |
-| **Выручка дата-центров (Q3 2025)** | $51.2 млрд | $4.3 млрд |
+| **Выручка дата-центров** | $51.2 млрд (Q3 FY2026, по старой базе документа) | $5.775 млрд (Q1 2026) |
 | **Программная платформа** | CUDA (18 лет развития) | ROCm (10 лет) |
 | **Ключевое преимущество** | Экосистема, NVLink | Цена, память, открытость |
 | **Главный вызов** | Антимонопольные расследования | Отставание в софте |
@@ -89,6 +91,7 @@
 | 07.2025 | **NVIDIA $4 трлн** | Первая компания в истории |
 | 10.2025 | **AMD + OpenAI: 6 ГВт партнёрство** | Потенциал $100+ млрд |
 | 01.2026 | NVIDIA $4.58 трлн | Самая дорогая компания в мире |
+| 05.05.2026 | **AMD Q1 2026: Data Center $5.775 млрд** | Data Center стал главным драйвером роста AMD; Q2 guide $11.2 млрд |
 
 ---
 
@@ -471,13 +474,16 @@ NVIDIA пришла к выводу, что нейросети революци�
 
 ### AMD
 
-| Показатель | 2025 | 2026 (прогноз) |
-|------------|------|----------------|
-| Общая выручка | ~$30 млрд | ~$42 млрд |
-| Выручка AI-сегмента | $9.5 млрд | $15+ млрд |
-| Выручка дата-центров Q3 | $4.3 млрд | — |
-| Капитализация | ~$350 млрд | — |
-| Потенциал от OpenAI | — | $10+ млрд/год |
+| Показатель | 2025 / старая база | Q1 2026 / актуальный срез |
+|------------|--------------------|--------------------------|
+| Общая выручка | ~$30 млрд | **$10.253 млрд за квартал**, +38% YoY |
+| Data Center revenue | $4.3 млрд в Q3 2025 | **$5.775 млрд**, +57% YoY |
+| Data Center operating income | — | **$1.599 млрд**, маржа сегмента ~27.7% |
+| Non-GAAP gross margin | — | **55%** |
+| Non-GAAP EPS | — | **$1.37**, +43% YoY |
+| Free cash flow | — | **$2.566 млрд**, FCF margin 25% |
+| Q2 2026 outlook | — | **$11.2 млрд +/- $0.3 млрд**, non-GAAP GM ~56% |
+| Потенциал от крупных AI-сделок | OpenAI / hyperscalers | Meta 6 GW, MI450/Helios pipeline, Samsung HBM4 для MI455X |
 
 ---
 
@@ -489,6 +495,30 @@ NVIDIA пришла к выводу, что нейросети революци�
 | P/E (forward) | ~35x | ~25x | — |
 | P/S | ~30x | ~10x | — |
 | Рост EPS 2026 | +50.9% | +36% | — |
+
+---
+
+## 7.3 Свежий отчёт AMD Q1 2026: что изменилось
+
+**Дата отчёта:** 5 мая 2026 после закрытия рынка. Это важное обновление к исходному анализу от 16 января 2026.
+
+### Главное
+
+- AMD показала квартальную выручку **$10.253 млрд**, практически flat QoQ и +38% YoY.
+- Data Center стал главным драйвером: **$5.775 млрд**, +57% YoY и +7% QoQ.
+- Non-GAAP EPS: **$1.37**, +43% YoY; non-GAAP gross margin: **55%**.
+- Free cash flow: **$2.566 млрд**, то есть AMD уже генерирует значимый денежный поток в период AI-инвестиций.
+- Q2 2026 guide: **$11.2 млрд +/- $300 млн**, что означает примерно +46% YoY и +9% QoQ на середине диапазона.
+
+### Инвестиционный смысл
+
+Отчёт усиливает базовый тезис документа: AMD пока не догоняет NVIDIA по масштабу, но перестаёт быть "опциональной ставкой" на AI и становится полноценным инфраструктурным поставщиком второго уровня. Самое важное не только в росте MI/Instinct, а в том, что AMD связывает accelerators, EPYC CPU, networking, HBM road map и rack-scale Helios в более цельное предложение.
+
+При этом Q1 2026 не снимает ключевой риск: AMD должна доказать, что рост Data Center поддерживается не только supply ramp и hyperscaler diversification, но и устойчивой software/platform adoption. ROCm, supply allocation HBM/CoWoS и исполнение по MI450/Helios остаются главными контрольными точками.
+
+### Обновлённый вывод по AMD
+
+AMD становится более качественной AI-инфраструктурной идеей, но всё ещё не симметричной альтернативой NVIDIA. Правильная формулировка: **AMD — ставка на расширение рынка AI compute, multi-vendor procurement hyperscalers и дефицит rack-scale систем, а не на быстрый крах CUDA-рова NVIDIA.**
 
 ---
 
@@ -688,7 +718,49 @@ AMD создаёт конкурентоспособное железо уже с
 2. **Прогресс ROCm 7.x** в достижении паритета с CUDA
 3. **Антимонопольные решения** в отношении NVIDIA
 4. **Рост custom ASIC** от гиперскейлеров
-5. **Финансовые результаты AMD** в AI-сегменте
+5. **Сохранение темпа Data Center AMD после Q1 2026**: Q2 guide $11.2 млрд, segment margin, supply ramp Instinct/EPYC
+6. **Физические bottlenecks AI-инфраструктуры**: HBM, advanced packaging, liquid cooling, power delivery и grid interconnection
+
+---
+
+# 11. Обновление после отчёта AMD Q1 2026
+
+## 11.1 Что отчёт подтвердил
+
+1. **AI-инфраструктура стала ядром AMD.** Руководство прямо указало, что Data Center теперь основной драйвер роста выручки и прибыли. Это меняет инвестиционный профиль AMD: компания всё меньше похожа на цикличную PC/Gaming историю и всё больше на поставщика AI compute.
+2. **EPYC и Instinct работают вместе.** Рост Data Center был обусловлен одновременно спросом на EPYC processors и продолжающимся ramp AMD Instinct GPU. Для инвестора это важно: AMD продаёт не только accelerator, но и CPU-часть AI/data-center платформы.
+3. **Rack-scale narrative усилился.** В отчёте отдельно выделены MI450 Series и Helios, а также усиление customer engagement и pipeline крупных deployments.
+4. **Партнёрская карта стала шире.** Среди свежих highlights: Meta до 6 GW AMD Instinct GPUs, TCS Helios-based infrastructure, Samsung HBM4 supply для MI455X, NAVER/Upstage в Корее, TCS/India sovereign AI.
+5. **Физический bottleneck смещается к time-to-power.** Даже если AMD/NVIDIA имеют supply AI-ускорителей, дата-центр не превращается в revenue capacity без участка с подключённой мощностью, подстанцией, transformers, switchgear, EPC и датой energization.
+
+## 11.2 Что отчёт не доказал
+
+- Он не доказывает паритет ROCm с CUDA.
+- Он не показывает отдельную выручку AI accelerators внутри Data Center, поэтому нельзя механически считать весь Data Center "AI GPU revenue".
+- Он не устраняет supply-chain риск: HBM, CoWoS/advanced packaging и rack-level integration остаются ограничителями.
+- Он не снимает риск ROI у hyperscalers: если AI monetization отстанет от CapEx, заказы на железо могут стать более волатильными.
+- Он не решает time-to-power риск клиентов: power access, grid interconnection, transformers/switchgear и electrical EPC могут задерживать deployment даже при наличии GPU.
+
+## 11.3 Как меняется сценарий
+
+| Сценарий | Было в январе 2026 | После Q1 2026 |
+|----------|--------------------|---------------|
+| Бычий | AMD увеличивает долю за счёт MI350/MI450 и крупных клиентов | Вероятность выше: Q1 показал реальный Data Center acceleration и сильный Q2 guide |
+| Базовый | AMD остаётся вторым поставщиком с 10-13% долей к 2028 | База сохраняется, но с лучшей видимостью по pipeline |
+| Медвежий | CUDA и supply constraints удерживают AMD на 5-8% | Риск сохраняется, но финансовые результаты стали сильнее, чем старая база документа |
+
+## 11.4 Предварительный инвестиционный вывод
+
+После Q1 2026 AMD выглядит более убедительно как **вторая AI-infrastructure ставка**: ниже доминирование и слабее ecosystem moat, чем у NVIDIA, но выше потенциальная операционная дельта от роста Data Center. Для портфеля это скорее high-beta дополнение к AI-infrastructure basket, чем самостоятельная замена NVIDIA.
+
+Контрольные точки на следующие кварталы:
+
+1. Q2 2026 revenue near/above $11.2 млрд и non-GAAP GM около 56%.
+2. Динамика Data Center revenue и segment operating margin.
+3. Конкретика по MI450/Helios deployments.
+4. Комментарии по HBM4/Samsung и supply availability.
+5. ROCm adoption в production workloads, особенно inference и agentic AI.
+6. Подтверждение, что крупные клиенты имеют secured power / interconnection status для заявленных GW deployments.
 
 ---
 
@@ -700,6 +772,10 @@ AMD создаёт конкурентоспособное железо уже с
 - NVIDIA Investor Relations, Financial Results Q3 FY2026
 - AMD Investor Relations, Advancing AI 2025
 - AMD Newsroom, Strategic Partnerships
+- [AMD Reports First Quarter 2026 Financial Results](https://ir.amd.com/news-events/press-releases/detail/1284/amd-reports-first-quarter-2026-financial-results)
+- [AMD Fiscal First Quarter 2026 Financial Results - IR Calendar](https://ir.amd.com/news-events/ir-calendar/detail/20260505-amd-fiscal-first-quarter-2026-financial-results)
+- [Sightline Climate - Data Center Outlook: Half of 2026 Pipeline May Not Materialize](https://www.sightlineclimate.com/research/data-center-outlook)
+- [FERC - Large Load Interconnection Docket RM26-4](https://www.ferc.gov/rm26-4)
 
 ### Исследовательские отчёты
 - Goldman Sachs, "AI Investment $500B" (2025)
@@ -724,12 +800,14 @@ AMD создаёт конкурентоспособное железо уже с
 - Fabricated Knowledge, "2026 AI and Semiconductor Outlook"
 - The Chip Letter, "Happy 18th Birthday CUDA"
 - AI Multiple, "CUDA vs ROCm 2026"
+- [IEA - Key Questions on Energy and AI](https://www.iea.org/reports/key-questions-on-energy-and-ai)
+- [Epoch AI - Advanced packaging and HBM bottlenecks](https://epoch.ai/data-insights/ai-chip-supply-chain-constraints)
 
 ---
 
-*Данный отчёт составлен на основе информации, доступной до 16 января 2026 года. Рынок AI-чипов динамично развивается, и рекомендуется регулярно обновлять анализ.*
+*Данный отчёт изначально составлен на основе информации, доступной до 16 января 2026 года. Обновление от 6 мая 2026 добавляет отчёт AMD Q1 2026 и уточняет физические bottlenecks AI-инфраструктуры.*
 
 ---
 
 **Автор:** AI Research Assistant
-**Последнее обновление:** 16 января 2026
+**Последнее обновление:** 6 мая 2026
