@@ -3,7 +3,7 @@
 - Группа TradingView: `Semiconductor`
 - Источник: `TRADINGVIEW_WATCHLISTS.md`; разбор в рамках AI-boom темы — см. [AI/AI_BOOM_DEEPDIVE.md](../AI/AI_BOOM_DEEPDIVE.md)
 - Статус: разобрана (deep-dive, Фаза 5)
-- Обновлено: 2026-06-24
+- Обновлено: 2026-09-22
 - Название: NVIDIA
 - Роль: GPU/AI accelerators; toll-road на capex всей AI-индустрии (звено Compute)
 
@@ -74,6 +74,23 @@ Rubin/Vera Rubin ramp (новый ASP-цикл); beat-and-raise при сжат�
 рациональна только малым/средним весом и с мониторингом capex, customer
 financing, inventory provisions и ASIC share.
 
+## Обновление 2026-09-22: Q2 FY2027 и оценка
+
+Факты (источники ниже, данные на 21-22.09.2026):
+
+- Цена $227.38 (закрытие 21.09), $228.93 (22.09, внутри дня); капитализация $5.53T; +22% YTD; 52w $164-236, максимум закрытия $235.74 (14.05.2026).
+- Q2 FY2027 (26.08.2026): revenue `$96.2B` (+106% YoY), Data Center `$89.0B` (+117%), GM `75.0%`, non-GAAP EPS `$2.22`, GAAP EPS `$2.46` (GAAP выше за счёт `$7.8B` прибыли по equity securities, headline-P/E на GAAP занижен).
+- Гайденс Q3: `$108B` ±2%, GM `74.0%`; в Q4 ожидается дно маржи 71-72% (рост цен на память), восстановление до 72-73% в FY2028. Китайский DC compute в гайденсе = 0.
+- Первый в истории годовой прогноз: FY2028 revenue ~+70% (~$690-700B, «ограничено поставками») против консенсуса LSEG +44% (~$570B).
+- Консенсус FY2027: EPS `$9.31`, revenue `$411.5B` (S&P Global через StockAnalysis); средний таргет `$329`.
+- Мультипликаторы: P/E FY2027 ~24.6; forward P/E (NTM) 18.9; при FY2028 по гайденсу (net margin ~55%) EPS ~$15-16 -> P/E ~14-15. Trailing P/E 28.8 против 12M-среднего ~40.6 и 3Y-среднего ~51.
+
+Вывод аналитика: дёшево к собственной истории и к темпу роста, но это цена цикла, а не ошибка рынка: рынок закладывает пик прибыли около FY2028-29. Сценарии от $229: сохранение роста в FY2029 при 20x -> ~$370 (+63%); 18x FY2028 -> ~$290 (+28%); digestion-год (EPS −35%) при 20x -> ~$210 (−8%); жёсткий спад (EPS −50%) при 18x -> ~$145 (−36%).
+
+Портфель (Google Sheets, 22.09.2026): 100 акций, средняя $194, вес 7.5% — выше лимита карточки 2-5%; полупроводники вместе (MRVL 18.5% + AMD 12.2% + NVDA 7.5%) ≈ 38%.
+
+Предложение аналитика от 2026-09-22 (ожидает подтверждения пользователя): **HOLD, не добирать** — позиция уже выше лимита, цена выше зоны входа, бета 2.2 при незакрытом вопросе по ФРС. Что проверять: GM не ниже 71% в Q4, capex-гайденсы гиперскейлеров в конце октября, рост non-marketable equity / vendor financing в 10-Q за Q2.
+
 ## Решение
 
 **BUY** с дисциплиной. Вход $185-205 (в зоне), добор <$170, тремя траншами. Размер 2-5% портфеля — high-beta core, не «безопасная» позиция. Цель 12-18 мес ~$280-320. Триггер на пересмотр: два квартала digestion в DC-выручке или рост vendor-financing на балансе.
@@ -85,3 +102,9 @@ financing, inventory provisions и ASIC share.
 - [NVIDIA Form 10-Q for quarter ended 2026-04-26, checked 2026-06-24](https://www.sec.gov/Archives/edgar/data/1045810/000104581026000052/nvda-20260426.htm)
 - [Barron's: Nvidia customer / ASIC risk, checked 2026-06-24](https://www.barrons.com/articles/nvidia-stock-price-ai-chips-5af3e659)
 - [Morgan Stanley / investingLive summary: Nvidia underperformance and ASIC concerns, checked 2026-06-24](https://investinglive.com/stocks/morgan-stanley-sticks-with-nvidia-says-underperformance-is-overblown-20260130/)
+- [NVIDIA Q2 FY2027 results, checked 2026-09-22](https://nvidianews.nvidia.com/news/nvidia-announces-financial-results-for-second-quarter-fiscal-2027)
+- [StockAnalysis: NVDA statistics, checked 2026-09-22](https://stockanalysis.com/stocks/nvda/statistics/)
+- [StockAnalysis: NVDA forecast (S&P Global consensus), checked 2026-09-22](https://stockanalysis.com/stocks/nvda/forecast/)
+- [CNBC: 70% FY2028 growth vs 44% LSEG estimate, 2026-08-26](https://www.cnbc.com/2026/08/26/nvidia-70percent-growth-forecast-puts-it-on-track-to-be-tech-no-2-company.html)
+- [Money365: Q2 FY2027 margin step-down, equity gains, checked 2026-09-22](https://www.money365.market/articles/nvidia-q2-fy2027-earnings-analysis)
+- Nasdaq API: дневные цены NVDA 02.09.2025-21.09.2026

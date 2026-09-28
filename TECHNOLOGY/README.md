@@ -232,6 +232,7 @@ Technology sector_score =
 - [META](META.md)
 - [MSFT](MSFT.md)
 - [NOW](NOW.md)
+- [ORCL](ORCL.md)
 - [PAYC](PAYC.md)
 - [PYPL](PYPL.md)
 - [TSLA](TSLA.md)
