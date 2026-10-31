@@ -7,7 +7,8 @@
 > `<СЕКТОР>/<TICKER>.md` верны. Остальное осталось в проекте сайта — соответствие старых путей:
 > - `scripts/*.py` → `market/scripts/`
 > - `data/market_quotes/` → `market/data/market_quotes/`
-> - `02_MARKET_DASHBOARD.md` → `market/docs/market_dashboard.md`, `SECTOR_PIPELINE.md` → `market/docs/sector_pipeline.md`
+> - `02_MARKET_DASHBOARD.md`: формат обзора рынка и сами обзоры — здесь (с 2026-10-31); методика
+>   дашборда → `market/docs/market_dashboard.md`; `SECTOR_PIPELINE.md` → `market/docs/sector_pipeline.md`
 > - `sector_valuation_dashboard.html` → страница приложения `market` (Django)
 >
 > Действующие правила pipeline дашборда (правила 11–14 и раздел «Известные проблемы и решения
