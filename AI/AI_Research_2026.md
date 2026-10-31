@@ -1,6 +1,7 @@
 # Комплексное исследование тенденций в сфере ИИ 2025-2026
 
 **Дата составления:** 16 января 2026
+**Последнее обновление:** 6 мая 2026
 **Фокус:** Финансовая оценка компаний и макроэкономический анализ
 
 ---
@@ -13,6 +14,8 @@
 4. [Влияние ИИ на мировую экономику](#4-влияние-ии-на-мировую-экономику)
 5. [Глобальные технологические тренды](#5-глобальные-технологические-тренды)
 6. [Стратегии и планы ключевых компаний](#6-стратегии-и-планы-ключевых-компаний)
+7. [Анализ инвестиционных форумов: Какие компании выиграют от ИИ](#7-анализ-инвестиционных-форумов-какие-компании-выиграют-от-ии)
+8. [AI-инфраструктура: физические bottlenecks и инвестиционная карта](#8-ai-инфраструктура-физические-bottlenecks-и-инвестиционная-карта)
 
 ---
 
@@ -1390,8 +1393,9 @@ OpenAI представила 5-уровневую шкалу к AGI:
 | **Инфраструктура** | CoreWeave, Nebius, Oracle | Высокий | Очень высокий |
 | **Платформы** | Palantir, Microsoft, Salesforce | Средний | Высокий |
 | **Приложения** | Meta, Alphabet, Amazon | Низкий | Средний |
-| **Picks & Shovels** | Vertiv, Eaton, Celestica | Низкий | Средний |
-| **Энергетика** | Constellation, Vistra | Низкий | Средний |
+| **Picks & Shovels** | Vertiv, Eaton, Schneider Electric, Celestica | Низкий/средний | Средний |
+| **Электрификация и сети** | Eaton, Siemens Energy, GE Vernova, Schneider Electric, ABB/Hitachi Energy | Низкий/средний | Высокий |
+| **Энергетика** | Constellation, Vistra, газовые турбины, renewables + storage | Средний | Средний/высокий |
 
 ---
 
@@ -1407,7 +1411,7 @@ OpenAI представила 5-уровневую шкалу к AGI:
 2026 — "ASIC acceleration point": кастомные чипы начинают превышать продажи GPU по объёму для inference.
 
 ### 4. Energy Bottleneck
-Датацентры потребляют ~1,050 TWh электричества глобально. Энергетические компании (Constellation, Vistra) — неожиданные бенефициары.
+IEA в обновлении 2026 года оценивает потребление дата-центров примерно в **485 TWh в 2025** с ростом до **950 TWh к 2030**, при этом AI-focused дата-центры растут быстрее обычных. Главный вывод: узкое место смещается от GPU к доступу к мощности, подключению к сети, трансформаторам, switchgear и охлаждению.
 
 ### 5. Hyperscaler Backlog
 Совокупный backlog CoreWeave + Nebius превышает $75 млрд, обеспечивая видимость выручки на 3-5 лет вперёд.
@@ -1423,6 +1427,238 @@ OpenAI представила 5-уровневую шкалу к AGI:
 | Morningstar | Волатильность | Коррекции возможны |
 
 > **Источник:** [Morningstar - 2026 US Market Outlook](https://www.morningstar.com.au/markets/2026-us-stock-market-outlook-where-find-investing-opportunities)
+
+---
+
+# 8. AI-инфраструктура: физические bottlenecks и инвестиционная карта
+
+**Обновление от 6 мая 2026:** текущая гипотеза по AI-суперциклу должна формулироваться не как "ИИ = электричество, значит все AI-акции растут", а как поиск дефицитных звеньев цепочки с долгим bottleneck и pricing power. Главный практический bottleneck строительства дата-центров сейчас — **time-to-power**: участок с разрешениями, подписанным interconnection agreement, доступной firm power, подстанцией, трансформаторами, switchgear, EPC-командой и понятной датой energization.
+
+## 8.1 Что подтверждают свежие источники
+
+- **CapEx уже стал инфраструктурным циклом.** Goldman Sachs Global Institute в материале от 1 мая 2026 описывает базовую модель примерно **$765 млрд annual AI CapEx в 2026** с ростом до **$1.6 трлн annual AI CapEx в 2031** и около **$7.6 трлн cumulative CapEx за 2026-2031**. Важно: это сценарный framework, а не инвестиционная рекомендация Goldman.
+- **Физическая инфраструктура становится ограничителем.** IEA пишет, что bottlenecks по электроэнергии, grid connections, manufacturing capacity, chips и capital уже усилились; HBM-дефицит, по оценке IEA, может сохраняться как минимум до конца 2027 года.
+- **Плотность мощности резко растет.** IEA оценивает, что power density AI-серверов выросла примерно в 11 раз за 2020-2025 и может вырасти еще в 4 раза к 2027. Это напрямую повышает ценность liquid cooling, power electronics, batteries, transformers и high-voltage distribution.
+- **HBM и CoWoS остаются ключевыми semiconductor bottlenecks.** Epoch AI оценивает, что NVIDIA, Google, AMD и Amazon в 2025 потребляли свыше 90% глобальной CoWoS capacity и HBM supply по стоимости, но только около 12% advanced logic die production. Значит, ограничение было не в "вафлях" как таковых, а в памяти и упаковке.
+- **Электрическое оборудование становится отдельным рынком AI.** Data Center Knowledge со ссылкой на Wood Mackenzie указывает, что спрос на трансформаторы для дата-центров в США может превысить 9,000 units annually к 2030 против примерно 1,500 сегодня, а рынок electrical equipment для дата-центров США может вырасти с ~$20 млрд в 2026 до ~$65 млрд к 2030.
+- **Очереди подключения стали самостоятельным риском.** Sightline Climate отслеживает 190 GW across 777 крупных дата-центров и AI factories, объявленных с 2024 года; из 16 GW capacity, заявленных к вводу в 2026, только около 5 GW уже находится в строительстве, а 30-50% pipeline 2026 может не выйти в срок. FERC открыл отдельный docket RM26-4 по large-load interconnection, что подтверждает системный характер проблемы.
+
+## 8.2 Ранжирование узких мест
+
+| Ранг | Узкое место | Почему дефицит может быть долгим | Типовые бенефициары |
+|------|-------------|----------------------------------|---------------------|
+| 1 | **Time-to-power / executable powered land** | Самый редкий актив: земля + разрешения + firm power + interconnection + equipment + EPC + дата energization | Powered-land owners, utilities, IPP, data center operators with secured power |
+| 2 | **Grid interconnection / network upgrades** | Study process, transmission capacity и cost allocation диктуют сроки проекта; grid buildout занимает 5-15 лет | Grid operators, utilities, Quanta, engineering/EPC |
+| 3 | **Transformers / switchgear / substations** | Длинные lead times, конкуренция с utilities, renewables и industrial demand | Eaton, Schneider Electric, Siemens Energy, GE Vernova, Hitachi Energy, ABB exposure |
+| 4 | **Electrical contractors / EPC / skilled electricians** | Electrical work становится критической частью бюджета и требует лицензированных команд | Quanta, EMCOR, Comfort Systems, MYR Group, MasTec |
+| 5 | **Firm / bridge / behind-the-meter power** | Проекты уходят в on-site generation, BESS и hybrid power, чтобы не ждать сеть | GE Vernova, gas turbine chain, storage/microgrid integrators |
+| 6 | **Liquid cooling / thermal management** | Rack density уходит за пределы воздушного охлаждения; retrofit старых DC ограничен | Vertiv, Schneider Electric, Modine, специализированные thermal suppliers |
+| 7 | **HBM + advanced packaging** | Ограничивает заполнение дата-центра AI-оборудованием, но не всегда тормозит строительство здания и подключения | SK Hynix, Micron, Samsung, TSMC, ASE/Amkor, equipment suppliers |
+| 8 | **Networking / optical interconnect** | Utilization GPU-кластеров зависит от InfiniBand/Ethernet, switches, optics и cables | Broadcom, Marvell, Arista, Coherent/Lumentum-type optical suppliers |
+| 9 | **GPU supply** | Все еще критично, но рынок уже лучше видит этот дефицит и капитал агрессивно идет в расширение | NVIDIA, AMD, Broadcom/custom silicon |
+
+## 8.3 Инвестиционный вывод
+
+На горизонте 5-10 лет интереснее искать не только "следующую NVIDIA", а компании, у которых есть дефицитный физический актив, backlog, pricing power и низкий риск технологического обесценивания. По этим критериям самые устойчивые зоны для дальнейшего исследования:
+
+1. **Time-to-power / powered land:** площадки с доказанной мощностью и датой подключения.
+2. **Electrical equipment / electrification:** трансформаторы, switchgear, UPS, PDUs, grid automation.
+3. **Grid infrastructure и firm power:** подключение, генерация, газовые турбины, nuclear/SMR, storage.
+4. **Electrical EPC / labor:** подрядчики и электрики, которые физически вводят мощность.
+5. **Thermal management:** direct-to-chip liquid cooling, CDUs, immersion, heat exchangers.
+6. **HBM и advanced packaging:** память, CoWoS/2.5D/3D packaging, тестирование и оборудование.
+7. **Networking и optical:** switches, NICs, DSP, optical transceivers, co-packaged optics.
+
+## 8.4 Очереди подключения и задержки строительства
+
+Самое важное различие: **нехватка GPU замедляет монетизацию дата-центра, а нехватка power/grid/interconnection замедляет сам ввод объекта в эксплуатацию**. Поэтому AI pipeline нужно делить на announced capacity и executable capacity.
+
+| Сигнал | Что показывает | Инвестиционный смысл |
+|--------|----------------|---------------------|
+| **Sightline Climate: 190 GW / 777 проектов** | Огромный announced pipeline крупных дата-центров и AI factories | Не вся объявленная мощность станет реальной capacity |
+| **Только ~5 GW из 16 GW 2026 уже строится** | Большая часть заявленного ввода 2026 не прошла физическую проверку строительства | Ценность secured power и advanced-stage проектов растёт |
+| **30-50% pipeline 2026 может задержаться** | Power constraints, equipment shortages и permitting/community opposition становятся системными | Бенефициары: grid equipment, EPC, bridge power |
+| **IEA: grid buildout 5-15 лет vs дата-центр 1-3 года** | Сроки сетей фундаментально длиннее сроков строительства здания | Time-to-power становится главным критерием site selection |
+| **Berkeley Lab: ~2,300 GW generation/storage в очередях США** | Новая генерация тоже не подключается быстро | On-site generation и co-location становятся стратегией обхода очередей |
+| **FERC RM26-4 large-load interconnection** | Регулятор признаёт проблему подключения крупных нагрузок >20 MW | Возможны новые правила для гибких/curtailable нагрузок и cost allocation |
+
+### Что именно тормозит проекты
+
+1. **Interconnection studies и network upgrades.** Сначала надо понять, какие линии, подстанции, transformers, breakers и reactive devices нужны, кто платит и когда оборудование будет построено.
+2. **Transformer / switchgear / battery supply chain.** Это не самый большой процент CapEx, но один задержанный компонент может остановить весь проект.
+3. **Firm power availability.** Даже если дата-центр готов, utility может не иметь reserve margin или transmission capacity для 100-1000 MW нагрузки.
+4. **Skilled electrical labor.** Texas Tribune пишет, что дата-центры вытягивают электриков из жилищного строительства; по оценке IBEW, electrical subcontractors могут составлять 45-70% бюджета строительства дата-центра.
+5. **Local opposition / permitting / water.** Data Center Frontier отмечает, что местные сообщества всё чаще становятся gatekeeper: power bills, вода, шум, emissions и нагрузка на сеть могут остановить проект до начала строительства.
+
+### Новая инвестиционная формула
+
+> Самый дефицитный актив AI-инфраструктуры — не чип и не здание, а **исполняемая мощность**: участок + разрешения + interconnection agreement + подстанция + трансформаторы + switchgear + EPC + дата подключения.
+
+Практический вывод для отбора идей:
+
+- **Лучше:** компании, которые сокращают time-to-power: prefab substations, modular power, switchgear, transformers, grid automation, EPC, bridge power, BESS.
+- **Осторожнее:** владельцы announced pipeline без раскрытой power strategy или с долгим grid queue.
+- **Ключевой KPI:** signed power agreement / interconnection status / equipment slots / EPC availability, а не только заявленные MW.
+
+## 8.5 Компании для дальнейшего анализа
+
+### 8.5.1 US-listed watchlist
+
+Это список компаний, торгующихся на NYSE/Nasdaq, которые зарабатывают на разных слоях `time-to-power`. Он не является рекомендацией к покупке: часть компаний уже сильно отыграла AI/power narrative.
+
+| # | Компания | Тикер | Слой bottleneck | Почему важна |
+|---|----------|-------|-----------------|--------------|
+| 1 | **Caterpillar** | CAT | Bridge/on-site power | Дизельные и газовые генераторы, engines, power generation для дата-центров и power plants |
+| 2 | **GE Vernova** | GEV | Grid + generation | Grid equipment, electrification, transformers exposure, gas turbines, power generation |
+| 3 | **Eaton** | ETN | Power distribution | Switchgear, breakers, UPS, busway, PDUs, power distribution внутри дата-центров |
+| 4 | **Vertiv** | VRT | Critical power + cooling | UPS, switchgear, busway, liquid cooling, modular infrastructure |
+| 5 | **Quanta Services** | PWR | Grid EPC | Transmission lines, substations, utility infrastructure, grid construction |
+| 6 | **Trane Technologies** | TT | Thermal management | Cooling, chillers, liquid cooling, AI factory thermal design |
+| 7 | **Cummins** | CMI | Backup/prime power | Generator sets, engines, standby/prime power для дата-центров |
+| 8 | **Bloom Energy** | BE | On-site power | Fuel-cell power, grid-bypass, bridge power; высокая волатильность и execution risk |
+| 9 | **Johnson Controls** | JCI | Cooling + building systems | Data center cooling, chillers, Silent-Aire, controls, thermal management |
+| 10 | **Comfort Systems USA** | FIX | Electrical/mechanical EPC | Mechanical/electrical contracting, modular construction, HVAC, data-center buildout |
+
+Дополнительные US-listed идеи меньшего размера или с более узкой специализацией:
+
+| Компания | Тикер | Почему смотреть |
+|----------|-------|-----------------|
+| **EMCOR** | EME | Electrical construction, data-center backlog, mechanical/electrical services |
+| **nVent Electric** | NVT | Enclosures, electrical protection, data-center electrical infrastructure |
+| **Hubbell** | HUBB | Utility/electrical components, grid and distribution equipment |
+| **Powell Industries** | POWL | Switchgear, power control rooms, высокое плечо к industrial/electrical cycle |
+| **Atkore** | ATKR | Electrical raceway, conduit, cables management; более цикличная construction exposure |
+| **Generac** | GNRC | Backup power, distributed energy; менее чистая data-center exposure |
+
+### 8.5.2 Глобальный список: ядро bottleneck
+
+Если не ограничиваться американскими биржами, список становится качественнее: Schneider Electric, Siemens Energy и Hitachi Energy находятся ближе к реальному bottleneck, чем многие US-listed alternatives.
+
+| # | Компания | Основной тикер | Биржа | Слой bottleneck | Почему важна |
+|---|----------|----------------|-------|-----------------|--------------|
+| 1 | **GE Vernova** | GEV | NYSE | Grid + generation | Grid equipment, газовые турбины, electrification, transformers exposure |
+| 2 | **Schneider Electric** | SU.PA | Paris | End-to-end data-center power | UPS, switchgear, PDUs, cooling, DCIM, prefab systems |
+| 3 | **Siemens Energy** | ENR.DE | Xetra | Grid + generation | Grid Technologies, transformers, HVDC, gas turbines |
+| 4 | **Eaton** | ETN | NYSE | Power distribution | Switchgear, breakers, UPS, busway, PDUs |
+| 5 | **Hitachi Ltd / Hitachi Energy** | 6501.T | Tokyo | Transformers + substations | Power transformers, substations, HV equipment, grid automation |
+| 6 | **ABB** | ABBN.SW / ABBNY | SIX / OTC | Electrification | Switchgear, breakers, UPS, distribution automation; US ADR сейчас OTC |
+| 7 | **Vertiv** | VRT | NYSE | Critical power + cooling | UPS, switchgear, busway, modular infrastructure, liquid cooling |
+| 8 | **Quanta Services** | PWR | NYSE | Grid EPC | Transmission, substations, utility-scale execution |
+| 9 | **Legrand** | LR.PA | Paris | Data-center power infrastructure | PDUs, busway, racks, Raritan, Server Technology, Starline |
+| 10 | **Prysmian** | PRY.MI | Milan | Cables | Power cables, grid cables, DC power cables, Encore Wire exposure |
+
+Короткий приоритет для глубокого разбора:
+
+1. **GEV / ENR.DE / 6501.T:** самый верхний слой bottleneck — transformers, substations, HV equipment, generation.
+2. **SU.PA / ETN / ABBN.SW:** power distribution и electrical infrastructure внутри и вокруг дата-центра.
+3. **PWR / EME / FIX:** physical execution: EPC, электрики, mechanical/electrical construction.
+4. **VRT / LR.PA:** critical power, cooling и modular infrastructure.
+5. **PRY.MI / NEX.PA:** кабели как производная от grid buildout и power distribution.
+
+### 8.5.3 Что ещё не полностью отыграло AI boom
+
+**Срез от 6 мая 2026:** первичный фильтр сделан по YTD/1Y динамике, близости к `time-to-power` bottleneck и чистоте экспозиции. Это не оценка справедливой стоимости; следующий шаг — смотреть EV/EBITDA, P/E, backlog conversion, margin expansion и capex/capacity expansion.
+
+| Компания | Тикер | YTD | 1Y | Вывод |
+|----------|-------|-----|----|-------|
+| **Hitachi Ltd / Hitachi Energy** | 6501.T | ~-5% | ~+32% | Самая интересная "скрытая" ставка: Hitachi Energy внутри конгломерата, а power transformers находятся прямо в центре bottleneck |
+| **Hubbell** | HUBB | ~+15% | ~+48% | Grid / utility components; менее хайповая история, ближе к скучной электрификации |
+| **Johnson Controls** | JCI | ~+20% | ~+62% | Cooling / Silent-Aire / controls; менее pure-play, чем Vertiv |
+| **Schneider Electric** | SU.PA | ~+21% | ~+36% | Уже на high, но рост умеренный относительно качества и близости к data-center power stack |
+| **Atkore** | ATKR | ~+22% | ~+20% | Electrical infrastructure / conduit / raceway; более цикличная и менее чистая ставка |
+| **Trane Technologies** | TT | ~+25% | ~+20% | Cooling для AI factories; пока не такой parabolic, как Vertiv |
+| **Legrand** | LR.PA | ~+26% | ~+67% | PDUs, Starline, Raritan, Server Technology; уже отыграло, но не экстремально |
+| **Nexans** | NEX.PA | ~+32% | ~+74% | Кабели/grid/data centers; не дешево, но менее хайпово, чем Vertiv/GEV |
+| **Eaton** | ETN | ~+33% | ~+43% | Качественный core holding, но рынок уже явно распознал AI/power тезис |
+| **ABB** | ABBN.SW / ABBNY | ~+36% | ~+87% | Хорошая electrification тема, но уже заметно отыграла; US ADR сейчас OTC |
+
+**Кандидаты на "ещё не полностью отыграло":**
+
+1. **Hitachi Ltd / Hitachi Energy (6501.T)** — лучший кандидат на скрытый transformer bottleneck, но не pure-play.
+2. **Hubbell (HUBB)** — скучная, но релевантная ставка на grid/electrical components.
+3. **Schneider Electric (SU.PA)** — один из лучших end-to-end игроков; не дёшево, но рост цены умереннее, чем у самых горячих AI-power names.
+4. **Trane Technologies (TT) / Johnson Controls (JCI)** — cooling без экстремального Vertiv premium.
+5. **Atkore (ATKR)** — более спекулятивная идея на electrical buildout с повышенной цикличностью.
+
+**Уже сильно отыграли AI/power narrative:**
+
+| Компания | Тикер | Почему осторожнее |
+|----------|-------|-------------------|
+| **Bloom Energy** | BE | Очень сильный рост на on-site power narrative; высокий execution и valuation risk |
+| **Powell Industries** | POWL | Малый/средний pure electrical play, но цена уже стала momentum trade |
+| **Vertiv** | VRT | Лучший pure-play на power + cooling, но premium уже очень высокий |
+| **Comfort Systems USA** | FIX | Отличный EPC/cooling execution, но рынок уже платит за data-center backlog |
+| **Quanta Services** | PWR | Качественный grid EPC, но rerating уже произошёл |
+| **GE Vernova** | GEV | Сильнейший grid/generation story, но AI-power thesis уже в цене |
+| **Caterpillar** | CAT | Bridge/on-site power + generation demand уже заметно переоценены рынком |
+| **Prysmian** | PRY.MI | Кабельная ставка на grid/data centers уже резко отыграла |
+| **Siemens Energy** | ENR.DE | Grid + turbine story очень сильная, но rerating за год уже значительный |
+
+**Приоритет для следующего глубокого разбора:**
+
+1. **Консервативный shortlist:** Hitachi, Hubbell, Schneider.
+2. **Агрессивный shortlist:** Atkore, Trane, Johnson Controls.
+3. **Watch only / ждать отката:** Vertiv, GE Vernova, Comfort Systems, Powell, Bloom Energy.
+
+### 8.5.4 Buffett-фильтр с поправкой на margin expansion
+
+**Методика:** классический Buffett-подход — понятный бизнес, устойчивый спрос, pricing power, качество менеджмента, разумный баланс, cash generation, долгосрочный moat и margin of safety. Но для этой конкретной темы низкая текущая рентабельность может быть **плюсом**, если она отражает временное under-earning, а не структурно слабый бизнес. В таком случае дефицит продукции, backlog и повышение цен могут дать сильную переоценку через margin expansion.
+
+Низкая маржа считается преимуществом только при выполнении условий:
+
+1. спрос структурно растёт из-за `time-to-power` bottleneck;
+2. компания имеет backlog или заказную видимость;
+3. есть pricing power или дефицит capacity;
+4. баланс выдерживает цикл;
+5. менеджмент способен конвертировать рост выручки в free cash flow.
+
+| Приоритет | Компания | Тикер | Вердикт |
+|-----------|----------|-------|---------|
+| 1 | **Hitachi / Hitachi Energy** | 6501.T | Лучший "скрытый" вариант: transformer bottleneck внутри большого конгломерата; рынок может не полностью платить за Hitachi Energy |
+| 2 | **Johnson Controls** | JCI | Turnaround + cooling + lower margin; возможна переоценка, если data-center mix и реструктуризация подтянут profitability |
+| 3 | **Atkore** | ATKR | Самая "value + margin recovery" идея; дешевле, но цикличнее и со слабее moat |
+| 4 | **Hubbell** | HUBB | Качественный скучный compounder на grid/electrical components; ближе к Buffett-профилю, но меньше upside от margin expansion |
+| 5 | **Schneider Electric** | SU.PA | Лучшее качество в группе и end-to-end data-center power stack; вопрос в цене и margin of safety |
+| 6 | **Nexans** | NEX.PA | Кабели/grid, умеренная оценка, margin expansion возможна; выше industrial/cable cycle risk |
+| 7 | **Trane Technologies** | TT | Отличное качество и менеджмент, но valuation уже высоковат |
+| 8 | **Legrand** | LR.PA | Качественная data-center infrastructure история, но уже заметно отыграла |
+| 9 | **Eaton** | ETN | Очень качественно, но рынок уже хорошо понял тезис |
+| 10 | **ABB** | ABBN.SW / ABBNY | Хорошая electrification история, но уже заметно переоценена narrative |
+
+**Лучшее сочетание "качество + ещё не полностью отыгранная маржа":**
+
+1. **Hitachi / Hitachi Energy (6501.T)** — ключевой bottleneck в power transformers/substations спрятан внутри конгломерата; не pure-play, но именно поэтому возможна недооценка.
+2. **Johnson Controls (JCI)** — не идеальный Buffett-business, но интересный turnaround: cooling, controls, Silent-Aire, дата-центры; низкая маржа может стать источником переоценки.
+3. **Atkore (ATKR)** — самая спорная и самая дешёвая идея; слабее moat и выше цикличность, но выше потенциал при восстановлении electrical construction и маржи.
+4. **Hubbell (HUBB)** — наиболее Buffett-like из US-listed идей: понятный бизнес, grid components, дисциплина, cash generation; upside более умеренный.
+5. **Schneider Electric (SU.PA)** — лучший quality compounder в теме; скорее кандидат на покупку на откате, чем aggressive entry после rerating.
+
+**Что отсекаем сейчас по Buffett-фильтру:**
+
+| Компания | Тикер | Почему осторожнее |
+|----------|-------|-------------------|
+| **Bloom Energy** | BE | Низкая рентабельность слишком спекулятивна; высокий execution risk |
+| **Powell Industries** | POWL | Тема сильная, но цена стала momentum trade |
+| **Vertiv** | VRT | Отличный pure-play на power + cooling, но valuation требует идеального исполнения |
+| **Comfort Systems USA** | FIX | Качественный EPC, но рост цены уже огромный |
+| **Quanta Services** | PWR | Хороший бизнес, но очень дорогой после rerating |
+| **GE Vernova** | GEV | Сильный moat в grid/generation, но AI-power тезис уже сильно в цене |
+| **Siemens Energy** | ENR.DE | Фундаментально релевантна, но rerating уже большой |
+| **Prysmian** | PRY.MI | Отличная cable/grid история, но уже резко отыграла |
+| **Caterpillar** | CAT | Слишком циклично и уже дорого на bridge-power narrative |
+
+**Итоговый shortlist после Buffett-фильтра:**
+
+1. **Консервативно:** Hitachi, Hubbell, Schneider.
+2. **Ставка на переоценку маржи:** Johnson Controls, Atkore, Nexans.
+3. **Качество, но ждать отката:** Eaton, Trane, Legrand.
+
+## 8.6 Главные риски гипотезы
+
+- **Переинвестирование:** если monetization AI не догонит CapEx, hyperscalers могут временно снизить бюджеты, что ударит по поставщикам железа.
+- **Эффективность моделей:** cheaper inference, quantization, sparsity, routing и ASIC могут снизить капиталоемкость на единицу AI-услуги.
+- **Цикличность semiconductor supply:** HBM и packaging могут перейти от дефицита к избытку быстрее, чем power/grid bottlenecks.
+- **Регуляторные ограничения:** grid queues, вода, тарифы, carbon goals и локальное сопротивление дата-центрам могут переносить проекты между регионами.
 
 ---
 
@@ -1444,6 +1680,23 @@ OpenAI представила 5-уровневую шкалу к AGI:
 - [Seeking Alpha - AI Analysis](https://seekingalpha.com/)
 - [TipRanks - WallStreetBets Stocks](https://www.tipranks.com/compare-stocks/wallstreetbets)
 - [Goldman Sachs Research](https://www.goldmansachs.com/insights/)
+- [Goldman Sachs - Tracking Trillions: The Assumptions Shaping the Scale of the AI Build-Out](https://www.goldmansachs.com/insights/articles/tracking-trillions-the-assumptions-shaping-scale-of-the-ai-build-out)
+- [IEA - Key Questions on Energy and AI](https://www.iea.org/reports/key-questions-on-energy-and-ai)
+- [IEA - Energy and AI: Energy supply for AI](https://www.iea.org/reports/energy-and-ai/energy-supply-for-ai)
+- [IEA - Electricity 2026: Grids](https://www.iea.org/reports/electricity-2026/grids)
+- [Sightline Climate - Data Center Outlook: Half of 2026 Pipeline May Not Materialize](https://www.sightlineclimate.com/research/data-center-outlook)
+- [Berkeley Lab - Queued Up: 2025 Edition](https://emp.lbl.gov/queues)
+- [FERC - Large Load Interconnection Docket RM26-4](https://www.ferc.gov/rm26-4)
+- [RMI - Interconnection Queue and Data Centers](https://rmi.org/interconnection-reform-ai-data-centers-generator-queues/)
+- [Texas Tribune - Data Centers and Electrician Shortage](https://www.texastribune.org/2026/04/28/data-centers-texas-electricians-builders/)
+- [Data Center Frontier - Community Opposition as Gatekeeper](https://www.datacenterfrontier.com/site-selection/article/55359925/community-opposition-emerges-as-new-gatekeeper-for-ai-data-center-expansion)
+- [Epoch AI - Advanced packaging and HBM bottlenecks](https://epoch.ai/data-insights/ai-chip-supply-chain-constraints)
+- [Data Center Knowledge - AI Data Center Boom Rewires US Power Supply Chain](https://www.datacenterknowledge.com/build-design/ai-data-center-boom-rewires-us-power-supply-chain)
+- [Schneider Electric - Q1 2026 Financial Results](https://www.se.com/ww/en/about-us/investor-relations/financial-results/)
+- [Hitachi Energy - Speed-to-Power Initiatives at CERAWeek 2026](https://www.hitachienergy.com/news/press-releases/2026/03/hitachi-at-ceraweek-2026)
+- [Siemens Energy - Q1 FY2026 Analyst Presentation](https://assets.siemens-energy.com/dam/d5e24758-5d19-44f7-b57d-b3ee0057e335/2026-02-11_Q1_Analyst_presentation-pdf_Original%20file.pdf)
+- [Legrand - Data Center Power and Control](https://www.legrand.us/data-power-and-control)
+- [Prysmian - Q1 2026 Presentation](https://www.prysmian.com/sites/www.prysmian.com/files/2026-04/Prysmian_1Q26_Presentation_def.pdf)
 - [Fidelity AI Outlook](https://www.fidelity.com/learning-center/trading-investing/AI-outlook)
 - [Yahoo Finance](https://finance.yahoo.com/)
 - [Nasdaq Analysis](https://www.nasdaq.com/)

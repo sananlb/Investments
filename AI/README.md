@@ -4,8 +4,8 @@
 
 ## Research
 
-- [AI Research 2026](AI_Research_2026.md)
-- [AMD vs NVIDIA Analysis 2026](AMD_vs_NVIDIA_Analysis_2026.md)
+- [AI Research 2026](AI_Research_2026.md) - обзор рынка ИИ: макроэкономика, инвестиции, физические bottlenecks AI-инфраструктуры, `time-to-power` watchlist, тренды и рекомендации аналитиков.
+- [AMD vs NVIDIA Analysis 2026](AMD_vs_NVIDIA_Analysis_2026.md) - конкуренция AMD и NVIDIA в AI-чипах, обновлено после отчета AMD Q1 2026.
 
 ## Company Exports
 
