@@ -256,6 +256,7 @@ Deloitte отдельно предупреждает, что AI data center mark
 - [QCOM](QCOM.md) - Qualcomm: mobile and edge silicon.
 - [ARM](ARM.md) - Arm Holdings: CPU IP architecture.
 - [TXN](TXN.md) - Texas Instruments: analog semiconductors.
+- [LITE](LITE.md) - Lumentum: InP-лазеры и оптика AI дата-центров; 02.11.2026 Marvell объявила её покупку.
 
 ## Компании и инструменты
 
@@ -269,6 +270,7 @@ Deloitte отдельно предупреждает, что AI data center mark
 - [DELL](DELL.md)
 - [GFS](GFS.md)
 - [INTC](INTC.md)
+- [LITE](LITE.md)
 - [MRVL](MRVL.md)
 - [MU](MU.md)
 - [NVDA](NVDA.md)
